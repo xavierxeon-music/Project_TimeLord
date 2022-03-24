@@ -5,7 +5,7 @@ QT += widgets svg
 CONFIG += audio midi
 DESTDIR = ..
 
-include(../../../Base/SeedCompanionApp.pri)
+include(../../../Base/DesktopApp.pri)
 
 HEADERS += \
    DataCore.h \

@@ -1,10 +1,12 @@
 #ifndef MainWidgetH
 #define MainWidgetH
 
-#include <CompanionApp.h>
+#include <Remember.h>
 #include <QSplitter>
 
 #include <Blocks/Graph.h>
+#include <FileStorage.h>
+#include <MidiDevice.h>
 
 #include "GraphDevice.h"
 #include "GraphWidget.h"
@@ -13,7 +15,7 @@
 #include "PortModel.h"
 #include "PortWidget.h"
 
-class MainWidget : public QSplitter, public CompanionApp
+class MainWidget : public QSplitter, public Remember::Root
 {
    Q_OBJECT
 public: // things to remeber
@@ -32,12 +34,16 @@ private:
    friend class DataCore;
 
 private:
-   void loadedFromDaisy() override;
+   void loadedFromDaisy();
    void updateUI();
    void closeEvent(QCloseEvent* ce) override;
 
 private:
    GraphList_ graphs;
+
+   MidiDevice midiDevice;
+   FileStorage fileStoreage;
+
    PortWidget* portWidget;
    PortModel* portModel;
 
