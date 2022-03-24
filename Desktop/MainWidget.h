@@ -8,12 +8,13 @@
 #include <FileStorage.h>
 #include <MidiBridge.h>
 
-#include "GraphDevice.h"
 #include "GraphWidget.h"
 #include "PointModel.h"
 #include "PointWidget.h"
 #include "PortModel.h"
 #include "PortWidget.h"
+
+class GraphDevice;
 
 class MainWidget : public QSplitter, public Remember::Root
 {
@@ -40,9 +41,11 @@ private:
 
 private:
    GraphList_ graphs;
+   GraphDevice* graphDevice;
 
    MidiBridge midiBridge;
-   FileStorage fileStoreage;
+   FileStorage fileStorageDaisy;
+   FileStorage fileStorageDevice;
 
    PortWidget* portWidget;
    PortModel* portModel;
@@ -51,7 +54,6 @@ private:
    PointModel* pointModel;
 
    GraphWidget* graphWidget;
-   GraphDevice* graphDevice;
 };
 
 #endif // MainWidgetH

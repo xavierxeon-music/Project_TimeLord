@@ -24,7 +24,7 @@ protected:
 
 private:
    MainWidget* mainWidget;
-   PoviderNameMap providerNameMap;
+   static const PoviderNameMap providerNameMap;
 };
 
 #endif // DataCoreH

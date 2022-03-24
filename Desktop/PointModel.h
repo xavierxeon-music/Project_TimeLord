@@ -11,7 +11,7 @@ public:
    PointModel(MainWidget* mainWidget);
 
 public slots:
-   void slotPortChanged(const uint8_t& index);
+   void slotPortChanged(const Provider provider, const uint8_t& index);
    void slotInsertPoint();
    void slotRemovePoint();
    void slotMoveBack();
@@ -22,6 +22,7 @@ private:
    void update();
 
 private:
+   Provider portProvider;
    uint8_t portIndex;
    uint8_t pointIndex;
 };

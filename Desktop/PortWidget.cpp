@@ -10,6 +10,7 @@
 PortWidget::PortWidget(MainWidget* mainWidget, PortModel* portModel)
    : QWidget(mainWidget)
    , DataCore(mainWidget)
+   , portModel(portModel)
 {
    setMinimumWidth(150);
 
@@ -38,5 +39,11 @@ void PortWidget::slotCurrentSelectionChanged(const QModelIndex& current, const Q
 {
    Q_UNUSED(previous);
 
-   emit signalPortChanged(current.row());
+   QStandardItem* item = portModel->itemFromIndex(current);
+   const QVariant itemData = item->data();
+   if (itemData.isNull())
+      return;
+
+   const Provider provider = itemData.value<Provider>();
+   emit signalPortChanged(provider, current.row());
 }

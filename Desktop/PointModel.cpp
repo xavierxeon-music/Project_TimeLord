@@ -10,15 +10,16 @@ PointModel::PointModel(MainWidget* mainWidget)
 {
 }
 
-void PointModel::slotPortChanged(const uint8_t& index)
+void PointModel::slotPortChanged(const Provider provider, const uint8_t& index)
 {
+   portProvider = provider;
    portIndex = index;
    update();
 }
 
 void PointModel::slotInsertPoint()
 {
-   Graph& currentGraph = graph(DataCore::Provider::DaisyPatch, portIndex);
+   Graph& currentGraph = graph(Provider::DaisyPatch, portIndex);
    currentGraph.addStage(255, 1, pointIndex, true);
 
    update();

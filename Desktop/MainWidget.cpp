@@ -5,6 +5,8 @@
 
 #include <SettingsUI.h>
 
+#include "GraphDevice.h"
+
 using Channel = AudioDevice::Channel;
 using Frame = AudioDevice::Frame;
 
@@ -12,21 +14,21 @@ MainWidget::MainWidget()
    : QSplitter(nullptr)
    , Remember::Root()
    , graphs(this)
+   , graphDevice(new GraphDevice(this))
    , midiBridge(this)
-   , fileStoreage(this)
+   , fileStorageDaisy(this)
+   , fileStorageDevice(graphDevice)
    , portWidget(nullptr)
    , portModel(nullptr)
    , pointWidget(nullptr)
    , pointModel(nullptr)
    , graphWidget(nullptr)
-   , graphDevice(nullptr)
 {
    setWindowTitle("Time Lord UI");
 
    midiBridge.initMidi();
    midiBridge.onLoadedFromDaisy(this, &MainWidget::loadedFromDaisy);
 
-   graphDevice = new GraphDevice(this);
 
    portModel = new PortModel(this);
    pointModel = new PointModel(this);
@@ -49,6 +51,9 @@ MainWidget::MainWidget()
 
 void MainWidget::slotLoadFromFile()
 {
+   const QString fileName;
+   fileStorageDaisy.loadFromFile(fileName);
+   fileStorageDevice.loadFromFile(fileName);
    updateUI();
 }
 
@@ -59,6 +64,9 @@ void MainWidget::slotStartLoadFromdDaisy()
 
 void MainWidget::slotSaveToFile()
 {
+   const QString fileName;
+   fileStorageDaisy.saveToFile(fileName);
+   fileStorageDevice.saveToFile(fileName);
 }
 
 void MainWidget::slotSaveToDaisy()

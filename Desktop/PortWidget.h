@@ -13,10 +13,13 @@ public:
    PortWidget(MainWidget* mainWidget, PortModel* portModel);
 
 signals:
-   void signalPortChanged(const uint8_t& index);
+   void signalPortChanged(const Provider provider, const uint8_t& index);
 
 private slots:
    void slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous);
+
+private:
+   PortModel* portModel;
 };
 
 #endif // PortWidgetH
