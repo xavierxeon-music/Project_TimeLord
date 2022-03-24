@@ -2,7 +2,6 @@ TARGET = TimeLord
 TEMPLATE = app
 
 include(../../../Base/PatchImposterApp.pri)
-include(../Common/Common.pri)
 
 HEADERS += \
     #Icons.h \

@@ -11,7 +11,7 @@ using Frame = AudioDevice::Frame;
 MainWidget::MainWidget()
    : QSplitter(nullptr)
    , CompanionApp()
-   , TimeLord(this)
+   , graphs(this)
    , portWidget(nullptr)
    , portModel(nullptr)
    , pointWidget(nullptr)

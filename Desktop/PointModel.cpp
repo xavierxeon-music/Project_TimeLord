@@ -18,9 +18,8 @@ void PointModel::slotPortChanged(const uint8_t& index)
 
 void PointModel::slotInsertPoint()
 {
-   TimeLord::GraphList_& graphList = getGraphList();
-   Graph& graph = graphList[portIndex];
-   graph.addStage(255, 1, pointIndex, true);
+   Graph& currentGraph = graph(DataCore::Provider::DaisyPatch, portIndex);
+   currentGraph.addStage(255, 1, pointIndex, true);
 
    update();
 }

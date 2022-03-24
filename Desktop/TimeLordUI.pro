@@ -6,7 +6,6 @@ CONFIG += audio midi
 DESTDIR = ..
 
 include(../../../Base/SeedCompanionApp.pri)
-include(../Common/Common.pri)
 
 HEADERS += \
    DataCore.h \

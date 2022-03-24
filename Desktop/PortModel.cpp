@@ -12,8 +12,7 @@ void PortModel::init()
 {
    clear();
 
-   const TimeLord::GraphList_& graphList = getGraphList();
-   for (uint8_t index = 0; index < graphList.getSize(); index++)
+   for (uint8_t index = 0; index < 16; index++)
    {
       const QString name = "Port " + QString::number(index + 1);
       QStandardItem* item = new QStandardItem(name);

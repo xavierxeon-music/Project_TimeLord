@@ -9,8 +9,9 @@ DataCore::DataCore(MainWidget* mainWidget)
 
 Graph& DataCore::graph(const Provider& provider, const uint8_t& index)
 {
+   static Graph dummy;
    if (Provider::DaisyPatch == provider)
       return mainWidget->graphs[index];
    else if (Provider::GraphDevice == provider)
-      return
+      return dummy;
 }

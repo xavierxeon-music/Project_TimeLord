@@ -2,8 +2,9 @@
 #define MainWidgetH
 
 #include <CompanionApp.h>
-#include <TimeLord.h>
 #include <QSplitter>
+
+#include <Blocks/Graph.h>
 
 #include "GraphDevice.h"
 #include "GraphWidget.h"
@@ -12,9 +13,12 @@
 #include "PortModel.h"
 #include "PortWidget.h"
 
-class MainWidget : public QSplitter, public CompanionApp, public TimeLord
+class MainWidget : public QSplitter, public CompanionApp
 {
    Q_OBJECT
+public: // things to remeber
+   using GraphList_ = Remember::RefArray<Graph, 16>;
+
 public:
    MainWidget();
 
@@ -25,11 +29,15 @@ public slots:
    void slotSaveToDaisy();
 
 private:
+   friend class DataCore;
+
+private:
    void loadedFromDaisy() override;
    void updateUI();
    void closeEvent(QCloseEvent* ce) override;
 
 private:
+   GraphList_ graphs;
    PortWidget* portWidget;
    PortModel* portModel;
 

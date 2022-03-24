@@ -1,7 +1,7 @@
 #ifndef DataCoreH
 #define DataCoreH
 
-#include <TimeLord.h>
+#include <Blocks/Graph.h>
 
 class MainWidget;
 
