@@ -6,7 +6,7 @@
 
 #include <Blocks/Graph.h>
 #include <FileStorage.h>
-#include <MidiDevice.h>
+#include <MidiBridge.h>
 
 #include "GraphDevice.h"
 #include "GraphWidget.h"
@@ -41,7 +41,7 @@ private:
 private:
    GraphList_ graphs;
 
-   MidiDevice midiDevice;
+   MidiBridge midiBridge;
    FileStorage fileStoreage;
 
    PortWidget* portWidget;

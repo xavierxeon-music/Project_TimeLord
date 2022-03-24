@@ -12,7 +12,7 @@ MainWidget::MainWidget()
    : QSplitter(nullptr)
    , Remember::Root()
    , graphs(this)
-   , midiDevice(this)
+   , midiBridge(this)
    , fileStoreage(this)
    , portWidget(nullptr)
    , portModel(nullptr)
@@ -23,8 +23,8 @@ MainWidget::MainWidget()
 {
    setWindowTitle("Time Lord UI");
 
-   midiDevice.initMidi();
-   midiDevice.onLoadedFromDaisy(this, &MainWidget::loadedFromDaisy);
+   midiBridge.initMidi();
+   midiBridge.onLoadedFromDaisy(this, &MainWidget::loadedFromDaisy);
 
    graphDevice = new GraphDevice(this);
 
@@ -54,7 +54,7 @@ void MainWidget::slotLoadFromFile()
 
 void MainWidget::slotStartLoadFromdDaisy()
 {
-   midiDevice.requestLoadFromDaisy();
+   midiBridge.requestLoadFromDaisy();
 }
 
 void MainWidget::slotSaveToFile()
@@ -63,7 +63,7 @@ void MainWidget::slotSaveToFile()
 
 void MainWidget::slotSaveToDaisy()
 {
-   midiDevice.saveToDaisy();
+   midiBridge.saveToDaisy();
 }
 
 void MainWidget::loadedFromDaisy()
