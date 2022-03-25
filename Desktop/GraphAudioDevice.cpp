@@ -1,6 +1,6 @@
-#include "GraphDevice.h"
+#include "GraphAudioDevice.h"
 
-GraphDevice::GraphDevice(QObject* parent)
+GraphAudioDevice::GraphAudioDevice(QObject* parent)
    : QObject(parent)
    , Remember::Root()
    , graphs(this)

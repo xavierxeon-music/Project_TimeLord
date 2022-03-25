@@ -1,5 +1,5 @@
-#ifndef GraphDeviceH
-#define GraphDeviceH
+#ifndef GraphAudioDeviceH
+#define GraphAudioDeviceH
 
 #include <Remember.h>
 #include <QObject>
@@ -8,11 +8,12 @@
 
 #include "MainWidget.h"
 
-class GraphDevice : public QObject, public Remember::Root
+// not named AudioDevice to avoid name clashes!
+class GraphAudioDevice : public QObject, public Remember::Root
 {
    Q_OBJECT
 public:
-   GraphDevice(QObject* parent);
+   GraphAudioDevice(QObject* parent);
 
 private:
    friend class DataCore;
@@ -22,4 +23,4 @@ private:
    AudioDevice::Driver audioDriver;
 };
 
-#endif // NOT GraphDeviceH
+#endif // NOT GraphAudioDeviceH

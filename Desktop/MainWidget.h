@@ -2,21 +2,23 @@
 #define MainWidgetH
 
 #include <Remember.h>
+#include <QWidget>
+
 #include <QSplitter>
 
 #include <Blocks/Graph.h>
 #include <FileStorage.h>
 #include <MidiBridge.h>
 
+#include "DeviceModel.h"
+#include "DeviceWidget.h"
 #include "GraphWidget.h"
 #include "PointModel.h"
 #include "PointWidget.h"
-#include "PortModel.h"
-#include "PortWidget.h"
 
-class GraphDevice;
+class GraphAudioDevice;
 
-class MainWidget : public QSplitter, public Remember::Root
+class MainWidget : public QWidget, public Remember::Root
 {
    Q_OBJECT
 public: // things to remeber
@@ -26,8 +28,8 @@ public:
    MainWidget();
 
 public slots:
+   void slotNewFile();
    void slotLoadFromFile();
-   void slotStartLoadFromdDaisy();
    void slotSaveToFile();
    void slotSaveToDaisy();
 
@@ -41,14 +43,16 @@ private:
 
 private:
    GraphList_ graphs;
-   GraphDevice* graphDevice;
+   GraphAudioDevice* graphAudioDevice;
 
    MidiBridge midiBridge;
    FileStorage fileStorageDaisy;
    FileStorage fileStorageDevice;
 
-   PortWidget* portWidget;
-   PortModel* portModel;
+   QSplitter* splitter;
+
+   DeviceWidget* deviceWidget;
+   DeviceModel* deviceModel;
 
    PointWidget* pointWidget;
    PointModel* pointModel;

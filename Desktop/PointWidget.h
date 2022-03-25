@@ -1,22 +1,24 @@
 #ifndef PointWidgetH
 #define PointWidgetH
 
-#include "DataCore.h"
-#include <QWidget>
+#include "AbstractWidget.h"
 
 class PointModel;
 
-class PointWidget : public QWidget, public DataCore
+class PointWidget : public AbstractWidget
 {
    Q_OBJECT
 public:
-   PointWidget(MainWidget* mainWidget, PointModel* pointModel);
+   PointWidget(MainWidget* mainWidget, QToolBar* toolBar, PointModel* pointModel);
 
 signals:
    void signalPointSelected(const uint8_t& index);
 
 private slots:
    void slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous);
+
+private:
+   PointModel* pointModel;
 };
 
 #endif // PointWidgetH

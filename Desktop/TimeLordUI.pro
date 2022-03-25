@@ -3,29 +3,31 @@ TEMPLATE = app
 
 QT += widgets svg
 CONFIG += audio midi
-DESTDIR = ..
+DESTDIR = ../bin
 
 include(../../../Base/DesktopApp.pri)
 
 HEADERS += \
+   AbstractWidget.h \
    DataCore.h \
-   GraphDevice.h \
+   DeviceModel.h \
+   GraphAudioDevice.h \
    GraphWidget.h \
    MainWidget.h \
    PointModel.h \
    PointWidget.h \
-   PortModel.h \
-   PortWidget.h
+   DeviceWidget.h
 
 SOURCES += \
+   AbstractWidget.cpp \
    DataCore.cpp \
-   GraphDevice.cpp \
+   DeviceModel.cpp \
+   GraphAudioDevice.cpp \
    GraphWidget.cpp \
    MainWidget.cpp \
    PointModel.cpp \
    PointWidget.cpp \
-   PortModel.cpp \
-   PortWidget.cpp
+   DeviceWidget.cpp
 
 FORMS +=
 

@@ -1,14 +1,13 @@
 #ifndef GraphWidgetH
 #define GraphWidgetH
 
-#include "DataCore.h"
-#include <QWidget>
+#include "AbstractWidget.h"
 
-class GraphWidget : public QWidget, public DataCore
+class GraphWidget : public AbstractWidget
 {
    Q_OBJECT
 public:
-   GraphWidget(MainWidget* mainWidget);
+   GraphWidget(MainWidget* mainWidget, QToolBar* toolBar);
 };
 
 #endif // GraphWidgetH

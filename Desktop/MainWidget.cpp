@@ -2,24 +2,27 @@
 
 #include <QApplication>
 #include <QCloseEvent>
+#include <QToolBar>
+#include <QVBoxLayout>
 
 #include <SettingsUI.h>
 
-#include "GraphDevice.h"
+#include "GraphAudioDevice.h"
 
 using Channel = AudioDevice::Channel;
 using Frame = AudioDevice::Frame;
 
 MainWidget::MainWidget()
-   : QSplitter(nullptr)
+   : QWidget(nullptr)
    , Remember::Root()
    , graphs(this)
-   , graphDevice(new GraphDevice(this))
+   , graphAudioDevice(new GraphAudioDevice(this))
    , midiBridge(this)
    , fileStorageDaisy(this)
-   , fileStorageDevice(graphDevice)
-   , portWidget(nullptr)
-   , portModel(nullptr)
+   , fileStorageDevice(graphAudioDevice)
+   , splitter(nullptr)
+   , deviceWidget(nullptr)
+   , deviceModel(nullptr)
    , pointWidget(nullptr)
    , pointModel(nullptr)
    , graphWidget(nullptr)
@@ -29,24 +32,41 @@ MainWidget::MainWidget()
    midiBridge.initMidi();
    midiBridge.onLoadedFromDaisy(this, &MainWidget::loadedFromDaisy);
 
+   QToolBar* toolBar = new QToolBar(this);
+   toolBar->setIconSize(QSize(24, 24));
 
-   portModel = new PortModel(this);
+   deviceModel = new DeviceModel(this);
    pointModel = new PointModel(this);
 
-   portWidget = new PortWidget(this, portModel);
-   pointWidget = new PointWidget(this, pointModel);
-   graphWidget = new GraphWidget(this);
+   deviceWidget = new DeviceWidget(this, toolBar, deviceModel);
+   pointWidget = new PointWidget(this, toolBar, pointModel);
+   graphWidget = new GraphWidget(this, toolBar);
 
-   connect(portWidget, &PortWidget::signalPortChanged, pointModel, &PointModel::slotPortChanged);
-   portModel->init();
+   connect(deviceWidget, &DeviceWidget::signalPortChanged, pointModel, &PointModel::slotPortChanged);
+   deviceModel->init();
 
-   addWidget(portWidget);
-   addWidget(pointWidget);
-   addWidget(graphWidget);
+   splitter = new QSplitter(this);
+   splitter->setObjectName("MainSplitter");
+   splitter->addWidget(deviceWidget);
+   splitter->addWidget(pointWidget);
+   splitter->addWidget(graphWidget);
+
+   QVBoxLayout* masterLayout = new QVBoxLayout(this);
+   masterLayout->setContentsMargins(0, 0, 0, 0);
+   masterLayout->setSpacing(0);
+   masterLayout->addWidget(toolBar);
+   masterLayout->addWidget(splitter);
 
    SettingsUI widgetSettings("MainWidget");
    restoreGeometry(widgetSettings.bytes("Geometry"));
-   restoreState(widgetSettings.bytes("State"));
+   splitter->restoreState(widgetSettings.bytes("State"));
+}
+
+void MainWidget::slotNewFile()
+{
+   const QString fileName;
+   fileStorageDaisy.loadFromFile(fileName);
+   fileStorageDevice.loadFromFile(fileName);
 }
 
 void MainWidget::slotLoadFromFile()
@@ -55,11 +75,6 @@ void MainWidget::slotLoadFromFile()
    fileStorageDaisy.loadFromFile(fileName);
    fileStorageDevice.loadFromFile(fileName);
    updateUI();
-}
-
-void MainWidget::slotStartLoadFromdDaisy()
-{
-   midiBridge.requestLoadFromDaisy();
 }
 
 void MainWidget::slotSaveToFile()
@@ -87,7 +102,7 @@ void MainWidget::closeEvent(QCloseEvent* ce)
 {
    SettingsUI widgetSettings("MainWidget");
    widgetSettings.write("Geometry", saveGeometry());
-   widgetSettings.write("State", saveState());
+   widgetSettings.write("State", splitter->saveState());
 
    ce->accept();
 }

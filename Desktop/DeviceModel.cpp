@@ -1,14 +1,14 @@
-#include "PortModel.h"
+#include "DeviceModel.h"
 
 #include "MainWidget.h"
 
-PortModel::PortModel(MainWidget* mainWidget)
+DeviceModel::DeviceModel(MainWidget* mainWidget)
    : QStandardItemModel(mainWidget)
    , DataCore(mainWidget)
 {
 }
 
-void PortModel::init()
+void DeviceModel::init()
 {
    clear();
 

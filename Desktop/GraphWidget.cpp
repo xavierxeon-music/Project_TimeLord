@@ -7,18 +7,13 @@
 
 #include "MainWidget.h"
 
-GraphWidget::GraphWidget(MainWidget* mainWidget)
-   : QWidget(mainWidget)
-   , DataCore(mainWidget)
+GraphWidget::GraphWidget(MainWidget* mainWidget, QToolBar* toolBar)
+   : AbstractWidget(mainWidget, toolBar, "graph")
 {
-   QToolBar* toolBar = new QToolBar(this);
-   toolBar->setIconSize(QSize(24, 24));
-
    QLabel* label = new QLabel("Graph", this);
 
    QVBoxLayout* masterLayout = new QVBoxLayout(this);
    masterLayout->setContentsMargins(0, 0, 0, 0);
-   masterLayout->addWidget(toolBar);
    masterLayout->addWidget(label);
 }
 
