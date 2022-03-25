@@ -48,4 +48,12 @@ void PointModel::slotPointSelected(const uint8_t& index)
 void PointModel::update()
 {
    clear();
+   const Graph& currentGraph = graph(Provider::DaisyPatch, portIndex);
+
+   QStandardItem* parentItem = new QStandardItem(currentGraph.stageCount());
+   parentItem->setEditable(false);
+   for (uint8_t index = 0; index < currentGraph.stageCount(); index++)
+   {
+      const Graph::Stage& stage = currentGraph.getStage(index);
+   }
 }
