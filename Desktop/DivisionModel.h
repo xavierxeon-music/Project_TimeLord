@@ -1,10 +1,13 @@
 #ifndef DivisionModelH
 #define DivisionModelH
 
-class DivisionModel
+#include <QStandardItemModel>
+
+class DivisionModel : public QStandardItemModel
 {
+   Q_OBJECT
 public:
-   DivisionModel();
+   DivisionModel(QObject* parent);
 };
 
 #endif // NOT DivisionModelH

@@ -1,27 +1,29 @@
-#ifndef ComboBoxDelegateH
-#define ComboBoxDelegateH
+#ifndef DelegateComboBoxH
+#define DelegateComboBoxH
 
 #include "DataCore.h"
 #include <QStyledItemDelegate>
 
 class QStandardItemModel;
 
-class ComboBoxDelegate : public QStyledItemDelegate, public DataCore
+namespace Delegate
 {
-   Q_OBJECT
+   class ComboBox : public QStyledItemDelegate, public DataCore
+   {
+      Q_OBJECT
 
-public:
-   ComboBoxDelegate(QObject* parent, MainWidget* mainWidget, const Model::Target& target);
+   public:
+      ComboBox(QObject* parent, MainWidget* mainWidget, QStandardItemModel* model);
 
-public:
-   QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-   void setEditorData(QWidget* editor, const QModelIndex& index) const override;
-   void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
-   void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+   public:
+      QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+      void setEditorData(QWidget* editor, const QModelIndex& index) const override;
+      void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
+      void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
-private:
-   const Model::Target target;
-   QStandardItemModel* model;
-};
+   private:
+      QStandardItemModel* model;
+   };
+} // namespace Delegate
 
-#endif // NOT ComboBoxDelegateH
+#endif // NOT DelegateComboBoxH

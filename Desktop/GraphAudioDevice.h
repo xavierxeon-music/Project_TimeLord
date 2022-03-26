@@ -19,8 +19,13 @@ private:
    friend class DataCore;
 
 private:
+   void audioLoop(const float& audioCallbackRate);
+
+private:
    MainWidget::GraphList_ graphs;
    AudioDevice::Driver audioDriver;
+   AudioDevice::InputsTempo tempo;
+   AudioDevice::OutputCV outputs[16];
 };
 
 #endif // NOT GraphAudioDeviceH

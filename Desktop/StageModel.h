@@ -10,6 +10,9 @@ class StageModel : public QStandardItemModel, public DataCore
 public:
    StageModel(MainWidget* mainWidget);
 
+signals:
+   void signalGraphLengthChanged(uint8_t graphIndex);
+
 public slots:
    void slotPortChanged(const Model::Provider newProvider, const uint8_t& newGraphIndex);
    void slotInsertPoint();
@@ -20,6 +23,9 @@ public slots:
 
 public:
    void update();
+
+private:
+   bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
 
 private:
    Model::Provider provider;

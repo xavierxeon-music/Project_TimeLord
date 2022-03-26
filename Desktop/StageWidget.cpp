@@ -6,6 +6,7 @@
 #include <QTreeView>
 #include <QVBoxLayout>
 
+#include "DelegateSpinBox.h"
 #include "MainWidget.h"
 
 StageWidget::StageWidget(MainWidget* mainWidget, QToolBar* toolBar, StageModel* stageModel)
@@ -22,6 +23,9 @@ StageWidget::StageWidget(MainWidget* mainWidget, QToolBar* toolBar, StageModel* 
 
    QTreeView* pointsTreeView = new QTreeView(this);
    pointsTreeView->setModel(stageModel);
+   pointsTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this, mainWidget));
+   pointsTreeView->setItemDelegateForColumn(2, new Delegate::SpinBox(this, mainWidget));
+
    pointsTreeView->setRootIsDecorated(false);
    connect(pointsTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &StageWidget::slotCurrentSelectionChanged);
 

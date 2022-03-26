@@ -5,9 +5,10 @@
 #include <QTreeView>
 #include <QVBoxLayout>
 
-#include "ComboBoxDelegate.h"
+#include "DelegateComboBox.h"
+#include "DelegateSpinBox.h"
+#include "DivisionModel.h"
 #include "MainWidget.h"
-#include "SpinBoxDelegate.h"
 
 GraphWidget::GraphWidget(MainWidget* mainWidget, QToolBar* toolBar, GraphModel* graphModel)
    : AbstractWidget(mainWidget, toolBar, "graph")
@@ -23,8 +24,8 @@ GraphWidget::GraphWidget(MainWidget* mainWidget, QToolBar* toolBar, GraphModel* 
 
    QTreeView* portTreeView = new QTreeView(this);
    portTreeView->setModel(graphModel);
-   portTreeView->setItemDelegateForColumn(1, new SpinBoxDelegate(this, mainWidget, Model::Target::GraphLength));
-   portTreeView->setItemDelegateForColumn(2, new ComboBoxDelegate(this, mainWidget, Model::Target::GraphStepSize));
+   portTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this, mainWidget));
+   portTreeView->setItemDelegateForColumn(2, new Delegate::ComboBox(this, mainWidget, new DivisionModel(this)));
    portTreeView->setRootIsDecorated(false);
    connect(portTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &GraphWidget::slotCurrentSelectionChanged);
 

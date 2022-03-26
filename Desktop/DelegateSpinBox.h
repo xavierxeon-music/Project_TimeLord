@@ -1,24 +1,25 @@
-#ifndef SpinBoxDelegateH
-#define SpinBoxDelegateH
+#ifndef DelegateSpinBoxH
+#define DelegateSpinBoxH
 
 #include <QStyledItemDelegate>
 #include "DataCore.h"
 
-class SpinBoxDelegate : public QStyledItemDelegate, public DataCore
+namespace Delegate
 {
-   Q_OBJECT
+   class SpinBox : public QStyledItemDelegate, public DataCore
+   {
+      Q_OBJECT
 
-public:
-   SpinBoxDelegate(QObject* parent, MainWidget* mainWidget, const Model::Target& target);
+   public:
+      SpinBox(QObject* parent, MainWidget* mainWidget);
 
-public:
-   QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-   void setEditorData(QWidget* editor, const QModelIndex& index) const override;
-   void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
-   void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+   public:
+      QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+      void setEditorData(QWidget* editor, const QModelIndex& index) const override;
+      void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
+      void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
-private:
-   const Model::Target target;
-};
+   };
+} // namespace Delegate
 
-#endif // NOT SpinBoxDelegateH
+#endif // NOT DelegateSpinBoxH

@@ -9,27 +9,29 @@ include(../../../Base/DesktopApp.pri)
 
 HEADERS += \
    AbstractWidget.h \
-   ComboBoxDelegate.h \
+   DelegateComboBox.h \
    DataCore.h \
+   DivisionModel.h \
    GraphAudioDevice.h \
    GraphModel.h \
    GraphVisuWidget.h \
    GraphWidget.h \
    MainWidget.h \
-   SpinBoxDelegate.h \
+   DelegateSpinBox.h \
    StageModel.h \
    StageWidget.h \
 
 SOURCES += \
    AbstractWidget.cpp \
-   ComboBoxDelegate.cpp \
+   DelegateComboBox.cpp \
    DataCore.cpp \
+   DivisionModel.cpp \
    GraphAudioDevice.cpp \
    GraphModel.cpp \
    GraphVisuWidget.cpp \
    GraphWidget.cpp \
    MainWidget.cpp \
-   SpinBoxDelegate.cpp \
+   DelegateSpinBox.cpp \
    StageModel.cpp \
    StageWidget.cpp \
 

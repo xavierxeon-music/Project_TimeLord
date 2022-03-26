@@ -14,6 +14,7 @@ namespace Model
       None,
       GraphLength,
       GraphStepSize,
+      GraphLoop,
       GraphStageCount,
       StageHeight,
       StageLength
@@ -25,7 +26,8 @@ namespace Model
       static constexpr int Provider = Qt::UserRole + 10;
       static constexpr int GraphIndex = Qt::UserRole + 11;
       static constexpr int StageIndex = Qt::UserRole + 12;
-      static constexpr int Data = Qt::UserRole + 13;   // non integer data in original foramt
+      static constexpr int Data = Qt::UserRole + 13;   // non integer data in original format
+      static constexpr int Target = Qt::UserRole + 14; // the target enum
    };
 
    enum class Provider : uint8_t
