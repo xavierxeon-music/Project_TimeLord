@@ -10,11 +10,11 @@
 #include <FileStorage.h>
 #include <MidiBridge.h>
 
-#include "DeviceModel.h"
-#include "DeviceWidget.h"
+#include "GraphModel.h"
+#include "GraphVisuWidget.h"
 #include "GraphWidget.h"
-#include "PointModel.h"
-#include "PointWidget.h"
+#include "StageModel.h"
+#include "StageWidget.h"
 
 class GraphAudioDevice;
 
@@ -50,13 +50,13 @@ private:
 
    QSplitter* splitter;
 
-   DeviceWidget* deviceWidget;
-   DeviceModel* deviceModel;
-
-   PointWidget* pointWidget;
-   PointModel* pointModel;
-
    GraphWidget* graphWidget;
+   GraphModel* graphModel;
+
+   StageWidget* stageWidget;
+   StageModel* stageModel;
+
+   GraphVisuWidget* graphVisuWidget;
 };
 
 #endif // MainWidgetH

@@ -1,8 +1,8 @@
-#include "PointModel.h"
+#include "StageModel.h"
 
 #include "MainWidget.h"
 
-PointModel::PointModel(MainWidget* mainWidget)
+StageModel::StageModel(MainWidget* mainWidget)
    : QStandardItemModel(mainWidget)
    , DataCore(mainWidget)
    , provider(Model::Provider::DaisyPatch)
@@ -11,14 +11,14 @@ PointModel::PointModel(MainWidget* mainWidget)
 {
 }
 
-void PointModel::slotPortChanged(const Model::Provider newProvider, const uint8_t& newGraphIndex)
+void StageModel::slotPortChanged(const Model::Provider newProvider, const uint8_t& newGraphIndex)
 {
    provider = newProvider;
    graphIndex = newGraphIndex;
    update();
 }
 
-void PointModel::slotInsertPoint()
+void StageModel::slotInsertPoint()
 {
    Graph* graph = getGraph(provider, graphIndex);
    graph->addStage(255, selectedStageIndex, graphIndex, true);
@@ -26,27 +26,27 @@ void PointModel::slotInsertPoint()
    update();
 }
 
-void PointModel::slotRemovePoint()
+void StageModel::slotRemovePoint()
 {
    qDebug() << __FUNCTION__;
 }
 
-void PointModel::slotMoveBack()
+void StageModel::slotMoveBack()
 {
    qDebug() << __FUNCTION__;
 }
 
-void PointModel::slotMoveForward()
+void StageModel::slotMoveForward()
 {
    qDebug() << __FUNCTION__;
 }
 
-void PointModel::slotPointSelected(const uint8_t& index)
+void StageModel::slotPointSelected(const uint8_t& index)
 {
    selectedStageIndex = index;
 }
 
-void PointModel::update()
+void StageModel::update()
 {
    clear();
    Graph* graph = getGraph(provider, graphIndex);

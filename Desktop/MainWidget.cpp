@@ -22,11 +22,11 @@ MainWidget::MainWidget()
    , fileStorageDaisy(this)
    , fileStorageDevice(graphAudioDevice)
    , splitter(nullptr)
-   , deviceWidget(nullptr)
-   , deviceModel(nullptr)
-   , pointWidget(nullptr)
-   , pointModel(nullptr)
    , graphWidget(nullptr)
+   , graphModel(nullptr)
+   , stageWidget(nullptr)
+   , stageModel(nullptr)
+   , graphVisuWidget(nullptr)
 {
    setWindowTitle("Time Lord UI");
 
@@ -36,21 +36,21 @@ MainWidget::MainWidget()
    QToolBar* toolBar = new QToolBar(this);
    toolBar->setIconSize(QSize(24, 24));
 
-   deviceModel = new DeviceModel(this);
-   pointModel = new PointModel(this);
+   graphModel = new GraphModel(this);
+   stageModel = new StageModel(this);
 
-   deviceWidget = new DeviceWidget(this, toolBar, deviceModel);
-   pointWidget = new PointWidget(this, toolBar, pointModel);
-   graphWidget = new GraphWidget(this, toolBar);
+   graphWidget = new GraphWidget(this, toolBar, graphModel);
+   stageWidget = new StageWidget(this, toolBar, stageModel);
+   graphVisuWidget = new GraphVisuWidget(this, toolBar);
 
-   connect(deviceWidget, &DeviceWidget::signalPortChanged, pointModel, &PointModel::slotPortChanged);
-   deviceModel->update();
+   connect(graphWidget, &GraphWidget::signalPortChanged, stageModel, &StageModel::slotPortChanged);
+   graphModel->update();
 
    splitter = new QSplitter(this);
    splitter->setObjectName("MainSplitter");
-   splitter->addWidget(deviceWidget);
-   splitter->addWidget(pointWidget);
    splitter->addWidget(graphWidget);
+   splitter->addWidget(stageWidget);
+   splitter->addWidget(graphVisuWidget);
 
    QVBoxLayout* masterLayout = new QVBoxLayout(this);
    masterLayout->setContentsMargins(0, 0, 0, 0);
@@ -71,6 +71,9 @@ void MainWidget::slotLoadFromFile()
 
    fileStorageDaisy.loadFromFile(fileName);
    //fileStorageDevice.loadFromFile(fileName + ".device");
+
+   SettingsUI fileSettings;
+   fileSettings.write("LastFile", fileName);
 
    updateUI();
 }
@@ -99,8 +102,8 @@ void MainWidget::loadedFromDaisy()
 
 void MainWidget::updateUI()
 {
-   deviceModel->update();
-   pointModel->update();
+   graphModel->update();
+   stageModel->update();
 }
 
 void MainWidget::closeEvent(QCloseEvent* ce)

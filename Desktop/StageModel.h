@@ -1,14 +1,14 @@
-#ifndef PointModelH
-#define PointModelH
+#ifndef StageModelH
+#define StageModelH
 
 #include "DataCore.h"
 #include <QStandardItemModel>
 
-class PointModel : public QStandardItemModel, public DataCore
+class StageModel : public QStandardItemModel, public DataCore
 {
    Q_OBJECT
 public:
-   PointModel(MainWidget* mainWidget);
+   StageModel(MainWidget* mainWidget);
 
 public slots:
    void slotPortChanged(const Model::Provider newProvider, const uint8_t& newGraphIndex);
@@ -27,4 +27,4 @@ private:
    uint8_t selectedStageIndex;
 };
 
-#endif // PointModelH
+#endif // StageModelH

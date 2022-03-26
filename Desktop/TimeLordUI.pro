@@ -11,27 +11,27 @@ HEADERS += \
    AbstractWidget.h \
    ComboBoxDelegate.h \
    DataCore.h \
-   DeviceModel.h \
    GraphAudioDevice.h \
+   GraphModel.h \
+   GraphVisuWidget.h \
    GraphWidget.h \
    MainWidget.h \
-   PointModel.h \
-   PointWidget.h \
-   DeviceWidget.h \
-   SpinBoxDelegate.h
+   SpinBoxDelegate.h \
+   StageModel.h \
+   StageWidget.h \
 
 SOURCES += \
    AbstractWidget.cpp \
    ComboBoxDelegate.cpp \
    DataCore.cpp \
-   DeviceModel.cpp \
    GraphAudioDevice.cpp \
+   GraphModel.cpp \
+   GraphVisuWidget.cpp \
    GraphWidget.cpp \
    MainWidget.cpp \
-   PointModel.cpp \
-   PointWidget.cpp \
-   DeviceWidget.cpp \
-   SpinBoxDelegate.cpp
+   SpinBoxDelegate.cpp \
+   StageModel.cpp \
+   StageWidget.cpp \
 
 FORMS +=
 

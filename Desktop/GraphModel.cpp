@@ -1,14 +1,14 @@
-#include "DeviceModel.h"
+#include "GraphModel.h"
 
 #include "MainWidget.h"
 
-DeviceModel::DeviceModel(MainWidget* mainWidget)
+GraphModel::GraphModel(MainWidget* mainWidget)
    : QStandardItemModel(mainWidget)
    , DataCore(mainWidget)
 {
 }
 
-void DeviceModel::update()
+void GraphModel::update()
 {
    clear();
    setHorizontalHeaderLabels({"name", "length", "division", "countt"});

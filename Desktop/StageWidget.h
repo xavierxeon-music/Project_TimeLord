@@ -1,15 +1,15 @@
-#ifndef PointWidgetH
-#define PointWidgetH
+#ifndef StageWidgetH
+#define StageWidgetH
 
 #include "AbstractWidget.h"
 
-class PointModel;
+class StageModel;
 
-class PointWidget : public AbstractWidget
+class StageWidget : public AbstractWidget
 {
    Q_OBJECT
 public:
-   PointWidget(MainWidget* mainWidget, QToolBar* toolBar, PointModel* pointModel);
+   StageWidget(MainWidget* mainWidget, QToolBar* toolBar, StageModel* stageModel);
 
 signals:
    void signalPointSelected(const uint8_t& index);
@@ -18,7 +18,7 @@ private slots:
    void slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous);
 
 private:
-   PointModel* pointModel;
+   StageModel* stageModel;
 };
 
-#endif // PointWidgetH
+#endif // StageWidgetH
