@@ -51,7 +51,6 @@ void DeviceModel::update()
             lengthItem->setText(length);
             lengthItem->setData(QVariant::fromValue(provider), Model::Role::Provider);
             lengthItem->setData(QVariant::fromValue(graphIndex), Model::Role::GraphIndex);
-            lengthItem->setData(QVariant::fromValue(Model::Target::GraphLength), Model::Role::Target);
          }
 
          QStandardItem* stepSizeItem = new QStandardItem();
@@ -61,7 +60,6 @@ void DeviceModel::update()
             stepSizeItem->setData(QVariant::fromValue(provider), Model::Role::Provider);
             stepSizeItem->setData(QVariant::fromValue(graphIndex), Model::Role::GraphIndex);
             stepSizeItem->setData(QVariant::fromValue(graph->getStepSize()), Model::Role::Data);
-            stepSizeItem->setData(QVariant::fromValue(Model::Target::GraphStepSize), Model::Role::Target);
          }
 
          QStandardItem* countItem = new QStandardItem();

@@ -2,9 +2,10 @@
 
 #include <QSpinBox>
 
-SpinBoxDelegate::SpinBoxDelegate(QObject* parent, MainWidget* mainWidget)
+SpinBoxDelegate::SpinBoxDelegate(QObject* parent, MainWidget* mainWidget, const Model::Target& target)
    : QStyledItemDelegate(parent)
    , DataCore(mainWidget)
+   , target(target)
 {
 }
 
@@ -13,12 +14,12 @@ QWidget* SpinBoxDelegate::createEditor(QWidget* parent, const QStyleOptionViewIt
    Q_UNUSED(option)
    Q_UNUSED(index)
 
-   QSpinBox* editor = new QSpinBox(parent);
-   editor->setFrame(false);
-   editor->setMinimum(0);
-   editor->setMaximum(100);
+   QSpinBox* spinBox = new QSpinBox(parent);
+   spinBox->setFrame(false);
+   spinBox->setMinimum(0);
+   spinBox->setMaximum(100);
 
-   return editor;
+   return spinBox;
 }
 
 void SpinBoxDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
@@ -35,15 +36,14 @@ void SpinBoxDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, c
    spinBox->interpretText();
    const uint8_t value = spinBox->value();
 
-   model->setData(index, value, Qt::EditRole);
 
    const QVariant itemDataProvider = index.model()->data(index, Model::Role::Provider);
    const Model::Provider provider = itemDataProvider.value<Model::Provider>();
    const int graphIndex = index.model()->data(index, Model::Role::GraphIndex).toInt();
 
    SpinBoxDelegate* unConstMe = const_cast<SpinBoxDelegate*>(this);
+   model->setData(index, value, Qt::EditRole);
 
-   const Model::Target target = index.model()->data(index, Model::Role::Target).value<Model::Target>();
    if (Model::Target::GraphLength == target)
    {
       Graph* graph = unConstMe->getGraph(provider, graphIndex);

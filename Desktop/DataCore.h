@@ -26,7 +26,6 @@ namespace Model
       static constexpr int GraphIndex = Qt::UserRole + 11;
       static constexpr int StageIndex = Qt::UserRole + 12;
       static constexpr int Data = Qt::UserRole + 13;   // non integer data in original foramt
-      static constexpr int Target = Qt::UserRole + 14; // where to write edit results
    };
 
    enum class Provider : uint8_t

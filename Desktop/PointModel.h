@@ -11,7 +11,7 @@ public:
    PointModel(MainWidget* mainWidget);
 
 public slots:
-   void slotPortChanged(const Model::Provider provider, const uint8_t& index);
+   void slotPortChanged(const Model::Provider newProvider, const uint8_t& newGraphIndex);
    void slotInsertPoint();
    void slotRemovePoint();
    void slotMoveBack();
@@ -22,9 +22,9 @@ public:
    void update();
 
 private:
-   Model::Provider portProvider;
-   uint8_t portIndex;
-   uint8_t pointIndex;
+   Model::Provider provider;
+   uint8_t graphIndex;
+   uint8_t selectedStageIndex;
 };
 
 #endif // PointModelH

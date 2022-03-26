@@ -22,7 +22,8 @@ DeviceWidget::DeviceWidget(MainWidget* mainWidget, QToolBar* toolBar, DeviceMode
 
    QTreeView* portTreeView = new QTreeView(this);
    portTreeView->setModel(deviceModel);
-   portTreeView->setItemDelegateForColumn(1, new SpinBoxDelegate(this, mainWidget));
+   portTreeView->setItemDelegateForColumn(1, new SpinBoxDelegate(this, mainWidget, Model::Target::GraphLength));
+   portTreeView->setItemDelegateForColumn(2, new ComboBoxDelegate(this, mainWidget, Model::Target::GraphStepSize));
    portTreeView->setRootIsDecorated(false);
    connect(portTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &DeviceWidget::slotCurrentSelectionChanged);
 
