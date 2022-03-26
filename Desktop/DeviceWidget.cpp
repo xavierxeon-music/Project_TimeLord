@@ -5,7 +5,9 @@
 #include <QTreeView>
 #include <QVBoxLayout>
 
+#include "ComboBoxDelegate.h"
 #include "MainWidget.h"
+#include "SpinBoxDelegate.h"
 
 DeviceWidget::DeviceWidget(MainWidget* mainWidget, QToolBar* toolBar, DeviceModel* deviceModel)
    : AbstractWidget(mainWidget, toolBar, "devices")
@@ -13,7 +15,6 @@ DeviceWidget::DeviceWidget(MainWidget* mainWidget, QToolBar* toolBar, DeviceMode
 {
    setMinimumWidth(150);
 
-   toolBar->addAction(QIcon(":/NewFile.svg"), "NewFile", mainWidget, &MainWidget::slotNewFile);
    toolBar->addAction(QIcon(":/LoadFromFile.svg"), "Load From File", mainWidget, &MainWidget::slotLoadFromFile);
    toolBar->addAction(QIcon(":/SaveToFile.svg"), "Save To File", mainWidget, &MainWidget::slotSaveToFile);
    toolBar->addSeparator();
@@ -21,7 +22,7 @@ DeviceWidget::DeviceWidget(MainWidget* mainWidget, QToolBar* toolBar, DeviceMode
 
    QTreeView* portTreeView = new QTreeView(this);
    portTreeView->setModel(deviceModel);
-   portTreeView->setHeaderHidden(true);
+   portTreeView->setItemDelegateForColumn(1, new SpinBoxDelegate(this, mainWidget));
    portTreeView->setRootIsDecorated(false);
    connect(portTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &DeviceWidget::slotCurrentSelectionChanged);
 
@@ -36,10 +37,12 @@ void DeviceWidget::slotCurrentSelectionChanged(const QModelIndex& current, const
    Q_UNUSED(previous);
 
    QStandardItem* item = deviceModel->itemFromIndex(current);
-   const QVariant itemData = item->data();
-   if (itemData.isNull())
+   const QVariant itemDataProvider = item->data(Model::Role::Provider);
+   if (itemDataProvider.isNull())
       return;
 
-   const Provider provider = itemData.value<Provider>();
-   emit signalPortChanged(provider, current.row());
+   const Model::Provider provider = itemDataProvider.value<Model::Provider>();
+
+   const int graphIndex = item->data(Model::Role::GraphIndex).toInt();
+   emit signalPortChanged(provider, graphIndex);
 }

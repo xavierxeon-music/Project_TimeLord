@@ -28,7 +28,6 @@ public:
    MainWidget();
 
 public slots:
-   void slotNewFile();
    void slotLoadFromFile();
    void slotSaveToFile();
    void slotSaveToDaisy();

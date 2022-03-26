@@ -10,7 +10,7 @@ PointModel::PointModel(MainWidget* mainWidget)
 {
 }
 
-void PointModel::slotPortChanged(const Provider provider, const uint8_t& index)
+void PointModel::slotPortChanged(const Model::Provider provider, const uint8_t& index)
 {
    portProvider = provider;
    portIndex = index;
@@ -19,8 +19,8 @@ void PointModel::slotPortChanged(const Provider provider, const uint8_t& index)
 
 void PointModel::slotInsertPoint()
 {
-   Graph& currentGraph = graph(Provider::DaisyPatch, portIndex);
-   currentGraph.addStage(255, 1, pointIndex, true);
+   Graph* graph = getGraph(portProvider, portIndex);
+   graph->addStage(255, 1, pointIndex, true);
 
    update();
 }
@@ -48,12 +48,13 @@ void PointModel::slotPointSelected(const uint8_t& index)
 void PointModel::update()
 {
    clear();
-   const Graph& currentGraph = graph(Provider::DaisyPatch, portIndex);
+   Graph* graph = getGraph(portProvider, portIndex);
 
-   QStandardItem* parentItem = new QStandardItem(currentGraph.stageCount());
+   QStandardItem* parentItem = new QStandardItem(graph->stageCount());
    parentItem->setEditable(false);
-   for (uint8_t index = 0; index < currentGraph.stageCount(); index++)
+
+   for (uint8_t index = 0; index < graph->stageCount(); index++)
    {
-      const Graph::Stage& stage = currentGraph.getStage(index);
+      const Graph::Stage& stage = graph->getStage(index);
    }
 }

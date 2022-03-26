@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QCloseEvent>
+#include <QFileDialog>
 #include <QToolBar>
 #include <QVBoxLayout>
 
@@ -43,7 +44,7 @@ MainWidget::MainWidget()
    graphWidget = new GraphWidget(this, toolBar);
 
    connect(deviceWidget, &DeviceWidget::signalPortChanged, pointModel, &PointModel::slotPortChanged);
-   deviceModel->init();
+   deviceModel->update();
 
    splitter = new QSplitter(this);
    splitter->setObjectName("MainSplitter");
@@ -62,26 +63,28 @@ MainWidget::MainWidget()
    splitter->restoreState(widgetSettings.bytes("State"));
 }
 
-void MainWidget::slotNewFile()
-{
-   const QString fileName;
-   fileStorageDaisy.loadFromFile(fileName);
-   fileStorageDevice.loadFromFile(fileName);
-}
-
 void MainWidget::slotLoadFromFile()
 {
-   const QString fileName;
+   const QString fileName = QFileDialog::getOpenFileName(this, "Save Data", QString(), "*.timelord");
+   if (fileName.isEmpty())
+      return;
+
    fileStorageDaisy.loadFromFile(fileName);
-   fileStorageDevice.loadFromFile(fileName);
+   //fileStorageDevice.loadFromFile(fileName + ".device");
+
    updateUI();
 }
 
 void MainWidget::slotSaveToFile()
 {
-   const QString fileName;
+   QString fileName = QFileDialog::getSaveFileName(this, "Save Data", QString(), "*.timelord");
+   if (fileName.isEmpty())
+      return;
+   if (!fileName.endsWith(".timelord"))
+      fileName += ".timelord";
+
    fileStorageDaisy.saveToFile(fileName);
-   fileStorageDevice.saveToFile(fileName);
+   //fileStorageDevice.saveToFile(fileName + ".device");
 }
 
 void MainWidget::slotSaveToDaisy()
@@ -96,6 +99,8 @@ void MainWidget::loadedFromDaisy()
 
 void MainWidget::updateUI()
 {
+   deviceModel->update();
+   pointModel->update();
 }
 
 void MainWidget::closeEvent(QCloseEvent* ce)

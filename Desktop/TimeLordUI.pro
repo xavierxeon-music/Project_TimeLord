@@ -9,6 +9,7 @@ include(../../../Base/DesktopApp.pri)
 
 HEADERS += \
    AbstractWidget.h \
+   ComboBoxDelegate.h \
    DataCore.h \
    DeviceModel.h \
    GraphAudioDevice.h \
@@ -16,10 +17,12 @@ HEADERS += \
    MainWidget.h \
    PointModel.h \
    PointWidget.h \
-   DeviceWidget.h
+   DeviceWidget.h \
+   SpinBoxDelegate.h
 
 SOURCES += \
    AbstractWidget.cpp \
+   ComboBoxDelegate.cpp \
    DataCore.cpp \
    DeviceModel.cpp \
    GraphAudioDevice.cpp \
@@ -27,7 +30,8 @@ SOURCES += \
    MainWidget.cpp \
    PointModel.cpp \
    PointWidget.cpp \
-   DeviceWidget.cpp
+   DeviceWidget.cpp \
+   SpinBoxDelegate.cpp
 
 FORMS +=
 

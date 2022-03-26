@@ -11,7 +11,7 @@ public:
    DeviceModel(MainWidget* mainWidget);
 
 public:
-   void init();
+   void update();
 };
 
 #endif // DeviceModelH

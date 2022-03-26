@@ -22,7 +22,6 @@ PointWidget::PointWidget(MainWidget* mainWidget, QToolBar* toolBar, PointModel* 
 
    QTreeView* pointsTreeView = new QTreeView(this);
    pointsTreeView->setModel(pointModel);
-   pointsTreeView->setHeaderHidden(true);
    pointsTreeView->setRootIsDecorated(false);
    connect(pointsTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &PointWidget::slotCurrentSelectionChanged);
 

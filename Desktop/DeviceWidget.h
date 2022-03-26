@@ -12,7 +12,7 @@ public:
    DeviceWidget(MainWidget* mainWidget, QToolBar* toolBar, DeviceModel* deviceModel);
 
 signals:
-   void signalPortChanged(const Provider provider, const uint8_t& index);
+   void signalPortChanged(const Model::Provider provider, const uint8_t& index);
 
 private slots:
    void slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous);
