@@ -21,7 +21,8 @@ void StageModel::slotPortChanged(const Model::Provider newProvider, const uint8_
 void StageModel::slotInsertPoint()
 {
    Graph* graph = getGraph(provider, graphIndex);
-   graph->addStage(255, selectedStageIndex, graphIndex, true);
+   if (!graph->addStage(255, selectedStageIndex, graphIndex, true))
+      return;
 
    update();
 }
@@ -49,6 +50,8 @@ void StageModel::slotPointSelected(const uint8_t& index)
 void StageModel::update()
 {
    clear();
+   setHorizontalHeaderLabels({"index", "start", "length"});
+
    Graph* graph = getGraph(provider, graphIndex);
 
    QStandardItem* parentItem = new QStandardItem(graph->stageCount());
@@ -56,19 +59,22 @@ void StageModel::update()
 
    for (uint8_t itemStageIndex = 0; itemStageIndex < graph->stageCount(); itemStageIndex++)
    {
-      const Graph::Stage& stage = graph->getStage(itemStageIndex);
-
-      QStandardItem* nameItem = new QStandardItem();
+      QStandardItem* indexItem = new QStandardItem();
       {
          QString name = QString::number(itemStageIndex + 1);
-         if (1 == name.length())
+         while (3 != name.length())
             name = QString("0") + name;
 
-         nameItem->setText("Port " + name);
-         nameItem->setData(QVariant::fromValue(provider), Model::Role::Provider);
-         nameItem->setData(QVariant::fromValue(graphIndex), Model::Role::GraphIndex);
-         nameItem->setData(QVariant::fromValue(itemStageIndex), Model::Role::StageIndex);
-         nameItem->setEditable(false);
+         indexItem->setText(name);
+         indexItem->setData(QVariant::fromValue(provider), Model::Role::Provider);
+         indexItem->setData(QVariant::fromValue(graphIndex), Model::Role::GraphIndex);
+         indexItem->setData(QVariant::fromValue(itemStageIndex), Model::Role::StageIndex);
+         indexItem->setEditable(false);
       }
+
+      QStandardItem* startItem = new QStandardItem("start");
+      QStandardItem* lengthItem = new QStandardItem("length");
+
+      invisibleRootItem()->appendRow({indexItem, startItem, lengthItem});
    }
 }

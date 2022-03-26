@@ -7,5 +7,6 @@
         <file>Remove.svg</file>
         <file>SaveToDaisy.svg</file>
         <file>SaveToFile.svg</file>
+        <file>SaveNewFile.svg</file>
     </qresource>
 </RCC>

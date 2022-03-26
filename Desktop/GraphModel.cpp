@@ -11,7 +11,7 @@ GraphModel::GraphModel(MainWidget* mainWidget)
 void GraphModel::update()
 {
    clear();
-   setHorizontalHeaderLabels({"name", "length", "division", "countt"});
+   setHorizontalHeaderLabels({"name", "length", "division", "count"});
 
    const PoviderNameMap& nameMap = getProviderNames();
    for (PoviderNameMap::const_iterator it = nameMap.constBegin(); it != nameMap.constEnd(); it++)

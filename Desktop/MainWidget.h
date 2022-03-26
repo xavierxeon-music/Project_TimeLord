@@ -30,13 +30,20 @@ public:
 public slots:
    void slotLoadFromFile();
    void slotSaveToFile();
+   void slotSaveNewFile();
    void slotSaveToDaisy();
 
 private:
    friend class DataCore;
 
+private slots:
+   void slotCheckDataModified();
+
 private:
-   void loadedFromDaisy();
+   void loadLastFile();
+   void loadInternal(const QString& fileName);
+   void saveInternal(const QString& fileName);
+   void updateWindowTitle(const QString& fileName);
    void updateUI();
    void closeEvent(QCloseEvent* ce) override;
 

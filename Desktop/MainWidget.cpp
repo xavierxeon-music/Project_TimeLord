@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QCloseEvent>
 #include <QFileDialog>
+#include <QTimer>
 #include <QToolBar>
 #include <QVBoxLayout>
 
@@ -28,10 +29,9 @@ MainWidget::MainWidget()
    , stageModel(nullptr)
    , graphVisuWidget(nullptr)
 {
-   setWindowTitle("Time Lord UI");
+   setWindowTitle("Time Lord UI[*]");
 
    midiBridge.initMidi();
-   midiBridge.onLoadedFromDaisy(this, &MainWidget::loadedFromDaisy);
 
    QToolBar* toolBar = new QToolBar(this);
    toolBar->setIconSize(QSize(24, 24));
@@ -61,6 +61,12 @@ MainWidget::MainWidget()
    SettingsUI widgetSettings("MainWidget");
    restoreGeometry(widgetSettings.bytes("Geometry"));
    splitter->restoreState(widgetSettings.bytes("State"));
+
+   loadLastFile();
+
+   QTimer* modfifiedCheckTimer = new QTimer(this);
+   connect(modfifiedCheckTimer, &QTimer::timeout, this, &MainWidget::slotCheckDataModified);
+   modfifiedCheckTimer->start(1000);
 }
 
 void MainWidget::slotLoadFromFile()
@@ -69,25 +75,36 @@ void MainWidget::slotLoadFromFile()
    if (fileName.isEmpty())
       return;
 
-   fileStorageDaisy.loadFromFile(fileName);
-   //fileStorageDevice.loadFromFile(fileName + ".device");
-
    SettingsUI fileSettings;
    fileSettings.write("LastFile", fileName);
 
-   updateUI();
+   loadInternal(fileName);
 }
 
 void MainWidget::slotSaveToFile()
 {
+   SettingsUI fileSettings;
+   QString fileName = fileSettings.string("LastFile");
+
+   if (fileName.isEmpty())
+      return slotSaveNewFile();
+
+   saveInternal(fileName);
+}
+
+void MainWidget::slotSaveNewFile()
+{
    QString fileName = QFileDialog::getSaveFileName(this, "Save Data", QString(), "*.timelord");
    if (fileName.isEmpty())
       return;
+
    if (!fileName.endsWith(".timelord"))
       fileName += ".timelord";
 
-   fileStorageDaisy.saveToFile(fileName);
-   //fileStorageDevice.saveToFile(fileName + ".device");
+   SettingsUI fileSettings;
+   fileSettings.write("LastFile", fileName);
+
+   saveInternal(fileName);
 }
 
 void MainWidget::slotSaveToDaisy()
@@ -95,9 +112,47 @@ void MainWidget::slotSaveToDaisy()
    midiBridge.saveToDaisy();
 }
 
-void MainWidget::loadedFromDaisy()
+void MainWidget::slotCheckDataModified()
 {
+   if (isUnsynced() || graphAudioDevice->isUnsynced())
+      setWindowModified(true);
+   else
+      setWindowModified(false);
+}
+
+void MainWidget::loadLastFile()
+{
+   SettingsUI fileSettings;
+   QString fileName = fileSettings.string("LastFile");
+   if (fileName.isEmpty())
+      return;
+
+   loadInternal(fileName);
+}
+
+void MainWidget::loadInternal(const QString& fileName)
+{
+   fileStorageDaisy.loadFromFile(fileName);
+   fileStorageDevice.loadFromFile(fileName + ".device");
+
+   updateWindowTitle(fileName);
    updateUI();
+}
+
+void MainWidget::saveInternal(const QString& fileName)
+{
+   fileStorageDaisy.saveToFile(fileName);
+   fileStorageDevice.saveToFile(fileName + ".device");
+
+   updateWindowTitle(fileName);
+}
+
+void MainWidget::updateWindowTitle(const QString& fileName)
+{
+   QFileInfo fileInfo(fileName);
+   const QString documentName = fileInfo.baseName();
+
+   setWindowTitle("Time Lord UI - " + documentName + "[*]");
 }
 
 void MainWidget::updateUI()
@@ -108,6 +163,10 @@ void MainWidget::updateUI()
 
 void MainWidget::closeEvent(QCloseEvent* ce)
 {
+   if (isWindowModified())
+   {
+   }
+
    SettingsUI widgetSettings("MainWidget");
    widgetSettings.write("Geometry", saveGeometry());
    widgetSettings.write("State", splitter->saveState());
