@@ -1,7 +1,9 @@
 <RCC>
  <qresource prefix="/">
   <file>Add.svg</file>
+  <file>Cancel.svg</file>
   <file>Division.svg</file>
+  <file>Execute.svg</file>
   <file>Length.svg</file>
   <file>LoadFromFile.svg</file>
   <file>Loop.svg</file>

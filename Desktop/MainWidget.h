@@ -28,6 +28,9 @@ public: // things to remeber
 public:
    MainWidget();
 
+public:
+   void forceRebuildModels();
+
 public slots:
    void slotLoadFromFile();
    void slotSaveToFile();
@@ -45,7 +48,6 @@ private:
    void loadInternal(const QString& fileName);
    void saveInternal(const QString& fileName);
    void updateWindowTitle(const QString& fileName);
-   void updateUI();
    void closeEvent(QCloseEvent* ce) override;
 
 private:

@@ -17,6 +17,10 @@ HEADERS += \
    DataCore.h \
    DivisionModel.h \
    GraphAudioDevice.h \
+   GraphEditAbstract.h \
+   GraphEditDivision.h \
+   GraphEditLength.h \
+   GraphEditLoop.h \
    GraphModel.h \
    GraphVisuWidget.h \
    GraphWidget.h \
@@ -32,6 +36,10 @@ SOURCES += \
    DataCore.cpp \
    DivisionModel.cpp \
    GraphAudioDevice.cpp \
+   GraphEditAbstract.cpp \
+   GraphEditDivision.cpp \
+   GraphEditLength.cpp \
+   GraphEditLoop.cpp \
    GraphModel.cpp \
    GraphVisuWidget.cpp \
    GraphWidget.cpp \

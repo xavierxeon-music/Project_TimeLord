@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QCloseEvent>
 #include <QFileDialog>
+#include <QStackedWidget>
 #include <QTimer>
 #include <QVBoxLayout>
 
@@ -74,6 +75,16 @@ MainWidget::MainWidget()
    QTimer* modfifiedCheckTimer = new QTimer(this);
    connect(modfifiedCheckTimer, &QTimer::timeout, this, &MainWidget::slotCheckDataModified);
    modfifiedCheckTimer->start(1000);
+
+   for (uint8_t index = 0; index < 16; index++)
+      graphs[index].clockReset();
+   graphAudioDevice->clockReset();
+}
+
+void MainWidget::forceRebuildModels()
+{
+   graphModel->rebuild();
+   stageModel->rebuild(Model::Provider::None, 0, false);
 }
 
 void MainWidget::slotLoadFromFile()
@@ -143,7 +154,7 @@ void MainWidget::loadInternal(const QString& fileName)
    fileStorageDevice.loadFromFile(fileName + ".device");
 
    updateWindowTitle(fileName);
-   updateUI();
+   forceRebuildModels();
 
    statusBar->showMessage("file loaded", 2000);
 }
@@ -164,12 +175,6 @@ void MainWidget::updateWindowTitle(const QString& fileName)
    const QString documentName = fileInfo.baseName();
 
    setWindowTitle("Time Lord UI - " + documentName + "[*]");
-}
-
-void MainWidget::updateUI()
-{
-   graphModel->rebuild();
-   stageModel->rebuild(Model::Provider::None, 0, false);
 }
 
 void MainWidget::closeEvent(QCloseEvent* ce)

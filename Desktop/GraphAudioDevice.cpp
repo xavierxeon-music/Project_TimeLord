@@ -22,6 +22,12 @@ GraphAudioDevice::GraphAudioDevice(QObject* parent)
    statusUpdateTimer->start(1000);
 }
 
+void GraphAudioDevice::clockReset()
+{
+   for (uint8_t index = 0; index < 16; index++)
+      graphs[index].clockReset();
+}
+
 void GraphAudioDevice::slotStatusUpdate()
 {
    emit signalStatusUpdate(tempo.getRunState(), tempo.getBeatsPerMinute());
@@ -35,7 +41,8 @@ void GraphAudioDevice::audioLoop(const float& audioCallbackRate)
    {
       if (tempo.isRunningOrFirstTick())
       {
-         const uint8_t value = graphs[index].getCurrentValue();
+         const Tempo::Division division = graphs[index].getStepSize();
+         const uint8_t value = graphs[index].getCurrentValue(tempo.getPercentage(division));
          const float voltage = value * 5.0 / 255.0;
          outputs[index].setVoltage(voltage);
       }
@@ -50,10 +57,4 @@ void GraphAudioDevice::clockTick()
 {
    for (uint8_t index = 0; index < 16; index++)
       graphs[index].clockTick();
-}
-
-void GraphAudioDevice::clockReset()
-{
-   for (uint8_t index = 0; index < 16; index++)
-      graphs[index].clockReset();
 }

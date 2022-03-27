@@ -13,6 +13,10 @@
 GraphWidget::GraphWidget(MainWidget* mainWidget, GraphModel* graphModel)
    : AbstractWidget(mainWidget)
    , graphModel(graphModel)
+   , editStack(nullptr)
+   , lengthEdit(nullptr)
+   , divisionEdit(nullptr)
+   , loopEdit(nullptr)
    , selectedProvider(Model::Provider::None)
    , selectedGraphIndex(0)
 {
@@ -30,6 +34,21 @@ GraphWidget::GraphWidget(MainWidget* mainWidget, GraphModel* graphModel)
    toolBar->addAction(QIcon(":/Division.svg"), "Set Division For All Graphs", this, &GraphWidget::slotSetDivisionAllGraphs);
    toolBar->addAction(QIcon(":/Loop.svg"), "Set Loop For All Graphs", this, &GraphWidget::slotSetLoopAllGraphs);
 
+   editStack = new QStackedWidget(this);
+   editStack->hide();
+   editStack->setFixedHeight(30);
+
+   lengthEdit = new GraphEdit::Length(this, mainWidget);
+   editStack->addWidget(lengthEdit);
+
+   divisionEdit = new GraphEdit::Division(this, mainWidget);
+   editStack->addWidget(divisionEdit);
+
+   loopEdit = new GraphEdit::Loop(this, mainWidget);
+   editStack->addWidget(loopEdit);
+
+   addPayload(editStack);
+
    QTreeView* graphTreeView = new QTreeView(this);
    graphTreeView->setModel(graphModel);
    graphTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this, mainWidget));
@@ -38,6 +57,11 @@ GraphWidget::GraphWidget(MainWidget* mainWidget, GraphModel* graphModel)
    connect(graphTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &GraphWidget::slotCurrentSelectionChanged);
 
    addPayload(graphTreeView);
+}
+
+void GraphWidget::hideEditStack()
+{
+   editStack->hide();
 }
 
 void GraphWidget::slotTrimCurrentGraph()
@@ -53,14 +77,20 @@ void GraphWidget::slotTrimCurrentGraph()
 
 void GraphWidget::slotSetLengthAllGraphs()
 {
+   editStack->show();
+   editStack->setCurrentWidget(lengthEdit);
 }
 
 void GraphWidget::slotSetDivisionAllGraphs()
 {
+   editStack->show();
+   editStack->setCurrentWidget(divisionEdit);
 }
 
 void GraphWidget::slotSetLoopAllGraphs()
 {
+   editStack->show();
+   editStack->setCurrentWidget(loopEdit);
 }
 
 void GraphWidget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)

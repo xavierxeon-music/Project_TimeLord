@@ -18,6 +18,9 @@ public:
 signals:
    void signalStatusUpdate(const Tempo::RunState& runState, const uint8_t& beatsPerMinute);
 
+public:
+   void clockReset();
+
 private:
    friend class DataCore;
 
@@ -27,7 +30,6 @@ private slots:
 private:
    void audioLoop(const float& audioCallbackRate);
    void clockTick();
-   void clockReset();
 
 private:
    QStatusBar* statusBar;
