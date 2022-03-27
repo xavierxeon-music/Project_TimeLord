@@ -19,7 +19,7 @@ Main::Main()
    load();
 
    for (uint8_t index = 0; index < graphs.getSize(); index++)
-      graphs[index].init();
+      graphs[index].clockReset();
 
    pageManager.addPage(new PageOverview(this, tempo));
 

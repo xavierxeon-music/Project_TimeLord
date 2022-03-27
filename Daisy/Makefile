@@ -3,11 +3,6 @@ TARGET = TimeLord
 
 # Sources
 
-COMMON_DIR = $(CURDIR)/../Common
-C_INCLUDES += -I$(COMMON_DIR)
-CPP_SOURCES += \
-	$(COMMON_DIR)/TimeLord.cpp
-
 CPP_SOURCES += \
     Main.cpp \
     PageOverview.cpp 
