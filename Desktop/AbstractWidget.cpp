@@ -5,24 +5,22 @@
 
 #include "MainWidget.h"
 
-AbstractWidget::AbstractWidget(MainWidget* mainWidget, QToolBar* toolBar, const QString& toolBarSectionName)
+AbstractWidget::AbstractWidget(MainWidget* mainWidget)
    : QWidget(mainWidget)
    , DataCore(mainWidget)
+   , toolBar(nullptr)
+   , masterLayout(nullptr)
 {
-   if (0 != toolBar->actions().count())
-   {
-      QFrame* divider = new QFrame(this);
-      divider->setFrameShape(QFrame::VLine);
-      divider->setFixedWidth(5);
-      toolBar->addWidget(divider);
+   toolBar = new QToolBar(this);
+   toolBar->setIconSize(QSize(24, 24));
 
-      QWidget* spacer1 = new QWidget(this);
-      spacer1->setFixedWidth(10);
-      toolBar->addWidget(spacer1);
-   }
-   toolBar->addWidget(new QLabel(toolBarSectionName));
+   masterLayout = new QVBoxLayout(this);
+   masterLayout->setContentsMargins(0, 0, 0, 0);
+   masterLayout->setSpacing(0);
+   masterLayout->addWidget(toolBar);
+}
 
-   QWidget* spacer2 = new QWidget(this);
-   spacer2->setFixedWidth(10);
-   toolBar->addWidget(spacer2);
+void AbstractWidget::addPayload(QWidget* widget)
+{
+   masterLayout->addWidget(widget);
 }

@@ -10,8 +10,8 @@
 #include "DivisionModel.h"
 #include "MainWidget.h"
 
-GraphWidget::GraphWidget(MainWidget* mainWidget, QToolBar* toolBar, GraphModel* graphModel)
-   : AbstractWidget(mainWidget, toolBar, "graph")
+GraphWidget::GraphWidget(MainWidget* mainWidget, GraphModel* graphModel)
+   : AbstractWidget(mainWidget)
    , graphModel(graphModel)
 {
    setMinimumWidth(150);
@@ -22,17 +22,14 @@ GraphWidget::GraphWidget(MainWidget* mainWidget, QToolBar* toolBar, GraphModel* 
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/SaveToDaisy.svg"), "Save To Daisy", mainWidget, &MainWidget::slotSaveToDaisy);
 
-   QTreeView* portTreeView = new QTreeView(this);
-   portTreeView->setModel(graphModel);
-   portTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this, mainWidget));
-   portTreeView->setItemDelegateForColumn(2, new Delegate::ComboBox(this, mainWidget, new DivisionModel(this)));
-   portTreeView->setRootIsDecorated(false);
-   connect(portTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &GraphWidget::slotCurrentSelectionChanged);
+   QTreeView* graphTreeView = new QTreeView(this);
+   graphTreeView->setModel(graphModel);
+   graphTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this, mainWidget));
+   graphTreeView->setItemDelegateForColumn(2, new Delegate::ComboBox(this, mainWidget, new DivisionModel(this)));
+   graphTreeView->setRootIsDecorated(false);
+   connect(graphTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &GraphWidget::slotCurrentSelectionChanged);
 
-   QVBoxLayout* masterLayout = new QVBoxLayout(this);
-   masterLayout->setSpacing(0);
-   masterLayout->setContentsMargins(0, 0, 0, 0);
-   masterLayout->addWidget(portTreeView);
+   addPayload(graphTreeView);
 }
 
 void GraphWidget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)

@@ -20,6 +20,7 @@ HEADERS += \
    DelegateSpinBox.h \
    StageModel.h \
    StageWidget.h \
+   TempoWidget.h
 
 SOURCES += \
    AbstractWidget.cpp \
@@ -34,6 +35,7 @@ SOURCES += \
    DelegateSpinBox.cpp \
    StageModel.cpp \
    StageWidget.cpp \
+   TempoWidget.cpp
 
 FORMS +=
 

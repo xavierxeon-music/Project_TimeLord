@@ -9,7 +9,7 @@ class GraphWidget : public AbstractWidget
 {
    Q_OBJECT
 public:
-   GraphWidget(MainWidget* mainWidget, QToolBar* toolBar, GraphModel* graphModel);
+   GraphWidget(MainWidget* mainWidget, GraphModel* graphModel);
 
 signals:
    void signalPortChanged(const Model::Provider provider, const uint8_t& index);

@@ -4,12 +4,12 @@
 #include <QCloseEvent>
 #include <QFileDialog>
 #include <QTimer>
-#include <QToolBar>
 #include <QVBoxLayout>
 
 #include <SettingsUI.h>
 
 #include "GraphAudioDevice.h"
+#include "TempoWidget.h"
 
 using Channel = AudioDevice::Channel;
 using Frame = AudioDevice::Frame;
@@ -23,6 +23,7 @@ MainWidget::MainWidget()
    , fileStorageDaisy(this)
    , fileStorageDevice(graphAudioDevice)
    , splitter(nullptr)
+   , statusBar(nullptr)
    , graphWidget(nullptr)
    , graphModel(nullptr)
    , stageWidget(nullptr)
@@ -33,30 +34,35 @@ MainWidget::MainWidget()
 
    midiBridge.initMidi();
 
-   QToolBar* toolBar = new QToolBar(this);
-   toolBar->setIconSize(QSize(24, 24));
-
    graphModel = new GraphModel(this);
    stageModel = new StageModel(this);
 
-   graphWidget = new GraphWidget(this, toolBar, graphModel);
-   stageWidget = new StageWidget(this, toolBar, stageModel);
-   graphVisuWidget = new GraphVisuWidget(this, toolBar);
+   graphWidget = new GraphWidget(this, graphModel);
+   stageWidget = new StageWidget(this, stageModel);
+   graphVisuWidget = new GraphVisuWidget(this);
 
    connect(graphWidget, &GraphWidget::signalPortChanged, stageModel, &StageModel::slotPortChanged);
    graphModel->update();
 
    splitter = new QSplitter(this);
+   splitter->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
    splitter->setObjectName("MainSplitter");
    splitter->addWidget(graphWidget);
    splitter->addWidget(stageWidget);
    splitter->addWidget(graphVisuWidget);
 
+   statusBar = new QStatusBar(this);
+   statusBar->setSizeGripEnabled(true);
+
+   TempoWidget* tempoWidget = new TempoWidget(this);
+   statusBar->addPermanentWidget(tempoWidget);
+   connect(graphAudioDevice, &GraphAudioDevice::signalStatusUpdate, tempoWidget, &TempoWidget::slotStatusUpdate);
+
    QVBoxLayout* masterLayout = new QVBoxLayout(this);
    masterLayout->setContentsMargins(0, 0, 0, 0);
    masterLayout->setSpacing(0);
-   masterLayout->addWidget(toolBar);
    masterLayout->addWidget(splitter);
+   masterLayout->addWidget(statusBar);
 
    SettingsUI widgetSettings("MainWidget");
    restoreGeometry(widgetSettings.bytes("Geometry"));
@@ -137,6 +143,8 @@ void MainWidget::loadInternal(const QString& fileName)
 
    updateWindowTitle(fileName);
    updateUI();
+
+   statusBar->showMessage("file loaded", 2000);
 }
 
 void MainWidget::saveInternal(const QString& fileName)
@@ -145,6 +153,8 @@ void MainWidget::saveInternal(const QString& fileName)
    fileStorageDevice.saveToFile(fileName + ".device");
 
    updateWindowTitle(fileName);
+
+   statusBar->showMessage("file saved", 2000);
 }
 
 void MainWidget::updateWindowTitle(const QString& fileName)

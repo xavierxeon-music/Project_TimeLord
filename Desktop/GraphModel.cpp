@@ -6,6 +6,7 @@ GraphModel::GraphModel(MainWidget* mainWidget)
    : QStandardItemModel(mainWidget)
    , DataCore(mainWidget)
 {
+   setHorizontalHeaderLabels({"name", "length", "division", "loop", "count"});
 }
 
 void GraphModel::update()

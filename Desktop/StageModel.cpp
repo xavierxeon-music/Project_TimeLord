@@ -9,6 +9,7 @@ StageModel::StageModel(MainWidget* mainWidget)
    , graphIndex(0)
    , selectedStageIndex(0)
 {
+   setHorizontalHeaderLabels({"index", "height", "length"});
 }
 
 void StageModel::slotPortChanged(const Model::Provider newProvider, const uint8_t& newGraphIndex)

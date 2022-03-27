@@ -9,7 +9,7 @@ class StageWidget : public AbstractWidget
 {
    Q_OBJECT
 public:
-   StageWidget(MainWidget* mainWidget, QToolBar* toolBar, StageModel* stageModel);
+   StageWidget(MainWidget* mainWidget, StageModel* stageModel);
 
 signals:
    void signalPointSelected(const uint8_t& index);

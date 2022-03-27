@@ -5,6 +5,7 @@
 #include <QWidget>
 
 #include <QToolBar>
+#include <QVBoxLayout>
 
 class MainWidget;
 
@@ -12,7 +13,16 @@ class AbstractWidget : public QWidget, public DataCore
 {
    Q_OBJECT
 public:
-   AbstractWidget(MainWidget* mainWidget, QToolBar* toolBar, const QString& toolBarSectionName);
+   AbstractWidget(MainWidget* mainWidget);
+
+protected:
+   void addPayload(QWidget* widget);
+
+protected:
+   QToolBar* toolBar;
+
+private:
+   QVBoxLayout* masterLayout;
 };
 
 #endif // AbstractWidgetH

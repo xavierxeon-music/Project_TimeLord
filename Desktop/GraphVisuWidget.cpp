@@ -1,19 +1,17 @@
 #include "GraphVisuWidget.h"
 
 #include <QAction>
-#include <QLabel>
+#include <QGraphicsView>
 #include <QToolBar>
-#include <QVBoxLayout>
 
 #include "MainWidget.h"
 
-GraphVisuWidget::GraphVisuWidget(MainWidget* mainWidget, QToolBar* toolBar)
-   : AbstractWidget(mainWidget, toolBar, "visu")
+GraphVisuWidget::GraphVisuWidget(MainWidget* mainWidget)
+   : AbstractWidget(mainWidget)
 {
-   QLabel* label = new QLabel("Graph Visu", this);
+   toolBar->addAction(QIcon(":/Add.svg"), "Hello");
 
-   QVBoxLayout* masterLayout = new QVBoxLayout(this);
-   masterLayout->setContentsMargins(0, 0, 0, 0);
-   masterLayout->addWidget(label);
+   QGraphicsView* graphicsView = new QGraphicsView(this);
+   addPayload(graphicsView);
 }
 

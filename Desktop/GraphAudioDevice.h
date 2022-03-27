@@ -15,13 +15,21 @@ class GraphAudioDevice : public QObject, public Remember::Root
 public:
    GraphAudioDevice(QObject* parent);
 
+signals:
+   void signalStatusUpdate(const Tempo::RunState& runState, const uint8_t& beatsPerMinute);
+
 private:
    friend class DataCore;
+
+private:
+   void slotStatusUpdate();
 
 private:
    void audioLoop(const float& audioCallbackRate);
 
 private:
+   QStatusBar* statusBar;
+
    MainWidget::GraphList_ graphs;
    AudioDevice::Driver audioDriver;
    AudioDevice::InputsTempo tempo;

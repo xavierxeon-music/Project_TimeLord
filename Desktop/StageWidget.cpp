@@ -9,8 +9,8 @@
 #include "DelegateSpinBox.h"
 #include "MainWidget.h"
 
-StageWidget::StageWidget(MainWidget* mainWidget, QToolBar* toolBar, StageModel* stageModel)
-   : AbstractWidget(mainWidget, toolBar, "points")
+StageWidget::StageWidget(MainWidget* mainWidget, StageModel* stageModel)
+   : AbstractWidget(mainWidget)
    , stageModel(stageModel)
 {
    toolBar->addAction(QIcon(":/Add.svg"), "Insert Point", stageModel, &StageModel::slotInsertPoint);
@@ -21,18 +21,15 @@ StageWidget::StageWidget(MainWidget* mainWidget, QToolBar* toolBar, StageModel* 
 
    connect(this, &StageWidget::signalPointSelected, stageModel, &StageModel::slotPointSelected);
 
-   QTreeView* pointsTreeView = new QTreeView(this);
-   pointsTreeView->setModel(stageModel);
-   pointsTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this, mainWidget));
-   pointsTreeView->setItemDelegateForColumn(2, new Delegate::SpinBox(this, mainWidget));
+   QTreeView* staggeTreeView = new QTreeView(this);
+   staggeTreeView->setModel(stageModel);
+   staggeTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this, mainWidget));
+   staggeTreeView->setItemDelegateForColumn(2, new Delegate::SpinBox(this, mainWidget));
 
-   pointsTreeView->setRootIsDecorated(false);
-   connect(pointsTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &StageWidget::slotCurrentSelectionChanged);
+   staggeTreeView->setRootIsDecorated(false);
+   connect(staggeTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &StageWidget::slotCurrentSelectionChanged);
 
-   QVBoxLayout* masterLayout = new QVBoxLayout(this);
-   masterLayout->setSpacing(0);
-   masterLayout->setContentsMargins(0, 0, 0, 0);
-   masterLayout->addWidget(pointsTreeView);
+   addPayload(staggeTreeView);
 }
 
 void StageWidget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)

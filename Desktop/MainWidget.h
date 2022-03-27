@@ -5,6 +5,7 @@
 #include <QWidget>
 
 #include <QSplitter>
+#include <QStatusBar>
 
 #include <Blocks/Graph.h>
 #include <FileStorage.h>
@@ -56,6 +57,7 @@ private:
    FileStorage fileStorageDevice;
 
    QSplitter* splitter;
+   QStatusBar* statusBar;
 
    GraphWidget* graphWidget;
    GraphModel* graphModel;
