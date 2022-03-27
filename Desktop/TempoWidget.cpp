@@ -17,10 +17,13 @@ void TempoWidget::slotStatusUpdate(const Tempo::RunState& runState, const uint8_
 {
    QString statusText;
    if (Tempo::RunState::Running == runState)
-      statusText += "@ ";
+   {
+      statusText += QChar(5125);
+      statusText += QString(" ");
+      statusText += QString::number(beatsPerMinute);
+      statusText += " bpm";
+   }
    else
-      statusText += "_ ";
-   statusText += QString::number(beatsPerMinute);
-   statusText += " bpm";
+      statusText += "stoped";
    bpmInfo->setText(statusText);
 }

@@ -21,11 +21,13 @@ signals:
 private:
    friend class DataCore;
 
-private:
+private slots:
    void slotStatusUpdate();
 
 private:
    void audioLoop(const float& audioCallbackRate);
+   void clockTick();
+   void clockReset();
 
 private:
    QStatusBar* statusBar;

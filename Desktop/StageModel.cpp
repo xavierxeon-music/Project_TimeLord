@@ -5,57 +5,19 @@
 StageModel::StageModel(MainWidget* mainWidget)
    : QStandardItemModel(mainWidget)
    , DataCore(mainWidget)
-   , provider(Model::Provider::DaisyPatch)
-   , graphIndex(0)
-   , selectedStageIndex(0)
+
 {
    setHorizontalHeaderLabels({"index", "height", "length"});
 }
 
-void StageModel::slotPortChanged(const Model::Provider newProvider, const uint8_t& newGraphIndex)
-{
-   provider = newProvider;
-   graphIndex = newGraphIndex;
-   update();
-}
-
-void StageModel::slotInsertPoint()
-{
-   Graph* graph = getGraph(provider, graphIndex);
-
-   if (Graph::LengthStatus::Changed != graph->addStage(255, selectedStageIndex, graphIndex, true))
-      return;
-
-   emit signalGraphLengthChanged(graphIndex);
-   update();
-}
-
-void StageModel::slotRemovePoint()
-{
-   qDebug() << __FUNCTION__;
-}
-
-void StageModel::slotMoveBack()
-{
-   qDebug() << __FUNCTION__;
-}
-
-void StageModel::slotMoveForward()
-{
-   qDebug() << __FUNCTION__;
-}
-
-void StageModel::slotPointSelected(const uint8_t& index)
-{
-   selectedStageIndex = index;
-}
-
-void StageModel::update()
+void StageModel::rebuild(const Model::Provider provider, const uint8_t& graphIndex, bool lengthChanged)
 {
    clear();
    setHorizontalHeaderLabels({"index", "height", "length"});
 
    Graph* graph = getGraph(provider, graphIndex);
+   if (!graph)
+      return;
 
    QStandardItem* parentItem = new QStandardItem(graph->stageCount());
    parentItem->setEditable(false);
@@ -97,6 +59,9 @@ void StageModel::update()
 
       invisibleRootItem()->appendRow({indexItem, startItem, lengthItem});
    }
+
+   if (lengthChanged)
+      emit signalGraphLengthChanged(provider, graphIndex);
 }
 
 bool StageModel::setData(const QModelIndex& index, const QVariant& value, int role)
@@ -126,6 +91,8 @@ bool StageModel::setData(const QModelIndex& index, const QVariant& value, int ro
    {
       const uint8_t length = value.toInt();
       graph->setStageLength(stageIndex, length);
+
+      emit signalGraphLengthChanged(provider, graphIndex);
    }
 
    return result;

@@ -10,8 +10,11 @@ class GraphModel : public QStandardItemModel, public DataCore
 public:
    GraphModel(MainWidget* mainWidget);
 
+public slots:
+   void slotGraphLengthChanged(const Model::Provider& provider, const uint8_t& graphIndex);
+
 public:
-   void update();
+   void rebuild();
 
 private:
    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;

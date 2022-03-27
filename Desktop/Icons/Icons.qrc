@@ -1,12 +1,20 @@
 <RCC>
-    <qresource prefix="/">
-        <file>Add.svg</file>
-        <file>Back.svg</file>
-        <file>Forward.svg</file>
-        <file>LoadFromFile.svg</file>
-        <file>Remove.svg</file>
-        <file>SaveToDaisy.svg</file>
-        <file>SaveToFile.svg</file>
-        <file>SaveNewFile.svg</file>
-    </qresource>
+ <qresource prefix="/">
+  <file>Add.svg</file>
+  <file>Division.svg</file>
+  <file>Length.svg</file>
+  <file>LoadFromFile.svg</file>
+  <file>Loop.svg</file>
+  <file>MoveBack.svg</file>
+  <file>MoveDown.svg</file>
+  <file>MoveForward.svg</file>
+  <file>MoveUp.svg</file>
+  <file>Remove.svg</file>
+  <file>SaveNewFile.svg</file>
+  <file>SaveToDaisy.svg</file>
+  <file>SaveToFile.svg</file>
+  <file>Trim.svg</file>
+  <file>ZoomIn.svg</file>
+  <file>ZoomOut.svg</file>
+ </qresource>
 </RCC>

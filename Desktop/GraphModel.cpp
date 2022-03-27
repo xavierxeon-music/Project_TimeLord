@@ -9,7 +9,29 @@ GraphModel::GraphModel(MainWidget* mainWidget)
    setHorizontalHeaderLabels({"name", "length", "division", "loop", "count"});
 }
 
-void GraphModel::update()
+void GraphModel::slotGraphLengthChanged(const Model::Provider& provider, const uint8_t& graphIndex)
+{
+   for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
+   {
+      QStandardItem* nameItem = invisibleRootItem()->child(row, 0);
+      if (nameItem->data(Model::Role::Provider).value<Model::Provider>() != provider)
+         continue;
+      if (nameItem->data(Model::Role::GraphIndex).value<uint8_t>() != graphIndex)
+         continue;
+
+      Graph* graph = getGraph(provider, graphIndex);
+
+      QStandardItem* lengthItem = invisibleRootItem()->child(row, 1);
+      const QString length = QString::number(graph->getLength());
+      lengthItem->setText(length);
+
+      QStandardItem* countItem = invisibleRootItem()->child(row, 4);
+      const QString count = QString::number(graph->stageCount());
+      countItem->setText(count);
+   }
+}
+
+void GraphModel::rebuild()
 {
    clear();
    setHorizontalHeaderLabels({"name", "length", "division", "loop", "count"});
@@ -18,17 +40,6 @@ void GraphModel::update()
    for (PoviderNameMap::const_iterator it = nameMap.constBegin(); it != nameMap.constEnd(); it++)
    {
       const Model::Provider provider = it.key();
-
-      QStandardItem* parentItem = new QStandardItem(it.value());
-      parentItem->setEditable(false);
-
-      QStandardItem* blankItem1 = new QStandardItem("");
-      blankItem1->setEditable(false);
-
-      QStandardItem* blankItem2 = new QStandardItem("");
-      blankItem2->setEditable(false);
-
-      invisibleRootItem()->appendRow({parentItem, blankItem1, blankItem2});
 
       for (uint8_t graphIndex = 0; graphIndex < 16; graphIndex++)
       {
@@ -40,7 +51,7 @@ void GraphModel::update()
             if (1 == name.length())
                name = QString("0") + name;
 
-            nameItem->setText("Port " + name);
+            nameItem->setText(it.value() + " " + name);
             nameItem->setData(QVariant::fromValue(provider), Model::Role::Provider);
             nameItem->setData(QVariant::fromValue(graphIndex), Model::Role::GraphIndex);
             nameItem->setEditable(false);
@@ -83,7 +94,7 @@ void GraphModel::update()
             countItem->setEditable(false);
          }
 
-         parentItem->appendRow({nameItem, lengthItem, stepSizeItem, loopItem, countItem});
+         invisibleRootItem()->appendRow({nameItem, lengthItem, stepSizeItem, loopItem, countItem});
       }
    }
 }

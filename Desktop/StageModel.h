@@ -11,26 +11,13 @@ public:
    StageModel(MainWidget* mainWidget);
 
 signals:
-   void signalGraphLengthChanged(uint8_t graphIndex);
-
-public slots:
-   void slotPortChanged(const Model::Provider newProvider, const uint8_t& newGraphIndex);
-   void slotInsertPoint();
-   void slotRemovePoint();
-   void slotMoveBack();
-   void slotMoveForward();
-   void slotPointSelected(const uint8_t& index);
+   void signalGraphLengthChanged(const Model::Provider& provider, const uint8_t& graphIndex);
 
 public:
-   void update();
+   void rebuild(const Model::Provider provider, const uint8_t& graphIndex, bool lengthChanged);
 
 private:
    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
-
-private:
-   Model::Provider provider;
-   uint8_t graphIndex;
-   uint8_t selectedStageIndex;
 };
 
 #endif // StageModelH

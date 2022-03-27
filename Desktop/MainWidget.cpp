@@ -41,8 +41,9 @@ MainWidget::MainWidget()
    stageWidget = new StageWidget(this, stageModel);
    graphVisuWidget = new GraphVisuWidget(this);
 
-   connect(graphWidget, &GraphWidget::signalPortChanged, stageModel, &StageModel::slotPortChanged);
-   graphModel->update();
+   connect(graphWidget, &GraphWidget::signalGraphSelected, stageWidget, &StageWidget::slotGraphSelected);
+   connect(stageModel, &StageModel::signalGraphLengthChanged, graphModel, &GraphModel::slotGraphLengthChanged);
+   graphModel->rebuild();
 
    splitter = new QSplitter(this);
    splitter->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
@@ -167,8 +168,8 @@ void MainWidget::updateWindowTitle(const QString& fileName)
 
 void MainWidget::updateUI()
 {
-   graphModel->update();
-   stageModel->update();
+   graphModel->rebuild();
+   stageModel->rebuild(Model::Provider::None, 0, false);
 }
 
 void MainWidget::closeEvent(QCloseEvent* ce)

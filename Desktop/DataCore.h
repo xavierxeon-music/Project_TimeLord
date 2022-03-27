@@ -32,6 +32,7 @@ namespace Model
 
    enum class Provider : uint8_t
    {
+      None,
       DaisyPatch,
       GraphAudioDevice
    };

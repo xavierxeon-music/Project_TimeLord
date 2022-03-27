@@ -13,6 +13,8 @@
 GraphWidget::GraphWidget(MainWidget* mainWidget, GraphModel* graphModel)
    : AbstractWidget(mainWidget)
    , graphModel(graphModel)
+   , selectedProvider(Model::Provider::None)
+   , selectedGraphIndex(0)
 {
    setMinimumWidth(150);
 
@@ -21,6 +23,12 @@ GraphWidget::GraphWidget(MainWidget* mainWidget, GraphModel* graphModel)
    toolBar->addAction(QIcon(":/SaveNewFile.svg"), "Save To New File", mainWidget, &MainWidget::slotSaveNewFile);
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/SaveToDaisy.svg"), "Save To Daisy", mainWidget, &MainWidget::slotSaveToDaisy);
+   toolBar->addSeparator();
+   toolBar->addAction(QIcon(":/Trim.svg"), "Trim Selected Graph", this, &GraphWidget::slotTrimCurrentGraph);
+   toolBar->addSeparator();
+   toolBar->addAction(QIcon(":/Length.svg"), "Set Length For All Graphs", this, &GraphWidget::slotSetLengthAllGraphs);
+   toolBar->addAction(QIcon(":/Division.svg"), "Set Division For All Graphs", this, &GraphWidget::slotSetDivisionAllGraphs);
+   toolBar->addAction(QIcon(":/Loop.svg"), "Set Loop For All Graphs", this, &GraphWidget::slotSetLoopAllGraphs);
 
    QTreeView* graphTreeView = new QTreeView(this);
    graphTreeView->setModel(graphModel);
@@ -32,6 +40,29 @@ GraphWidget::GraphWidget(MainWidget* mainWidget, GraphModel* graphModel)
    addPayload(graphTreeView);
 }
 
+void GraphWidget::slotTrimCurrentGraph()
+{
+   Graph* graph = getGraph(selectedProvider, selectedGraphIndex);
+   if (!graph)
+      return;
+
+   graph->trimLength();
+
+   graphModel->slotGraphLengthChanged(selectedProvider, selectedGraphIndex);
+}
+
+void GraphWidget::slotSetLengthAllGraphs()
+{
+}
+
+void GraphWidget::slotSetDivisionAllGraphs()
+{
+}
+
+void GraphWidget::slotSetLoopAllGraphs()
+{
+}
+
 void GraphWidget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)
 {
    Q_UNUSED(previous);
@@ -41,8 +72,8 @@ void GraphWidget::slotCurrentSelectionChanged(const QModelIndex& current, const 
    if (itemDataProvider.isNull())
       return;
 
-   const Model::Provider provider = itemDataProvider.value<Model::Provider>();
+   selectedProvider = itemDataProvider.value<Model::Provider>();
+   selectedGraphIndex = item->data(Model::Role::GraphIndex).toInt();
 
-   const int graphIndex = item->data(Model::Role::GraphIndex).toInt();
-   emit signalPortChanged(provider, graphIndex);
+   emit signalGraphSelected(selectedProvider, selectedGraphIndex);
 }

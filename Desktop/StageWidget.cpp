@@ -12,29 +12,103 @@
 StageWidget::StageWidget(MainWidget* mainWidget, StageModel* stageModel)
    : AbstractWidget(mainWidget)
    , stageModel(stageModel)
+   , selectionModel(nullptr)
+   , provider(Model::Provider::None)
+   , graphIndex(0)
+   , selectedStageIndex(0)
 {
-   toolBar->addAction(QIcon(":/Add.svg"), "Insert Point", stageModel, &StageModel::slotInsertPoint);
-   toolBar->addAction(QIcon(":/Remove.svg"), "Remove  Point", stageModel, &StageModel::slotRemovePoint);
+   toolBar->addAction(QIcon(":/Add.svg"), "Insert Point", this, &StageWidget::slotInsertPoint);
+   toolBar->addAction(QIcon(":/Remove.svg"), "Remove  Point", this, &StageWidget::slotRemovePoint);
    toolBar->addSeparator();
-   toolBar->addAction(QIcon(":/Back.svg"), "Move Back", stageModel, &StageModel::slotMoveBack);
-   toolBar->addAction(QIcon(":/Forward.svg"), "Move Forward", stageModel, &StageModel::slotMoveForward);
-
-   connect(this, &StageWidget::signalPointSelected, stageModel, &StageModel::slotPointSelected);
+   toolBar->addAction(QIcon(":/MoveUp.svg"), "Move Back", this, &StageWidget::slotMoveBack);
+   toolBar->addAction(QIcon(":/MoveDown.svg"), "Move Forward", this, &StageWidget::slotMoveForward);
 
    QTreeView* staggeTreeView = new QTreeView(this);
    staggeTreeView->setModel(stageModel);
    staggeTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this, mainWidget));
    staggeTreeView->setItemDelegateForColumn(2, new Delegate::SpinBox(this, mainWidget));
-
    staggeTreeView->setRootIsDecorated(false);
-   connect(staggeTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &StageWidget::slotCurrentSelectionChanged);
+
+   selectionModel = staggeTreeView->selectionModel();
+   connect(selectionModel, &QItemSelectionModel::currentChanged, this, &StageWidget::slotCurrentSelectionChanged);
 
    addPayload(staggeTreeView);
+}
+
+void StageWidget::slotGraphSelected(const Model::Provider& newProvider, const uint8_t& newGraphIndex)
+{
+   provider = newProvider;
+   graphIndex = newGraphIndex;
+
+   stageModel->rebuild(provider, graphIndex, false);
+   selectedStageIndex = 0;
+}
+
+void StageWidget::slotInsertPoint()
+{
+   Graph* graph = getGraph(provider, graphIndex);
+   if (!graph)
+      return;
+
+   graph->addStage(selectedStageIndex);
+
+   stageModel->rebuild(provider, graphIndex, true);
+   setSelection(selectedStageIndex);
+}
+
+void StageWidget::slotRemovePoint()
+{
+   Graph* graph = getGraph(provider, graphIndex);
+   if (!graph)
+      return;
+
+   graph->removeStage(selectedStageIndex);
+
+   stageModel->rebuild(provider, graphIndex, true);
+}
+
+void StageWidget::slotMoveBack()
+{
+   Graph* graph = getGraph(provider, graphIndex);
+   if (!graph)
+      return;
+
+   if (0 == selectedStageIndex)
+      return;
+
+   graph->moveStage(selectedStageIndex, selectedStageIndex - 1);
+
+   stageModel->rebuild(provider, graphIndex, false);
+   setSelection(selectedStageIndex - 1);
+}
+
+void StageWidget::slotMoveForward()
+{
+   Graph* graph = getGraph(provider, graphIndex);
+   if (!graph)
+      return;
+
+   if (selectedStageIndex + 1 > graph->stageCount())
+      return;
+
+   graph->moveStage(selectedStageIndex, selectedStageIndex + 1);
+
+   stageModel->rebuild(provider, graphIndex, false);
+   setSelection(selectedStageIndex + 1);
 }
 
 void StageWidget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)
 {
    Q_UNUSED(previous);
+   selectedStageIndex = current.row();
+}
 
-   emit signalPointSelected(current.row());
+void StageWidget::setSelection(const uint& stageIndex)
+{
+   const QModelIndex modelIndexLeft = stageModel->index(stageIndex, 0);
+   const QModelIndex modelIndexRight = stageModel->index(stageIndex, stageModel->columnCount() - 1);
+
+   selectionModel->select(QItemSelection(modelIndexLeft, modelIndexRight), QItemSelectionModel::SelectCurrent);
+
+   selectedStageIndex = stageIndex;
 }
