@@ -28,6 +28,8 @@ void GraphModel::slotGraphLengthChanged(const Model::Provider& provider, const u
       QStandardItem* countItem = invisibleRootItem()->child(row, 4);
       const QString count = QString::number(graph->stageCount());
       countItem->setText(count);
+
+      break;
    }
 }
 

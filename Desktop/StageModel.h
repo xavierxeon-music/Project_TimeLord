@@ -17,6 +17,7 @@ public:
    void rebuild(const Model::Provider provider, const uint8_t& graphIndex, bool lengthChanged);
 
 private:
+   void update(Graph* graph, const uint8_t& stageIndex);
    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
 };
 
