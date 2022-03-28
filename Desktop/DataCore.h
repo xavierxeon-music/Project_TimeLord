@@ -55,6 +55,7 @@ protected:
 
 protected:
    MainWidget* mainWidget;
+   static bool lockGraphSize;
 
 private:
    static const PoviderNameMap providerNameMap;

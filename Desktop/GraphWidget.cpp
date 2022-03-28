@@ -23,12 +23,16 @@ GraphWidget::GraphWidget(MainWidget* mainWidget, GraphModel* graphModel)
    setMinimumWidth(150);
 
    toolBar->addAction(QIcon(":/LoadFromFile.svg"), "Load From File", mainWidget, &MainWidget::slotLoadFromFile);
-   toolBar->addAction(QIcon(":/SaveToFile.svg"), "Save To File", mainWidget, &MainWidget::slotSaveToFile);
+   QAction* saveFileAction = toolBar->addAction(QIcon(":/SaveToFile.svg"), "Save To File", mainWidget, &MainWidget::slotSaveToFile);
+   saveFileAction->setShortcut(QKeySequence(QKeySequence::Save));
    toolBar->addAction(QIcon(":/SaveNewFile.svg"), "Save To New File", mainWidget, &MainWidget::slotSaveNewFile);
+
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/SaveToDaisy.svg"), "Save To Daisy", mainWidget, &MainWidget::slotSaveToDaisy);
+
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/Trim.svg"), "Trim Selected Graph", this, &GraphWidget::slotTrimCurrentGraph);
+
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/Length.svg"), "Set Length For All Graphs", this, &GraphWidget::slotSetLengthAllGraphs);
    toolBar->addAction(QIcon(":/Division.svg"), "Set Division For All Graphs", this, &GraphWidget::slotSetDivisionAllGraphs);

@@ -4,6 +4,7 @@
 #include "MainWidget.h"
 
 const DataCore::PoviderNameMap DataCore::providerNameMap = {{Model::Provider::DaisyPatch, "Daisy"}, {Model::Provider::AudioDeviceGraph, "ES-8"}};
+bool DataCore::lockGraphSize = true;
 
 DataCore::DataCore(MainWidget* mainWidget)
    : mainWidget(mainWidget)

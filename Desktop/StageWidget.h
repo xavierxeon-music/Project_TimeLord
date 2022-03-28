@@ -20,6 +20,7 @@ private slots:
    void slotRemovePoint();
    void slotMoveBack();
    void slotMoveForward();
+   void slotLockGraphSize();
    void slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous);
 
 private:

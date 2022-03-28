@@ -17,8 +17,14 @@ StageWidget::StageWidget(MainWidget* mainWidget, StageModel* stageModel)
    , graphIndex(0)
    , selectedStageIndex(0)
 {
+   QAction* lockAction = toolBar->addAction(QIcon(":/Lock.svg"), "Lock Graph Size", this, &StageWidget::slotLockGraphSize);
+   lockAction->setCheckable(true);
+   lockAction->setChecked(lockGraphSize);
+
+   toolBar->addSeparator();
    toolBar->addAction(QIcon(":/Add.svg"), "Insert Point", this, &StageWidget::slotInsertPoint);
    toolBar->addAction(QIcon(":/Remove.svg"), "Remove  Point", this, &StageWidget::slotRemovePoint);
+
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/MoveUp.svg"), "Move Back", this, &StageWidget::slotMoveBack);
    toolBar->addAction(QIcon(":/MoveDown.svg"), "Move Forward", this, &StageWidget::slotMoveForward);
@@ -95,6 +101,11 @@ void StageWidget::slotMoveForward()
 
    stageModel->rebuild(provider, graphIndex, false);
    setSelection(selectedStageIndex + 1);
+}
+
+void StageWidget::slotLockGraphSize()
+{
+   lockGraphSize = !lockGraphSize;
 }
 
 void StageWidget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)

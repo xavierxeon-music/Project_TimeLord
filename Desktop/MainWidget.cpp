@@ -43,6 +43,7 @@ MainWidget::MainWidget()
    graphVisuWidget = new GraphVisuWidget(this);
 
    connect(graphWidget, &GraphWidget::signalGraphSelected, stageWidget, &StageWidget::slotGraphSelected);
+   connect(graphWidget, &GraphWidget::signalGraphSelected, graphVisuWidget, &GraphVisuWidget::slotGraphSelected);
    connect(stageModel, &StageModel::signalGraphLengthChanged, graphModel, &GraphModel::slotGraphLengthChanged);
    graphModel->rebuild();
 

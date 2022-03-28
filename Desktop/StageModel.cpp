@@ -66,20 +66,20 @@ void StageModel::rebuild(const Model::Provider provider, const uint8_t& graphInd
 
 bool StageModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-   bool result = QStandardItemModel::setData(index, value, role);
    if (Qt::EditRole != role)
-      return result;
+      return QStandardItemModel::setData(index, value, role);
 
    const QVariant targetData = data(index, Model::Role::Target);
    if (targetData.isNull())
-      return result;
+      return QStandardItemModel::setData(index, value, role);
 
    const Model::Provider provider = data(index, Model::Role::Provider).value<Model::Provider>();
    const uint8_t graphIndex = data(index, Model::Role::GraphIndex).value<uint8_t>();
 
    Graph* graph = getGraph(provider, graphIndex);
-
    const uint8_t stageIndex = data(index, Model::Role::StageIndex).value<uint8_t>();
+
+   QVariant targeValue = value;
 
    const Model::Target target = targetData.value<Model::Target>();
    if (Model::Target::StageHeight == target)
@@ -90,10 +90,16 @@ bool StageModel::setData(const QModelIndex& index, const QVariant& value, int ro
    else if (Model::Target::StageLength == target)
    {
       const uint8_t length = value.toInt();
-      graph->setStageLength(stageIndex, length);
-
-      emit signalGraphLengthChanged(provider, graphIndex);
+      if (Graph::LengthStatus::Changed != graph->setStageLength(stageIndex, length, !lockGraphSize))
+      {
+         targeValue = graph->getStageLength(stageIndex);
+      }
+      else
+      {
+         emit signalGraphLengthChanged(provider, graphIndex);
+      }
    }
 
+   bool result = QStandardItemModel::setData(index, targeValue, role);
    return result;
 }
