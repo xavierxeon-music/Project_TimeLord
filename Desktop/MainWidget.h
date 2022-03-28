@@ -59,8 +59,7 @@ private:
    FileStorage fileStorageDaisy;
    FileStorage fileStorageDevice;
 
-   QSplitter* splitterModel;
-   QSplitter* splitterVisu;
+   QSplitter* splitter;
    QStatusBar* statusBar;
 
    GraphWidget* graphWidget;
