@@ -1,5 +1,5 @@
-#ifndef GraphAudioDeviceH
-#define GraphAudioDeviceH
+#ifndef AudioDeviceGraphH
+#define AudioDeviceGraphH
 
 #include <Remember.h>
 #include <QObject>
@@ -9,23 +9,21 @@
 #include "MainWidget.h"
 
 // not named AudioDevice to avoid name clashes!
-class GraphAudioDevice : public QObject, public Remember::Root
+class AudioDeviceGraph : public QObject, public Remember::Root
 {
    Q_OBJECT
 public:
-   GraphAudioDevice(QObject* parent);
-
-signals:
-   void signalStatusUpdate(const Tempo::RunState& runState, const uint8_t& beatsPerMinute);
+   AudioDeviceGraph(QObject* parent);
 
 public:
    void clockReset();
+   const Tempo* getTempo() const;
 
 private:
    friend class DataCore;
 
-private slots:
-   void slotStatusUpdate();
+private: // things to remeber
+   using GraphList_ = Remember::RefArray<Graph, 16>;
 
 private:
    void audioLoop(const float& audioCallbackRate);
@@ -34,10 +32,10 @@ private:
 private:
    QStatusBar* statusBar;
 
-   MainWidget::GraphList_ graphs;
+   GraphList_ graphs;
    AudioDevice::Driver audioDriver;
    AudioDevice::InputsTempo tempo;
    AudioDevice::OutputCV outputs[16];
 };
 
-#endif // NOT GraphAudioDeviceH
+#endif // NOT AudioDeviceGraphH

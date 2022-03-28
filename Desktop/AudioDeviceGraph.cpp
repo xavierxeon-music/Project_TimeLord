@@ -1,8 +1,6 @@
-#include "GraphAudioDevice.h"
+#include "AudioDeviceGraph.h"
 
-#include <QTimer>
-
-GraphAudioDevice::GraphAudioDevice(QObject* parent)
+AudioDeviceGraph::AudioDeviceGraph(QObject* parent)
    : QObject(parent)
    , Remember::Root()
    , graphs(this)
@@ -10,30 +8,27 @@ GraphAudioDevice::GraphAudioDevice(QObject* parent)
    , tempo(&audioDriver, 0, 1)
    , outputs()
 {
-   audioDriver.registerAudioLoopFunction(this, &GraphAudioDevice::audioLoop);
+   audioDriver.registerAudioLoopFunction(this, &AudioDeviceGraph::audioLoop);
    for (uint8_t index = 0; index < 16; index++)
       outputs[index].activate(&audioDriver, index);
 
-   tempo.onClockTick(this, &GraphAudioDevice::clockTick);
-   tempo.onClockReset(this, &GraphAudioDevice::clockReset);
+   tempo.onClockTick(this, &AudioDeviceGraph::clockTick);
+   tempo.onClockReset(this, &AudioDeviceGraph::clockReset);
 
-   QTimer* statusUpdateTimer = new QTimer(this);
-   connect(statusUpdateTimer, &QTimer::timeout, this, &GraphAudioDevice::slotStatusUpdate);
-   statusUpdateTimer->start(1000);
 }
 
-void GraphAudioDevice::clockReset()
+void AudioDeviceGraph::clockReset()
 {
    for (uint8_t index = 0; index < 16; index++)
       graphs[index].clockReset();
 }
 
-void GraphAudioDevice::slotStatusUpdate()
+const Tempo* AudioDeviceGraph::getTempo() const
 {
-   emit signalStatusUpdate(tempo.getRunState(), tempo.getBeatsPerMinute());
+   return &tempo;
 }
 
-void GraphAudioDevice::audioLoop(const float& audioCallbackRate)
+void AudioDeviceGraph::audioLoop(const float& audioCallbackRate)
 {
    tempo.advance(audioCallbackRate);
 
@@ -53,7 +48,7 @@ void GraphAudioDevice::audioLoop(const float& audioCallbackRate)
    }
 }
 
-void GraphAudioDevice::clockTick()
+void AudioDeviceGraph::clockTick()
 {
    for (uint8_t index = 0; index < 16; index++)
       graphs[index].clockTick();

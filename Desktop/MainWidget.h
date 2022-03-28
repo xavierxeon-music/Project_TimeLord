@@ -17,13 +17,11 @@
 #include "StageModel.h"
 #include "StageWidget.h"
 
-class GraphAudioDevice;
+class AudioDeviceGraph;
 
 class MainWidget : public QWidget, public Remember::Root
 {
    Q_OBJECT
-public: // things to remeber
-   using GraphList_ = Remember::RefArray<Graph, 16>;
 
 public:
    MainWidget();
@@ -40,6 +38,9 @@ public slots:
 private:
    friend class DataCore;
 
+private: // things to remeber
+   using GraphList_ = Remember::RefArray<Graph, 16>;
+
 private slots:
    void slotCheckDataModified();
 
@@ -52,7 +53,7 @@ private:
 
 private:
    GraphList_ graphs;
-   GraphAudioDevice* graphAudioDevice;
+   AudioDeviceGraph* audioDevice;
 
    MidiBridge midiBridge;
    FileStorage fileStorageDaisy;

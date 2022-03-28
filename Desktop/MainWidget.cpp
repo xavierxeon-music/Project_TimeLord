@@ -9,7 +9,7 @@
 
 #include <SettingsUI.h>
 
-#include "GraphAudioDevice.h"
+#include "AudioDeviceGraph.h"
 #include "TempoWidget.h"
 
 using Channel = AudioDevice::Channel;
@@ -19,10 +19,10 @@ MainWidget::MainWidget()
    : QWidget(nullptr)
    , Remember::Root()
    , graphs(this)
-   , graphAudioDevice(new GraphAudioDevice(this))
+   , audioDevice(new AudioDeviceGraph(this))
    , midiBridge(this)
    , fileStorageDaisy(this)
-   , fileStorageDevice(graphAudioDevice)
+   , fileStorageDevice(audioDevice)
    , splitter(nullptr)
    , statusBar(nullptr)
    , graphWidget(nullptr)
@@ -56,9 +56,8 @@ MainWidget::MainWidget()
    statusBar = new QStatusBar(this);
    statusBar->setSizeGripEnabled(true);
 
-   TempoWidget* tempoWidget = new TempoWidget(this);
+   TempoWidget* tempoWidget = new TempoWidget(this, audioDevice->getTempo());
    statusBar->addPermanentWidget(tempoWidget);
-   connect(graphAudioDevice, &GraphAudioDevice::signalStatusUpdate, tempoWidget, &TempoWidget::slotStatusUpdate);
 
    QVBoxLayout* masterLayout = new QVBoxLayout(this);
    masterLayout->setContentsMargins(0, 0, 0, 0);
@@ -78,7 +77,7 @@ MainWidget::MainWidget()
 
    for (uint8_t index = 0; index < 16; index++)
       graphs[index].clockReset();
-   graphAudioDevice->clockReset();
+   audioDevice->clockReset();
 }
 
 void MainWidget::forceRebuildModels()
@@ -132,7 +131,7 @@ void MainWidget::slotSaveToDaisy()
 
 void MainWidget::slotCheckDataModified()
 {
-   if (isUnsynced() || graphAudioDevice->isUnsynced())
+   if (isUnsynced() || audioDevice->isUnsynced())
       setWindowModified(true);
    else
       setWindowModified(false);

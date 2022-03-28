@@ -13,10 +13,10 @@ include(../../../Base/DesktopApp.pri)
 
 HEADERS += \
    AbstractWidget.h \
+   AudioDeviceGraph.h \
    DelegateComboBox.h \
    DataCore.h \
    DivisionModel.h \
-   GraphAudioDevice.h \
    GraphEditAbstract.h \
    GraphEditDivision.h \
    GraphEditLength.h \
@@ -32,10 +32,10 @@ HEADERS += \
 
 SOURCES += \
    AbstractWidget.cpp \
+   AudioDeviceGraph.cpp \
    DelegateComboBox.cpp \
    DataCore.cpp \
    DivisionModel.cpp \
-   GraphAudioDevice.cpp \
    GraphEditAbstract.cpp \
    GraphEditDivision.cpp \
    GraphEditLength.cpp \

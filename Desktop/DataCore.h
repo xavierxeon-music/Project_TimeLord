@@ -34,7 +34,7 @@ namespace Model
    {
       None,
       DaisyPatch,
-      GraphAudioDevice
+      AudioDeviceGraph
    };
 
    Q_ENUM_NS(Provider)

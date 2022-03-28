@@ -11,12 +11,13 @@ class TempoWidget : public QWidget
 {
    Q_OBJECT
 public:
-   TempoWidget(QWidget* parent);
+   TempoWidget(QWidget* parent, const Tempo* tempo);
 
 public slots:
-   void slotStatusUpdate(const Tempo::RunState& runState, const uint8_t& beatsPerMinute);
+   void slotStatusUpdate();
 
 private:
+   const Tempo* tempo;
    QLabel* bpmInfo;
 };
 
