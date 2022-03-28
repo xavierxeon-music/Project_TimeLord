@@ -23,7 +23,8 @@ MainWidget::MainWidget()
    , midiBridge(this)
    , fileStorageDaisy(this)
    , fileStorageDevice(audioDevice)
-   , splitter(nullptr)
+   , splitterModel(nullptr)
+   , splitterVisu(nullptr)
    , statusBar(nullptr)
    , graphWidget(nullptr)
    , graphModel(nullptr)
@@ -47,12 +48,16 @@ MainWidget::MainWidget()
    connect(stageModel, &StageModel::signalGraphLengthChanged, graphModel, &GraphModel::slotGraphLengthChanged);
    graphModel->rebuild();
 
-   splitter = new QSplitter(this);
-   splitter->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-   splitter->setObjectName("MainSplitter");
-   splitter->addWidget(graphWidget);
-   splitter->addWidget(stageWidget);
-   splitter->addWidget(graphVisuWidget);
+   splitterModel = new QSplitter(Qt::Horizontal, this);
+   splitterModel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+   splitterModel->setObjectName("ModelSplitter");
+   splitterModel->addWidget(graphWidget);
+   splitterModel->addWidget(stageWidget);
+
+   splitterVisu = new QSplitter(Qt::Vertical, this);
+   splitterModel->setObjectName("VisuSplitter");
+   splitterVisu->addWidget(splitterModel);
+   splitterVisu->addWidget(graphVisuWidget);
 
    statusBar = new QStatusBar(this);
    statusBar->setSizeGripEnabled(true);
@@ -63,12 +68,13 @@ MainWidget::MainWidget()
    QVBoxLayout* masterLayout = new QVBoxLayout(this);
    masterLayout->setContentsMargins(0, 0, 0, 0);
    masterLayout->setSpacing(0);
-   masterLayout->addWidget(splitter);
+   masterLayout->addWidget(splitterVisu);
    masterLayout->addWidget(statusBar);
 
    SettingsUI widgetSettings("MainWidget");
    restoreGeometry(widgetSettings.bytes("Geometry"));
-   splitter->restoreState(widgetSettings.bytes("State"));
+   splitterModel->restoreState(widgetSettings.bytes("StateModel"));
+   splitterVisu->restoreState(widgetSettings.bytes("StateVisu"));
 
    loadLastFile();
 
@@ -185,7 +191,8 @@ void MainWidget::closeEvent(QCloseEvent* ce)
 
    SettingsUI widgetSettings("MainWidget");
    widgetSettings.write("Geometry", saveGeometry());
-   widgetSettings.write("State", splitter->saveState());
+   widgetSettings.write("StateModel", splitterModel->saveState());
+   widgetSettings.write("StateVisu", splitterVisu->saveState());
 
    ce->accept();
 }

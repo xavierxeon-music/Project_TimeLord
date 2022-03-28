@@ -20,15 +20,22 @@ private:
       QGraphicsLineItem* lineItem;
 
       using List = QList<Stage>;
+      using Map = QMap<Graph*, List>;
    };
 
 private slots:
    void slotUpdate();
+   void slotZoomIn();
+   void slotZoomOut();
 
 private:
    QGraphicsView* graphicsView;
-   Stage::List stageList;
-   Graph* graph;
+   Stage::Map stageMap;
+
+   Model::Provider selectedProvider;
+   uint8_t selectedGraphIndex;
+
+   uint8_t zoomLevel;
 };
 
 #endif // GraphVisuWidgetH

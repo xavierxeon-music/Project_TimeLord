@@ -17,7 +17,7 @@ TempoWidget::TempoWidget(QWidget* parent, const Tempo* tempo)
 
    QTimer* statusUpdateTimer = new QTimer(this);
    connect(statusUpdateTimer, &QTimer::timeout, this, &TempoWidget::slotStatusUpdate);
-   statusUpdateTimer->start(1000);
+   statusUpdateTimer->start(100);
 }
 
 void TempoWidget::slotStatusUpdate()
@@ -25,15 +25,17 @@ void TempoWidget::slotStatusUpdate()
    const Tempo::RunState& runState = tempo->getRunState();
    const uint8_t& beatsPerMinute = tempo->getBeatsPerMinute();
 
-   QString statusText;
    if (Tempo::RunState::Running == runState)
    {
-      statusText += QChar(5125);
-      statusText += QString(" ");
-      statusText += QString::number(beatsPerMinute);
-      statusText += " bpm";
+      const uint8_t bar = tempo->getCounter(Tempo::Division::Bar);
+      const uint8_t quarter = tempo->getCounter(Tempo::Division::Quarter);
+      const uint8_t bpm = tempo->getBeatsPerMinute();
+      QString statusText = QChar(5125) + QString(" %1:%2  %3 bpm");
+      statusText = statusText.arg(bar);
+      statusText = statusText.arg(quarter);
+      statusText = statusText.arg(bpm);
+      bpmInfo->setText(statusText);
    }
    else
-      statusText += "stoped";
-   bpmInfo->setText(statusText);
+      bpmInfo->setText("stoped");
 }
