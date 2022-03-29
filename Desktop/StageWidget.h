@@ -3,36 +3,40 @@
 
 #include "AbstractWidget.h"
 
-class StageModel;
 class QItemSelectionModel;
 
-class StageWidget : public AbstractWidget
+namespace Stage
 {
-   Q_OBJECT
-public:
-   StageWidget(MainWidget* mainWidget, StageModel* stageModel);
+   class Model;
 
-public slots:
-   void slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex);
+   class Widget : public Abstract::Widget
+   {
+      Q_OBJECT
+   public:
+      Widget(MainWidget* mainWidget, Model* stageModel);
 
-private slots:
-   void slotInsertPoint();
-   void slotRemovePoint();
-   void slotMoveBack();
-   void slotMoveForward();
-   void slotLockGraphSize();
-   void slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous);
+   public slots:
+      void slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex);
 
-private:
-   void setSelection(const uint& stageIndex);
+   private slots:
+      void slotInsertPoint();
+      void slotRemovePoint();
+      void slotMoveBack();
+      void slotMoveForward();
+      void slotLockGraphSize();
+      void slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous);
 
-private:
-   StageModel* stageModel;
-   QItemSelectionModel* selectionModel;
+   private:
+      void setSelection(const uint& stageIndex);
 
-   Data::Provider provider;
-   uint8_t graphIndex;
-   uint8_t selectedStageIndex;
-};
+   private:
+      Model* stageModel;
+      QItemSelectionModel* selectionModel;
+
+      Data::Provider provider;
+      uint8_t graphIndex;
+      uint8_t selectedStageIndex;
+   };
+} // namespace Stage
 
 #endif // StageWidgetH

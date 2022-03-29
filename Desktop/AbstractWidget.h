@@ -9,20 +9,23 @@
 
 class MainWidget;
 
-class AbstractWidget : public QWidget, public Data::Core
+namespace Abstract
 {
-   Q_OBJECT
-public:
-   AbstractWidget(MainWidget* mainWidget);
+   class Widget : public QWidget, public Data::Core
+   {
+      Q_OBJECT
+   public:
+      Widget(MainWidget* mainWidget);
 
-protected:
-   void addPayload(QWidget* widget);
+   protected:
+      void addPayload(QWidget* widget);
 
-protected:
-   QToolBar* toolBar;
+   protected:
+      QToolBar* toolBar;
 
-private:
-   QVBoxLayout* masterLayout;
-};
+   private:
+      QVBoxLayout* masterLayout;
+   };
+} // namespace Abstract
 
 #endif // AbstractWidgetH

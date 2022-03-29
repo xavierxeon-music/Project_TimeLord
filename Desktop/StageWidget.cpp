@@ -6,25 +6,25 @@
 #include "DelegateSpinBox.h"
 #include "MainWidget.h"
 
-StageWidget::StageWidget(MainWidget* mainWidget, StageModel* stageModel)
-   : AbstractWidget(mainWidget)
+Stage::Widget::Widget(MainWidget* mainWidget, Model* stageModel)
+   : Abstract::Widget(mainWidget)
    , stageModel(stageModel)
    , selectionModel(nullptr)
    , provider(Data::Provider::None)
    , graphIndex(0)
    , selectedStageIndex(0)
 {
-   QAction* lockAction = toolBar->addAction(QIcon(":/Lock.svg"), "Lock Graph Size", this, &StageWidget::slotLockGraphSize);
+   QAction* lockAction = toolBar->addAction(QIcon(":/Lock.svg"), "Lock Graph Size", this, &Widget::slotLockGraphSize);
    lockAction->setCheckable(true);
    lockAction->setChecked(lockGraphSize);
 
    toolBar->addSeparator();
-   toolBar->addAction(QIcon(":/Add.svg"), "Insert Point", this, &StageWidget::slotInsertPoint);
-   toolBar->addAction(QIcon(":/Remove.svg"), "Remove  Point", this, &StageWidget::slotRemovePoint);
+   toolBar->addAction(QIcon(":/Add.svg"), "Insert Point", this, &Widget::slotInsertPoint);
+   toolBar->addAction(QIcon(":/Remove.svg"), "Remove  Point", this, &Widget::slotRemovePoint);
 
    toolBar->addSeparator();
-   toolBar->addAction(QIcon(":/MoveUp.svg"), "Move Back", this, &StageWidget::slotMoveBack);
-   toolBar->addAction(QIcon(":/MoveDown.svg"), "Move Forward", this, &StageWidget::slotMoveForward);
+   toolBar->addAction(QIcon(":/MoveUp.svg"), "Move Back", this, &Widget::slotMoveBack);
+   toolBar->addAction(QIcon(":/MoveDown.svg"), "Move Forward", this, &Widget::slotMoveForward);
 
    QTreeView* staggeTreeView = new QTreeView(this);
    staggeTreeView->setModel(stageModel);
@@ -33,12 +33,12 @@ StageWidget::StageWidget(MainWidget* mainWidget, StageModel* stageModel)
    staggeTreeView->setRootIsDecorated(false);
 
    selectionModel = staggeTreeView->selectionModel();
-   connect(selectionModel, &QItemSelectionModel::currentChanged, this, &StageWidget::slotCurrentSelectionChanged);
+   connect(selectionModel, &QItemSelectionModel::currentChanged, this, &Widget::slotCurrentSelectionChanged);
 
    addPayload(staggeTreeView);
 }
 
-void StageWidget::slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex)
+void Stage::Widget::slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex)
 {
    provider = newProvider;
    graphIndex = newGraphIndex;
@@ -47,7 +47,7 @@ void StageWidget::slotGraphSelected(const Data::Provider& newProvider, const uin
    selectedStageIndex = 0;
 }
 
-void StageWidget::slotInsertPoint()
+void Stage::Widget::slotInsertPoint()
 {
    PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
    if (!polyRamp)
@@ -59,7 +59,7 @@ void StageWidget::slotInsertPoint()
    setSelection(selectedStageIndex);
 }
 
-void StageWidget::slotRemovePoint()
+void Stage::Widget::slotRemovePoint()
 {
    PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
    if (!polyRamp)
@@ -70,7 +70,7 @@ void StageWidget::slotRemovePoint()
    stageModel->rebuild(provider, graphIndex, true);
 }
 
-void StageWidget::slotMoveBack()
+void Stage::Widget::slotMoveBack()
 {
    PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
    if (!polyRamp)
@@ -85,7 +85,7 @@ void StageWidget::slotMoveBack()
    setSelection(selectedStageIndex - 1);
 }
 
-void StageWidget::slotMoveForward()
+void Stage::Widget::slotMoveForward()
 {
    PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
    if (!polyRamp)
@@ -100,18 +100,18 @@ void StageWidget::slotMoveForward()
    setSelection(selectedStageIndex + 1);
 }
 
-void StageWidget::slotLockGraphSize()
+void Stage::Widget::slotLockGraphSize()
 {
    lockGraphSize = !lockGraphSize;
 }
 
-void StageWidget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)
+void Stage::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)
 {
    Q_UNUSED(previous);
    selectedStageIndex = current.row();
 }
 
-void StageWidget::setSelection(const uint& stageIndex)
+void Stage::Widget::setSelection(const uint& stageIndex)
 {
    const QModelIndex modelIndexLeft = stageModel->index(stageIndex, 0);
    const QModelIndex modelIndexRight = stageModel->index(stageIndex, stageModel->columnCount() - 1);

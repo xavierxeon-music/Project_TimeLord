@@ -13,9 +13,9 @@
 
 #include "PolyLineModel.h"
 #include "PolyLineWidget.h"
-#include "PolyRampModel.h"
-#include "PolyRampVisu.h"
-#include "PolyRampWidget.h"
+#include "RampModel.h"
+#include "RampVisu.h"
+#include "RampWidget.h"
 #include "StageModel.h"
 #include "StageWidget.h"
 
@@ -64,12 +64,12 @@ private:
    QSplitter* splitter;
    QStatusBar* statusBar;
 
-   PolyRampModel* polyRampModel;
-   PolyRampVisu* polyRampVisu;
-   PolyRampWidget* polyRampWidget;
+   Ramp::Model* polyRampModel;
+   Ramp::Visu* polyRampVisu;
+   Ramp::Widget* polyRampWidget;
 
-   StageModel* stageModel;
-   StageWidget* stageWidget;
+   Stage::Model* stageModel;
+   Stage::Widget* stageWidget;
 
    PolyLine::Model* polyLineModel;
    PolyLine::Widget* polyLineWidget;

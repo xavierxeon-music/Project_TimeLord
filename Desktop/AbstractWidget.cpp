@@ -5,7 +5,7 @@
 
 #include "MainWidget.h"
 
-AbstractWidget::AbstractWidget(MainWidget* mainWidget)
+Abstract::Widget::Widget(MainWidget* mainWidget)
    : QWidget(mainWidget)
    , Data::Core(mainWidget)
    , toolBar(nullptr)
@@ -20,7 +20,7 @@ AbstractWidget::AbstractWidget(MainWidget* mainWidget)
    masterLayout->addWidget(toolBar);
 }
 
-void AbstractWidget::addPayload(QWidget* widget)
+void Abstract::Widget::addPayload(QWidget* widget)
 {
    masterLayout->addWidget(widget);
 }

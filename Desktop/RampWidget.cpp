@@ -1,4 +1,4 @@
-#include "PolyRampWidget.h"
+#include "RampWidget.h"
 
 #include <QAction>
 #include <QToolBar>
@@ -10,8 +10,8 @@
 #include "DivisionModel.h"
 #include "MainWidget.h"
 
-PolyRampWidget::PolyRampWidget(MainWidget* mainWidget, PolyRampModel* polyRampModel)
-   : AbstractWidget(mainWidget)
+Ramp::Widget::Widget(MainWidget* mainWidget, Model* polyRampModel)
+   : Abstract::Widget(mainWidget)
    , polyRampModel(polyRampModel)
    , editStack(nullptr)
    , lengthEdit(nullptr)
@@ -22,12 +22,12 @@ PolyRampWidget::PolyRampWidget(MainWidget* mainWidget, PolyRampModel* polyRampMo
 {
    setMinimumWidth(150);
 
-   toolBar->addAction(QIcon(":/Trim.svg"), "Trim Selected Graph", this, &PolyRampWidget::slotTrimCurrentGraph);
+   toolBar->addAction(QIcon(":/Trim.svg"), "Trim Selected Graph", this, &Widget::slotTrimCurrentGraph);
 
    toolBar->addSeparator();
-   toolBar->addAction(QIcon(":/Length.svg"), "Set Length For All Graphs", this, &PolyRampWidget::slotSetLengthAllGraphs);
-   toolBar->addAction(QIcon(":/Division.svg"), "Set Division For All Graphs", this, &PolyRampWidget::slotSetDivisionAllGraphs);
-   toolBar->addAction(QIcon(":/Loop.svg"), "Set Loop For All Graphs", this, &PolyRampWidget::slotSetLoopAllGraphs);
+   toolBar->addAction(QIcon(":/Length.svg"), "Set Length For All Graphs", this, &Widget::slotSetLengthAllGraphs);
+   toolBar->addAction(QIcon(":/Division.svg"), "Set Division For All Graphs", this, &Widget::slotSetDivisionAllGraphs);
+   toolBar->addAction(QIcon(":/Loop.svg"), "Set Loop For All Graphs", this, &Widget::slotSetLoopAllGraphs);
 
    editStack = new QStackedWidget(this);
    editStack->hide();
@@ -44,22 +44,22 @@ PolyRampWidget::PolyRampWidget(MainWidget* mainWidget, PolyRampModel* polyRampMo
 
    addPayload(editStack);
 
-   QTreeView* graphTreeView = new QTreeView(this);
-   graphTreeView->setModel(polyRampModel);
-   graphTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this, mainWidget));
-   graphTreeView->setItemDelegateForColumn(2, new Delegate::ComboBox(this, mainWidget, new DivisionModel(this)));
-   graphTreeView->setRootIsDecorated(false);
-   connect(graphTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &PolyRampWidget::slotCurrentSelectionChanged);
+   QTreeView* polyRampTreeView = new QTreeView(this);
+   polyRampTreeView->setModel(polyRampModel);
+   polyRampTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this, mainWidget));
+   polyRampTreeView->setItemDelegateForColumn(2, new Delegate::ComboBox(this, mainWidget, new DivisionModel(this)));
+   polyRampTreeView->setRootIsDecorated(false);
+   connect(polyRampTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &Widget::slotCurrentSelectionChanged);
 
-   addPayload(graphTreeView);
+   addPayload(polyRampTreeView);
 }
 
-void PolyRampWidget::hideEditStack()
+void Ramp::Widget::hideEditStack()
 {
    editStack->hide();
 }
 
-void PolyRampWidget::slotTrimCurrentGraph()
+void Ramp::Widget::slotTrimCurrentGraph()
 {
    PolyRamp* polyRamp = getPolyRamp(selectedProvider, selectedGraphIndex);
    if (!polyRamp)
@@ -70,25 +70,25 @@ void PolyRampWidget::slotTrimCurrentGraph()
    polyRampModel->slotGraphLengthChanged(selectedProvider, selectedGraphIndex);
 }
 
-void PolyRampWidget::slotSetLengthAllGraphs()
+void Ramp::Widget::slotSetLengthAllGraphs()
 {
    editStack->show();
    editStack->setCurrentWidget(lengthEdit);
 }
 
-void PolyRampWidget::slotSetDivisionAllGraphs()
+void Ramp::Widget::slotSetDivisionAllGraphs()
 {
    editStack->show();
    editStack->setCurrentWidget(divisionEdit);
 }
 
-void PolyRampWidget::slotSetLoopAllGraphs()
+void Ramp::Widget::slotSetLoopAllGraphs()
 {
    editStack->show();
    editStack->setCurrentWidget(loopEdit);
 }
 
-void PolyRampWidget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)
+void Ramp::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)
 {
    Q_UNUSED(previous);
 

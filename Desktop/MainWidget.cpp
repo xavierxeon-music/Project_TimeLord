@@ -37,18 +37,18 @@ MainWidget::MainWidget()
 
    midiBridge.initMidi();
 
-   polyRampModel = new PolyRampModel(this);
-   stageModel = new StageModel(this);
+   polyRampModel = new Ramp::Model(this);
+   stageModel = new Stage::Model(this);
    polyLineModel = new PolyLine::Model(this);
 
-   polyRampVisu = new PolyRampVisu(this);
-   polyRampWidget = new PolyRampWidget(this, polyRampModel);
-   stageWidget = new StageWidget(this, stageModel);
+   polyRampVisu = new Ramp::Visu(this);
+   polyRampWidget = new Ramp::Widget(this, polyRampModel);
+   stageWidget = new Stage::Widget(this, stageModel);
    polyLineWidget = new PolyLine::Widget(this, polyLineModel);
 
-   connect(polyRampWidget, &PolyRampWidget::signalGraphSelected, stageWidget, &StageWidget::slotGraphSelected);
-   connect(polyRampWidget, &PolyRampWidget::signalGraphSelected, polyRampVisu, &PolyRampVisu::slotGraphSelected);
-   connect(stageModel, &StageModel::signalGraphLengthChanged, polyRampModel, &PolyRampModel::slotGraphLengthChanged);
+   connect(polyRampWidget, &Ramp::Widget::signalGraphSelected, stageWidget, &Stage::Widget::slotGraphSelected);
+   connect(polyRampWidget, &Ramp::Widget::signalGraphSelected, polyRampVisu, &Ramp::Visu::slotGraphSelected);
+   connect(stageModel, &Stage::Model::signalGraphLengthChanged, polyRampModel, &Ramp::Model::slotGraphLengthChanged);
    polyRampModel->rebuild();
 
    splitter = new QSplitter(Qt::Horizontal, this);

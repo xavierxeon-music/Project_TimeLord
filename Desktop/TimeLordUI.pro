@@ -12,43 +12,43 @@ macos:ICON = ApplicaionIcon/TimeLord.icns
 include(../../../Base/DesktopApp.pri)
 
 HEADERS += \
+   AbstractEdit.h \
    AbstractWidget.h \
    AudioDeviceGraph.h \
    DataCore.h \
    DelegateComboBox.h \
    DelegateSpinBox.h \
    DivisionModel.h \
-   EditAbstract.h \
    EditDivision.h \
    EditLength.h \
    EditLoop.h \
-   PolyRampVisu.h \
    MainWidget.h \
-   PolyRampModel.h \
-   PolyRampWidget.h \
    PolyLineModel.h \
    PolyLineWidget.h \
+   RampModel.h \
+   RampVisu.h \
+   RampWidget.h \
    StageModel.h \
    StageWidget.h \
    TempoWidget.h \
 
 SOURCES += \
+   AbstractEdit.cpp \
    AbstractWidget.cpp \
    AudioDeviceGraph.cpp \
    DataCore.cpp \
    DelegateComboBox.cpp \
    DelegateSpinBox.cpp \
    DivisionModel.cpp \
-   EditAbstract.cpp \
    EditDivision.cpp \
    EditLength.cpp \
    EditLoop.cpp \
-   PolyRampVisu.cpp \
    MainWidget.cpp \
-   PolyRampModel.cpp \
-   PolyRampWidget.cpp \
    PolyLineModel.cpp \
    PolyLineWidget.cpp \
+   RampModel.cpp \
+   RampVisu.cpp \
+   RampWidget.cpp \
    StageModel.cpp \
    StageWidget.cpp \
    TempoWidget.cpp \

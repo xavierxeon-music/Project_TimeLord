@@ -1,11 +1,12 @@
-#include "EditAbstract.h"
+#include "AbstractEdit.h"
 
+#include <QIcon>
 #include <QLabel>
 
 #include "MainWidget.h"
-#include "PolyRampWidget.h"
+#include "RampWidget.h"
 
-Edit::Abstract::Abstract(PolyRampWidget* polyRampWidget, MainWidget* mainWidget)
+Abstract::Edit::Edit(Ramp::Widget* polyRampWidget, MainWidget* mainWidget)
    : QToolBar(polyRampWidget)
    , Data::Core(mainWidget)
    , polyRampWidget(polyRampWidget)
@@ -13,10 +14,10 @@ Edit::Abstract::Abstract(PolyRampWidget* polyRampWidget, MainWidget* mainWidget)
    setIconSize(QSize(24, 24));
 }
 
-void Edit::Abstract::setPayload(QWidget* widget, const QString& text)
+void Abstract::Edit::setPayload(QWidget* widget, const QString& text)
 {
-   addAction(QIcon(":/Cancel.svg"), "Cancel", this, &Abstract::slotCancel);
-   addAction(QIcon(":/Execute.svg"), "Execute", this, &Abstract::slotExecute);
+   addAction(QIcon(":/Cancel.svg"), "Cancel", this, &Edit::slotCancel);
+   addAction(QIcon(":/Execute.svg"), "Execute", this, &Edit::slotExecute);
 
    addWidget(new QLabel(text));
 
@@ -24,12 +25,12 @@ void Edit::Abstract::setPayload(QWidget* widget, const QString& text)
    addWidget(widget);
 }
 
-void Edit::Abstract::slotCancel()
+void Abstract::Edit::slotCancel()
 {
    polyRampWidget->hideEditStack();
 }
 
-void Edit::Abstract::slotExecute()
+void Abstract::Edit::slotExecute()
 {
    const PoviderNameMap& nameMap = getProviderNames();
    for (PoviderNameMap::const_iterator it = nameMap.constBegin(); it != nameMap.constEnd(); it++)

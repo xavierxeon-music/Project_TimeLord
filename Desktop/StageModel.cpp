@@ -2,7 +2,7 @@
 
 #include "MainWidget.h"
 
-StageModel::StageModel(MainWidget* mainWidget)
+Stage::Model::Model(MainWidget* mainWidget)
    : QStandardItemModel(mainWidget)
    , Data::Core(mainWidget)
 
@@ -10,7 +10,7 @@ StageModel::StageModel(MainWidget* mainWidget)
    setHorizontalHeaderLabels({"index", "position", "length", "height"});
 }
 
-void StageModel::rebuild(const Data::Provider provider, const uint8_t& graphIndex, bool lengthChanged)
+void Stage::Model::rebuild(const Data::Provider provider, const uint8_t& graphIndex, bool lengthChanged)
 {
    clear();
    setHorizontalHeaderLabels({"index", "position", "length", "height"});
@@ -69,7 +69,7 @@ void StageModel::rebuild(const Data::Provider provider, const uint8_t& graphInde
       emit signalGraphLengthChanged(provider, graphIndex);
 }
 
-void StageModel::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
+void Stage::Model::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
 {
    uint32_t startPos = 0;
    for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
@@ -112,7 +112,7 @@ void StageModel::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
    }
 }
 
-bool StageModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int role)
 {
    if (Qt::EditRole != role)
       return QStandardItemModel::setData(index, value, role);

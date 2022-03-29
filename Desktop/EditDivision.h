@@ -1,16 +1,16 @@
 #ifndef EditDivisionH
 #define EditDivisionH
 
-#include "EditAbstract.h"
+#include "AbstractEdit.h"
 
 #include <QComboBox>
 
 namespace Edit
 {
-   class Division : public Abstract
+   class Division : public Abstract::Edit
    {
    public:
-      Division(PolyRampWidget* polyRampWidget, MainWidget* mainWidget);
+      Division(Ramp::Widget* polyRampWidget, MainWidget* mainWidget);
 
    private:
       void execute(PolyRamp* polyRamp) override;

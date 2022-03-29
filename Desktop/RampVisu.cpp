@@ -1,4 +1,4 @@
-#include "PolyRampVisu.h"
+#include "RampVisu.h"
 
 #include <QAction>
 #include <QGraphicsLineItem>
@@ -7,8 +7,8 @@
 
 #include "MainWidget.h"
 
-PolyRampVisu::PolyRampVisu(MainWidget* mainWidget)
-   : AbstractWidget(mainWidget)
+Ramp::Visu::Visu(MainWidget* mainWidget)
+   : Abstract::Widget(mainWidget)
    , graphicsView(nullptr)
    , stageMap()
    , selectedProvider(Data::Provider::None)
@@ -26,8 +26,8 @@ PolyRampVisu::PolyRampVisu(MainWidget* mainWidget)
    toolBar->addAction(QIcon(":/SaveToDaisy.svg"), "Save To Daisy", mainWidget, &MainWidget::slotSaveToDaisy);
 
    toolBar->addSeparator();
-   toolBar->addAction(QIcon(":/ZoomIn.svg"), "Zoom In", this, &PolyRampVisu::slotZoomIn);
-   toolBar->addAction(QIcon(":/ZoomOut.svg"), "Zoom Out", this, &PolyRampVisu::slotZoomOut);
+   toolBar->addAction(QIcon(":/ZoomIn.svg"), "Zoom In", this, &Visu::slotZoomIn);
+   toolBar->addAction(QIcon(":/ZoomOut.svg"), "Zoom Out", this, &Visu::slotZoomOut);
 
    QGraphicsScene* scene = new QGraphicsScene(this);
    scene->setSceneRect(0, 0, 150, 150);
@@ -35,21 +35,21 @@ PolyRampVisu::PolyRampVisu(MainWidget* mainWidget)
    addPayload(graphicsView);
 
    QTimer* updateTimer = new QTimer(this);
-   connect(updateTimer, &QTimer::timeout, this, &PolyRampVisu::slotUpdate);
+   connect(updateTimer, &QTimer::timeout, this, &Visu::slotUpdate);
    updateTimer->start(500);
 
    QPen whitePen(QColor(255, 255, 255));
    graphicsView->scene()->addLine(0, 0, 0, 150, whitePen); // to force height even withou graph data
 }
 
-void PolyRampVisu::slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex)
+void Ramp::Visu::slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex)
 {
    selectedProvider = newProvider;
    selectedGraphIndex = newGraphIndex;
    slotUpdate();
 }
 
-void PolyRampVisu::slotUpdate()
+void Ramp::Visu::slotUpdate()
 {
    static const QPen blackPen(QColor(0, 0, 0), 2);
    static const QPen grayPen(QColor(200, 200, 200));
@@ -118,7 +118,7 @@ void PolyRampVisu::slotUpdate()
    graphicsView->scene()->setSceneRect(contentRect);
 }
 
-void PolyRampVisu::slotZoomIn()
+void Ramp::Visu::slotZoomIn()
 {
    if (255 == zoomLevel)
       return;
@@ -127,7 +127,7 @@ void PolyRampVisu::slotZoomIn()
    slotUpdate();
 }
 
-void PolyRampVisu::slotZoomOut()
+void Ramp::Visu::slotZoomOut()
 {
    if (1 == zoomLevel)
       return;

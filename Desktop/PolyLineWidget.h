@@ -9,7 +9,7 @@ namespace PolyLine
 {
    class Model;
 
-   class Widget : public AbstractWidget
+   class Widget : public Abstract::Widget
    {
       Q_OBJECT
    public:

@@ -6,15 +6,18 @@
 
 #include <QHBoxLayout>
 
-class PolyRampWidget;
-
-namespace Edit
+namespace Ramp
 {
-   class Abstract : public QToolBar, public Data::Core
+   class Widget;
+}
+
+namespace Abstract
+{
+   class Edit : public QToolBar, public Data::Core
    {
       Q_OBJECT
    public:
-      Abstract(PolyRampWidget* polyRampWidget, MainWidget* mainWidget);
+      Edit(Ramp::Widget* polyRampWidget, MainWidget* mainWidget);
 
    protected:
       void setPayload(QWidget* widget, const QString& text);
@@ -25,7 +28,7 @@ namespace Edit
       void slotExecute();
 
    private:
-      PolyRampWidget* polyRampWidget;
+      Ramp::Widget* polyRampWidget;
    };
 } // namespace Edit
 

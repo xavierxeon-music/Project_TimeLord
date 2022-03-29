@@ -1,16 +1,16 @@
 #ifndef EditLengthH
 #define EditLengthH
 
-#include "EditAbstract.h"
+#include "AbstractEdit.h"
 
 #include <QSpinBox>
 
 namespace Edit
 {
-   class Length : public Abstract
+   class Length : public Abstract::Edit
    {
    public:
-      Length(PolyRampWidget* polyRampWidget, MainWidget* mainWidget);
+      Length(Ramp::Widget* polyRampWidget, MainWidget* mainWidget);
 
    private:
       void execute(PolyRamp* polyRamp) override;
