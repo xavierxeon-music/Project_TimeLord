@@ -15,14 +15,14 @@ void StageModel::rebuild(const Model::Provider provider, const uint8_t& graphInd
    clear();
    setHorizontalHeaderLabels({"index", "position", "length", "height"});
 
-   Graph* graph = getGraph(provider, graphIndex);
-   if (!graph)
+   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+   if (!polyRamp)
       return;
 
-   QStandardItem* parentItem = new QStandardItem(graph->stageCount());
+   QStandardItem* parentItem = new QStandardItem(polyRamp->stageCount());
    parentItem->setEditable(false);
 
-   for (uint8_t stageIndex = 0; stageIndex < graph->stageCount(); stageIndex++)
+   for (uint8_t stageIndex = 0; stageIndex < polyRamp->stageCount(); stageIndex++)
    {
       QStandardItem* indexItem = new QStandardItem();
       {
@@ -62,14 +62,14 @@ void StageModel::rebuild(const Model::Provider provider, const uint8_t& graphInd
       }
 
       invisibleRootItem()->appendRow({indexItem, posItem, lengthItem, startItem});
-      update(graph, stageIndex);
+      update(polyRamp, stageIndex);
    }
 
    if (lengthChanged)
       emit signalGraphLengthChanged(provider, graphIndex);
 }
 
-void StageModel::update(Graph* graph, const uint8_t& itemStageIndex)
+void StageModel::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
 {
    uint32_t startPos = 0;
    for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
@@ -77,10 +77,10 @@ void StageModel::update(Graph* graph, const uint8_t& itemStageIndex)
       QStandardItem* nameItem = invisibleRootItem()->child(row, 0);
       const uint8_t stageIndex = nameItem->data(Model::Role::StageIndex).value<uint8_t>();
 
-      const uint8_t nextIndex = (stageIndex + 1 < graph->stageCount()) ? stageIndex + 1 : 0;
-      const uint8_t startHeight = graph->getStageStartHeight(stageIndex);
-      const uint8_t endHeight = graph->getStageStartHeight(nextIndex);
-      const uint8_t length = graph->getStageLength(stageIndex);
+      const uint8_t nextIndex = (stageIndex + 1 < polyRamp->stageCount()) ? stageIndex + 1 : 0;
+      const uint8_t startHeight = polyRamp->getStageStartHeight(stageIndex);
+      const uint8_t endHeight = polyRamp->getStageStartHeight(nextIndex);
+      const uint8_t length = polyRamp->getStageLength(stageIndex);
 
       QStandardItem* posItem = invisibleRootItem()->child(row, 1);
       QString posText = QString::number(startPos);
@@ -99,7 +99,7 @@ void StageModel::update(Graph* graph, const uint8_t& itemStageIndex)
       {
          QStandardItem* lengthItem = invisibleRootItem()->child(row, 2);
          QString lengthText = QString::number(length);
-         if (stageIndex + 1 == graph->stageCount())
+         if (stageIndex + 1 == polyRamp->stageCount())
             lengthText += "*";
          lengthItem->setText(lengthText);
 
@@ -108,7 +108,7 @@ void StageModel::update(Graph* graph, const uint8_t& itemStageIndex)
          startItem->setText(startHeightText);
       }
 
-      startPos += graph->getStageLength(stageIndex);
+      startPos += polyRamp->getStageLength(stageIndex);
    }
 }
 
@@ -124,7 +124,7 @@ bool StageModel::setData(const QModelIndex& index, const QVariant& value, int ro
    const Model::Provider provider = data(index, Model::Role::Provider).value<Model::Provider>();
    const uint8_t graphIndex = data(index, Model::Role::GraphIndex).value<uint8_t>();
 
-   Graph* graph = getGraph(provider, graphIndex);
+   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
    const uint8_t stageIndex = data(index, Model::Role::StageIndex).value<uint8_t>();
 
    QVariant targeValue = value;
@@ -133,18 +133,18 @@ bool StageModel::setData(const QModelIndex& index, const QVariant& value, int ro
    if (Model::Target::StageHeight == target)
    {
       const uint8_t height = value.toInt();
-      graph->setStageStartHeight(stageIndex, height);
+      polyRamp->setStageStartHeight(stageIndex, height);
    }
    else if (Model::Target::StageLength == target)
    {
       QString length = value.toString().replace("*", "");
-      if (Graph::LengthStatus::Changed != graph->setStageLength(stageIndex, length.toInt(), !lockGraphSize))
+      if (PolyRamp::LengthStatus::Changed != polyRamp->setStageLength(stageIndex, length.toInt(), !lockGraphSize))
       {
-         targeValue = graph->getStageLength(stageIndex); // UNDO
+         targeValue = polyRamp->getStageLength(stageIndex); // UNDO
       }
       else
       {
-         if (stageIndex + 1 == graph->stageCount())
+         if (stageIndex + 1 == polyRamp->stageCount())
             length += "*";
          targeValue = length;
          emit signalGraphLengthChanged(provider, graphIndex);
@@ -152,6 +152,6 @@ bool StageModel::setData(const QModelIndex& index, const QVariant& value, int ro
    }
 
    bool result = QStandardItemModel::setData(index, targeValue, role);
-   update(graph, stageIndex);
+   update(polyRamp, stageIndex);
    return result;
 }

@@ -18,18 +18,20 @@ using Frame = AudioDevice::Frame;
 MainWidget::MainWidget()
    : QWidget(nullptr)
    , Remember::Root()
-   , graphs(this)
+   , polyRamps(this)
    , audioDevice(new AudioDeviceGraph(this))
    , midiBridge(this)
    , fileStorageDaisy(this)
    , fileStorageDevice(audioDevice)
    , splitter(nullptr)
    , statusBar(nullptr)
-   , polyRampWidget(nullptr)
    , polyRampModel(nullptr)
-   , stageWidget(nullptr)
-   , stageModel(nullptr)
    , polyRampVisu(nullptr)
+   , polyRampWidget(nullptr)
+   , stageModel(nullptr)
+   , stageWidget(nullptr)
+   , polyLineModel(nullptr)
+   , polyLineWidget(nullptr)
 {
    setWindowTitle("Time Lord UI[*]");
 
@@ -62,8 +64,8 @@ MainWidget::MainWidget()
    QVBoxLayout* masterLayout = new QVBoxLayout(this);
    masterLayout->setContentsMargins(0, 0, 0, 0);
    masterLayout->setSpacing(0);
-   masterLayout->addWidget(splitter);
    masterLayout->addWidget(polyRampVisu);
+   masterLayout->addWidget(splitter);
    masterLayout->addWidget(statusBar);
 
    SettingsUI widgetSettings("MainWidget");
@@ -77,7 +79,7 @@ MainWidget::MainWidget()
    modfifiedCheckTimer->start(1000);
 
    for (uint8_t index = 0; index < 16; index++)
-      graphs[index].clockReset();
+      polyRamps[index].clockReset();
    audioDevice->clockReset();
 }
 

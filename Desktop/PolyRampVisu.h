@@ -20,7 +20,7 @@ private:
       QGraphicsLineItem* lineItem;
 
       using List = QList<Stage>;
-      using Map = QMap<Graph*, List>;
+      using Map = QMap<PolyRamp*, List>;
    };
 
 private slots:

@@ -7,10 +7,12 @@
 #include <QSplitter>
 #include <QStatusBar>
 
-#include <Blocks/Graph.h>
+#include <Blocks/PolyRamp.h>
 #include <FileStorage.h>
 #include <MidiBridge.h>
 
+#include "PolyLineModel.h"
+#include "PolyLineWidget.h"
 #include "PolyRampModel.h"
 #include "PolyRampVisu.h"
 #include "PolyRampWidget.h"
@@ -39,7 +41,7 @@ private:
    friend class DataCore;
 
 private: // things to remeber
-   using GraphList_ = Remember::RefArray<Graph, 16>;
+   using PolyRampList_ = Remember::RefArray<PolyRamp, 16>;
 
 private slots:
    void slotCheckDataModified();
@@ -52,7 +54,7 @@ private:
    void closeEvent(QCloseEvent* ce) override;
 
 private:
-   GraphList_ graphs;
+   PolyRampList_ polyRamps;
    AudioDeviceGraph* audioDevice;
 
    MidiBridge midiBridge;
@@ -62,13 +64,15 @@ private:
    QSplitter* splitter;
    QStatusBar* statusBar;
 
-   PolyRampWidget* polyRampWidget;
    PolyRampModel* polyRampModel;
-
-   StageWidget* stageWidget;
-   StageModel* stageModel;
-
    PolyRampVisu* polyRampVisu;
+   PolyRampWidget* polyRampWidget;
+
+   StageModel* stageModel;
+   StageWidget* stageWidget;
+
+   PolyLine::Model* polyLineModel;
+   PolyLine::Widget* polyLineWidget;
 };
 
 #endif // MainWidgetH

@@ -1,7 +1,7 @@
 #ifndef DataCoreH
 #define DataCoreH
 
-#include <Blocks/Graph.h>
+#include <Blocks/PolyRamp.h>
 
 class MainWidget;
 
@@ -51,7 +51,7 @@ public:
 
 protected:
    PoviderNameMap getProviderNames() const;
-   Graph* getGraph(const Model::Provider& provider, const uint8_t& index);
+   PolyRamp* getPolyRamp(const Model::Provider& provider, const uint8_t& index);
 
 protected:
    MainWidget* mainWidget;

@@ -52,11 +52,11 @@ void StageWidget::slotGraphSelected(const Model::Provider& newProvider, const ui
 
 void StageWidget::slotInsertPoint()
 {
-   Graph* graph = getGraph(provider, graphIndex);
-   if (!graph)
+   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+   if (!polyRamp)
       return;
 
-   graph->addStage(selectedStageIndex);
+   polyRamp->addStage(selectedStageIndex);
 
    stageModel->rebuild(provider, graphIndex, true);
    setSelection(selectedStageIndex);
@@ -64,25 +64,25 @@ void StageWidget::slotInsertPoint()
 
 void StageWidget::slotRemovePoint()
 {
-   Graph* graph = getGraph(provider, graphIndex);
-   if (!graph)
+   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+   if (!polyRamp)
       return;
 
-   graph->removeStage(selectedStageIndex);
+   polyRamp->removeStage(selectedStageIndex);
 
    stageModel->rebuild(provider, graphIndex, true);
 }
 
 void StageWidget::slotMoveBack()
 {
-   Graph* graph = getGraph(provider, graphIndex);
-   if (!graph)
+   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+   if (!polyRamp)
       return;
 
    if (0 == selectedStageIndex)
       return;
 
-   graph->moveStage(selectedStageIndex, selectedStageIndex - 1);
+   polyRamp->moveStage(selectedStageIndex, selectedStageIndex - 1);
 
    stageModel->rebuild(provider, graphIndex, false);
    setSelection(selectedStageIndex - 1);
@@ -90,14 +90,14 @@ void StageWidget::slotMoveBack()
 
 void StageWidget::slotMoveForward()
 {
-   Graph* graph = getGraph(provider, graphIndex);
-   if (!graph)
+   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+   if (!polyRamp)
       return;
 
-   if (selectedStageIndex + 1 > graph->stageCount())
+   if (selectedStageIndex + 1 > polyRamp->stageCount())
       return;
 
-   graph->moveStage(selectedStageIndex, selectedStageIndex + 1);
+   polyRamp->moveStage(selectedStageIndex, selectedStageIndex + 1);
 
    stageModel->rebuild(provider, graphIndex, false);
    setSelection(selectedStageIndex + 1);

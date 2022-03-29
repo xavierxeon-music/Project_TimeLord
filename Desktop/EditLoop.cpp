@@ -8,8 +8,8 @@ Edit::Loop::Loop(PolyRampWidget* polyRampWidget, MainWidget* mainWidget)
    setPayload(loopCheck, "Loop");
 }
 
-void Edit::Loop::execute(Graph* graph)
+void Edit::Loop::execute(PolyRamp* polyRamp)
 {
    const bool loop = loopCheck->isChecked();
-   graph->setLooping(loop);
+   polyRamp->setLooping(loop);
 }

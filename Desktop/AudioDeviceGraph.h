@@ -23,7 +23,7 @@ private:
    friend class DataCore;
 
 private: // things to remeber
-   using GraphList_ = Remember::RefArray<Graph, 16>;
+   using PolyRampList_ = Remember::RefArray<PolyRamp, 16>;
 
 private:
    void audioLoop(const float& audioCallbackRate);
@@ -32,7 +32,7 @@ private:
 private:
    QStatusBar* statusBar;
 
-   GraphList_ graphs;
+   PolyRampList_ polyRamps;
    AudioDevice::Driver audioDriver;
    AudioDevice::InputsTempo tempo;
    AudioDevice::OutputCV outputs[16];

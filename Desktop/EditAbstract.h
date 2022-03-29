@@ -18,7 +18,7 @@ namespace Edit
 
    protected:
       void setPayload(QWidget* widget, const QString& text);
-      virtual void execute(Graph* graph) = 0;
+      virtual void execute(PolyRamp* polyRamp) = 0;
 
    private slots:
       void slotCancel();

@@ -13,7 +13,7 @@ namespace Edit
       Length(PolyRampWidget* polyRampWidget, MainWidget* mainWidget);
 
    private:
-      void execute(Graph* graph) override;
+      void execute(PolyRamp* polyRamp) override;
 
    private:
       QSpinBox* lengthSpin;

@@ -26,6 +26,8 @@ HEADERS += \
    MainWidget.h \
    PolyRampModel.h \
    PolyRampWidget.h \
+   PolyLineModel.h \
+   PolyLineWidget.h \
    StageModel.h \
    StageWidget.h \
    TempoWidget.h \
@@ -45,6 +47,8 @@ SOURCES += \
    MainWidget.cpp \
    PolyRampModel.cpp \
    PolyRampWidget.cpp \
+   PolyLineModel.cpp \
+   PolyLineWidget.cpp \
    StageModel.cpp \
    StageWidget.cpp \
    TempoWidget.cpp \

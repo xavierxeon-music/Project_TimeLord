@@ -3,7 +3,7 @@
 AudioDeviceGraph::AudioDeviceGraph(QObject* parent)
    : QObject(parent)
    , Remember::Root()
-   , graphs(this)
+   , polyRamps(this)
    , audioDriver(AudioDevice::Common::Device::ES8, AudioDevice::Common::SampleRate::Normal)
    , tempo(&audioDriver, 0, 1)
    , outputs()
@@ -20,7 +20,7 @@ AudioDeviceGraph::AudioDeviceGraph(QObject* parent)
 void AudioDeviceGraph::clockReset()
 {
    for (uint8_t index = 0; index < 16; index++)
-      graphs[index].clockReset();
+      polyRamps[index].clockReset();
 }
 
 const Tempo* AudioDeviceGraph::getTempo() const
@@ -36,8 +36,8 @@ void AudioDeviceGraph::audioLoop(const float& audioCallbackRate)
    {
       if (tempo.isRunningOrFirstTick())
       {
-         const Tempo::Division division = graphs[index].getStepSize();
-         const uint8_t value = graphs[index].getCurrentValue(tempo.getPercentage(division));
+         const Tempo::Division division = polyRamps[index].getStepSize();
+         const uint8_t value = polyRamps[index].getCurrentValue(tempo.getPercentage(division));
          const float voltage = value * 5.0 / 255.0;
          outputs[index].setVoltage(voltage);
       }
@@ -51,5 +51,5 @@ void AudioDeviceGraph::audioLoop(const float& audioCallbackRate)
 void AudioDeviceGraph::clockTick()
 {
    for (uint8_t index = 0; index < 16; index++)
-      graphs[index].clockTick();
+      polyRamps[index].clockTick();
 }

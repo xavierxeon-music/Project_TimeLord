@@ -22,15 +22,6 @@ PolyRampWidget::PolyRampWidget(MainWidget* mainWidget, PolyRampModel* polyRampMo
 {
    setMinimumWidth(150);
 
-   toolBar->addAction(QIcon(":/LoadFromFile.svg"), "Load From File", mainWidget, &MainWidget::slotLoadFromFile);
-   QAction* saveFileAction = toolBar->addAction(QIcon(":/SaveToFile.svg"), "Save To File", mainWidget, &MainWidget::slotSaveToFile);
-   saveFileAction->setShortcut(QKeySequence(QKeySequence::Save));
-   toolBar->addAction(QIcon(":/SaveNewFile.svg"), "Save To New File", mainWidget, &MainWidget::slotSaveNewFile);
-
-   toolBar->addSeparator();
-   toolBar->addAction(QIcon(":/SaveToDaisy.svg"), "Save To Daisy", mainWidget, &MainWidget::slotSaveToDaisy);
-
-   toolBar->addSeparator();
    toolBar->addAction(QIcon(":/Trim.svg"), "Trim Selected Graph", this, &PolyRampWidget::slotTrimCurrentGraph);
 
    toolBar->addSeparator();
@@ -70,11 +61,11 @@ void PolyRampWidget::hideEditStack()
 
 void PolyRampWidget::slotTrimCurrentGraph()
 {
-   Graph* graph = getGraph(selectedProvider, selectedGraphIndex);
-   if (!graph)
+   PolyRamp* polyRamp = getPolyRamp(selectedProvider, selectedGraphIndex);
+   if (!polyRamp)
       return;
 
-   graph->trimLength();
+   polyRamp->trimLength();
 
    polyRampModel->slotGraphLengthChanged(selectedProvider, selectedGraphIndex);
 }

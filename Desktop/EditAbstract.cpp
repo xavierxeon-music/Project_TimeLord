@@ -38,8 +38,8 @@ void Edit::Abstract::slotExecute()
 
       for (uint8_t graphIndex = 0; graphIndex < 16; graphIndex++)
       {
-         Graph* graph = getGraph(provider, graphIndex);
-         execute(graph);
+         PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+         execute(polyRamp);
       }
    }
 

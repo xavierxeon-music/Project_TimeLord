@@ -12,10 +12,10 @@ Edit::Division::Division(PolyRampWidget* polyRampWidget, MainWidget* mainWidget)
    setPayload(divisionCombo, "Division");
 }
 
-void Edit::Division::execute(Graph* graph)
+void Edit::Division::execute(PolyRamp* polyRamp)
 {
    const QVariant data = divisionCombo->currentData(Model::Role::Data);
    const Tempo::Division stepSize = data.value<Tempo::Division>();
 
-   graph->setStepSize(stepSize);
+   polyRamp->setStepSize(stepSize);
 }

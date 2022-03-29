@@ -14,10 +14,10 @@ Edit::Length::Length(PolyRampWidget* polyRampWidget, MainWidget* mainWidget)
    setPayload(lengthSpin, "Length");
 }
 
-void Edit::Length::execute(Graph* graph)
+void Edit::Length::execute(PolyRamp* polyRamp)
 {
    lengthSpin->interpretText();
    const uint32_t value = lengthSpin->value();
 
-   graph->setLength(value, true);
+   polyRamp->setLength(value, true);
 }

@@ -16,6 +16,16 @@ PolyRampVisu::PolyRampVisu(MainWidget* mainWidget)
    , zoomLevel(10)
 {
    setFixedHeight(200);
+
+   toolBar->addAction(QIcon(":/LoadFromFile.svg"), "Load From File", mainWidget, &MainWidget::slotLoadFromFile);
+   QAction* saveFileAction = toolBar->addAction(QIcon(":/SaveToFile.svg"), "Save To File", mainWidget, &MainWidget::slotSaveToFile);
+   saveFileAction->setShortcut(QKeySequence(QKeySequence::Save));
+   toolBar->addAction(QIcon(":/SaveNewFile.svg"), "Save To New File", mainWidget, &MainWidget::slotSaveNewFile);
+
+   toolBar->addSeparator();
+   toolBar->addAction(QIcon(":/SaveToDaisy.svg"), "Save To Daisy", mainWidget, &MainWidget::slotSaveToDaisy);
+
+   toolBar->addSeparator();
    toolBar->addAction(QIcon(":/ZoomIn.svg"), "Zoom In", this, &PolyRampVisu::slotZoomIn);
    toolBar->addAction(QIcon(":/ZoomOut.svg"), "Zoom Out", this, &PolyRampVisu::slotZoomOut);
 
@@ -44,15 +54,15 @@ void PolyRampVisu::slotUpdate()
    static const QPen blackPen(QColor(0, 0, 0), 2);
    static const QPen grayPen(QColor(200, 200, 200));
 
-   Graph* selectedGraph = getGraph(selectedProvider, selectedGraphIndex);
+   PolyRamp* selectedPolyRamp = getPolyRamp(selectedProvider, selectedGraphIndex);
 
-   auto drawGraph = [&](Graph* graph)
+   auto drawGraph = [&](PolyRamp* polyRamp)
    {
-      if (!graph || 0 == graph->stageCount())
+      if (!polyRamp || 0 == polyRamp->stageCount())
          return;
 
-      Stage::List& stageList = stageMap[graph];
-      while (stageList.size() < graph->stageCount()) // add lines
+      Stage::List& stageList = stageMap[polyRamp];
+      while (stageList.size() < polyRamp->stageCount()) // add lines
       {
          Stage stage;
          stage.lineItem = new QGraphicsLineItem();
@@ -61,7 +71,7 @@ void PolyRampVisu::slotUpdate()
          stageList.append(stage);
       }
 
-      while (stageList.size() > graph->stageCount()) // remove lines
+      while (stageList.size() > polyRamp->stageCount()) // remove lines
       {
          Stage stage = stageList.takeLast();
          delete stage.lineItem;
@@ -70,20 +80,20 @@ void PolyRampVisu::slotUpdate()
       uint16_t offsetY = 10;
       uint32_t startX = 5;
 
-      for (uint8_t startIndex = 0; startIndex < graph->stageCount(); startIndex++)
+      for (uint8_t startIndex = 0; startIndex < polyRamp->stageCount(); startIndex++)
       {
-         uint32_t stageLength = graph->getStageLength(startIndex);
-         uint8_t endIndex = (startIndex + 1 < graph->stageCount()) ? startIndex + 1 : 0;
+         uint32_t stageLength = polyRamp->getStageLength(startIndex);
+         uint8_t endIndex = (startIndex + 1 < polyRamp->stageCount()) ? startIndex + 1 : 0;
 
-         uint32_t startY = 128 - (0.5 * graph->getStageStartHeight(startIndex));
-         uint32_t endY = 128 - (0.5 * graph->getStageStartHeight(endIndex));
+         uint32_t startY = 128 - (0.5 * polyRamp->getStageStartHeight(startIndex));
+         uint32_t endY = 128 - (0.5 * polyRamp->getStageStartHeight(endIndex));
 
-         uint32_t endX = (endIndex == 0) ? graph->getLength() : startX + stageLength;
+         uint32_t endX = (endIndex == 0) ? polyRamp->getLength() : startX + stageLength;
 
          QGraphicsLineItem* lineItem = stageList[startIndex].lineItem;
          lineItem->setLine(zoomLevel * startX, offsetY + startY, zoomLevel * endX, offsetY + endY);
-         lineItem->setPen((graph == selectedGraph) ? blackPen : grayPen);
-         lineItem->setZValue((graph == selectedGraph) ? 1.0 : 0.0);
+         lineItem->setPen((polyRamp == selectedPolyRamp) ? blackPen : grayPen);
+         lineItem->setZValue((polyRamp == selectedPolyRamp) ? 1.0 : 0.0);
 
          startX = endX;
       }
@@ -96,12 +106,12 @@ void PolyRampVisu::slotUpdate()
 
       for (uint8_t graphIndex = 0; graphIndex < 16; graphIndex++)
       {
-         Graph* graph = getGraph(provider, graphIndex);
-         drawGraph(graph);
+         PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+         drawGraph(polyRamp);
       }
    }
 
-   drawGraph(selectedGraph);
+   drawGraph(selectedPolyRamp);
 
    QRectF contentRect = graphicsView->scene()->itemsBoundingRect();
    contentRect.setHeight(150);

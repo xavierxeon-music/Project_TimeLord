@@ -13,7 +13,7 @@ namespace Edit
       Division(PolyRampWidget* polyRampWidget, MainWidget* mainWidget);
 
    private:
-      void execute(Graph* graph) override;
+      void execute(PolyRamp* polyRamp) override;
 
    private:
       QComboBox* divisionCombo;

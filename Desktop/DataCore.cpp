@@ -16,12 +16,12 @@ DataCore::PoviderNameMap DataCore::getProviderNames() const
    return providerNameMap;
 }
 
-Graph* DataCore::getGraph(const Model::Provider& provider, const uint8_t& index)
+PolyRamp* DataCore::getPolyRamp(const Model::Provider& provider, const uint8_t& index)
 {
    if (Model::Provider::DaisyPatch == provider)
-      return &(mainWidget->graphs[index]);
+      return &(mainWidget->polyRamps[index]);
    else if (Model::Provider::AudioDeviceGraph == provider)
-      return &(mainWidget->audioDevice->graphs[index]);
+      return &(mainWidget->audioDevice->polyRamps[index]);
    else
       return nullptr;
 }
