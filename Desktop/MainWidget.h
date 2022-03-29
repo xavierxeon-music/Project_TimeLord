@@ -11,8 +11,8 @@
 #include <FileStorage.h>
 #include <MidiBridge.h>
 
-#include "GraphVisuWidget.h"
 #include "PolyRampModel.h"
+#include "PolyRampVisu.h"
 #include "PolyRampWidget.h"
 #include "StageModel.h"
 #include "StageWidget.h"
@@ -68,7 +68,7 @@ private:
    StageWidget* stageWidget;
    StageModel* stageModel;
 
-   GraphVisuWidget* graphVisuWidget;
+   PolyRampVisu* polyRampVisu;
 };
 
 #endif // MainWidgetH

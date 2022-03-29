@@ -29,7 +29,7 @@ MainWidget::MainWidget()
    , polyRampModel(nullptr)
    , stageWidget(nullptr)
    , stageModel(nullptr)
-   , graphVisuWidget(nullptr)
+   , polyRampVisu(nullptr)
 {
    setWindowTitle("Time Lord UI[*]");
 
@@ -40,10 +40,10 @@ MainWidget::MainWidget()
 
    polyRampWidget = new PolyRampWidget(this, polyRampModel);
    stageWidget = new StageWidget(this, stageModel);
-   graphVisuWidget = new GraphVisuWidget(this);
+   polyRampVisu = new PolyRampVisu(this);
 
    connect(polyRampWidget, &PolyRampWidget::signalGraphSelected, stageWidget, &StageWidget::slotGraphSelected);
-   connect(polyRampWidget, &PolyRampWidget::signalGraphSelected, graphVisuWidget, &GraphVisuWidget::slotGraphSelected);
+   connect(polyRampWidget, &PolyRampWidget::signalGraphSelected, polyRampVisu, &PolyRampVisu::slotGraphSelected);
    connect(stageModel, &StageModel::signalGraphLengthChanged, polyRampModel, &PolyRampModel::slotGraphLengthChanged);
    polyRampModel->rebuild();
 
@@ -63,7 +63,7 @@ MainWidget::MainWidget()
    masterLayout->setContentsMargins(0, 0, 0, 0);
    masterLayout->setSpacing(0);
    masterLayout->addWidget(splitter);
-   masterLayout->addWidget(graphVisuWidget);
+   masterLayout->addWidget(polyRampVisu);
    masterLayout->addWidget(statusBar);
 
    SettingsUI widgetSettings("MainWidget");

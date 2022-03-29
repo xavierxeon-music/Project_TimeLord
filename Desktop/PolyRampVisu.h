@@ -1,15 +1,15 @@
-#ifndef GraphVisuWidgetH
-#define GraphVisuWidgetH
+#ifndef PolyRampVisuH
+#define PolyRampVisuH
 
 #include "AbstractWidget.h"
 
 #include <QGraphicsView>
 
-class GraphVisuWidget : public AbstractWidget
+class PolyRampVisu : public AbstractWidget
 {
    Q_OBJECT
 public:
-   GraphVisuWidget(MainWidget* mainWidget);
+   PolyRampVisu(MainWidget* mainWidget);
 
 public slots:
    void slotGraphSelected(const Model::Provider& newProvider, const uint8_t& newGraphIndex);
@@ -38,4 +38,4 @@ private:
    uint8_t zoomLevel;
 };
 
-#endif // GraphVisuWidgetH
+#endif // PolyRampVisuH

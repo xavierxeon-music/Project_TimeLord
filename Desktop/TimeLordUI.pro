@@ -22,7 +22,7 @@ HEADERS += \
    EditDivision.h \
    EditLength.h \
    EditLoop.h \
-   GraphVisuWidget.h \
+   PolyRampVisu.h \
    MainWidget.h \
    PolyRampModel.h \
    PolyRampWidget.h \
@@ -41,7 +41,7 @@ SOURCES += \
    EditDivision.cpp \
    EditLength.cpp \
    EditLoop.cpp \
-   GraphVisuWidget.cpp \
+   PolyRampVisu.cpp \
    MainWidget.cpp \
    PolyRampModel.cpp \
    PolyRampWidget.cpp \

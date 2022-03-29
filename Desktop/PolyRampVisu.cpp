@@ -1,4 +1,4 @@
-#include "GraphVisuWidget.h"
+#include "PolyRampVisu.h"
 
 #include <QAction>
 #include <QGraphicsLineItem>
@@ -7,7 +7,7 @@
 
 #include "MainWidget.h"
 
-GraphVisuWidget::GraphVisuWidget(MainWidget* mainWidget)
+PolyRampVisu::PolyRampVisu(MainWidget* mainWidget)
    : AbstractWidget(mainWidget)
    , graphicsView(nullptr)
    , stageMap()
@@ -16,8 +16,8 @@ GraphVisuWidget::GraphVisuWidget(MainWidget* mainWidget)
    , zoomLevel(10)
 {
    setFixedHeight(200);
-   toolBar->addAction(QIcon(":/ZoomIn.svg"), "Zoom In", this, &GraphVisuWidget::slotZoomIn);
-   toolBar->addAction(QIcon(":/ZoomOut.svg"), "Zoom Out", this, &GraphVisuWidget::slotZoomOut);
+   toolBar->addAction(QIcon(":/ZoomIn.svg"), "Zoom In", this, &PolyRampVisu::slotZoomIn);
+   toolBar->addAction(QIcon(":/ZoomOut.svg"), "Zoom Out", this, &PolyRampVisu::slotZoomOut);
 
    QGraphicsScene* scene = new QGraphicsScene(this);
    scene->setSceneRect(0, 0, 150, 150);
@@ -25,21 +25,21 @@ GraphVisuWidget::GraphVisuWidget(MainWidget* mainWidget)
    addPayload(graphicsView);
 
    QTimer* updateTimer = new QTimer(this);
-   connect(updateTimer, &QTimer::timeout, this, &GraphVisuWidget::slotUpdate);
+   connect(updateTimer, &QTimer::timeout, this, &PolyRampVisu::slotUpdate);
    updateTimer->start(500);
 
    QPen whitePen(QColor(255, 255, 255));
    graphicsView->scene()->addLine(0, 0, 0, 150, whitePen); // to force height even withou graph data
 }
 
-void GraphVisuWidget::slotGraphSelected(const Model::Provider& newProvider, const uint8_t& newGraphIndex)
+void PolyRampVisu::slotGraphSelected(const Model::Provider& newProvider, const uint8_t& newGraphIndex)
 {
    selectedProvider = newProvider;
    selectedGraphIndex = newGraphIndex;
    slotUpdate();
 }
 
-void GraphVisuWidget::slotUpdate()
+void PolyRampVisu::slotUpdate()
 {
    static const QPen blackPen(QColor(0, 0, 0), 2);
    static const QPen grayPen(QColor(200, 200, 200));
@@ -108,7 +108,7 @@ void GraphVisuWidget::slotUpdate()
    graphicsView->scene()->setSceneRect(contentRect);
 }
 
-void GraphVisuWidget::slotZoomIn()
+void PolyRampVisu::slotZoomIn()
 {
    if (255 == zoomLevel)
       return;
@@ -117,7 +117,7 @@ void GraphVisuWidget::slotZoomIn()
    slotUpdate();
 }
 
-void GraphVisuWidget::slotZoomOut()
+void PolyRampVisu::slotZoomOut()
 {
    if (1 == zoomLevel)
       return;
