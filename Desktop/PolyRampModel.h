@@ -4,14 +4,14 @@
 #include "DataCore.h"
 #include <QStandardItemModel>
 
-class PolyRampModel : public QStandardItemModel, public DataCore
+class PolyRampModel : public QStandardItemModel, public Data::Core
 {
    Q_OBJECT
 public:
    PolyRampModel(MainWidget* mainWidget);
 
 public slots:
-   void slotGraphLengthChanged(const Model::Provider& provider, const uint8_t& graphIndex);
+   void slotGraphLengthChanged(const Data::Provider& provider, const uint8_t& graphIndex);
 
 public:
    void rebuild();

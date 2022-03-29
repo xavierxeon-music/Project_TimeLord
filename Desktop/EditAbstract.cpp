@@ -7,7 +7,7 @@
 
 Edit::Abstract::Abstract(PolyRampWidget* polyRampWidget, MainWidget* mainWidget)
    : QToolBar(polyRampWidget)
-   , DataCore(mainWidget)
+   , Data::Core(mainWidget)
    , polyRampWidget(polyRampWidget)
 {
    setIconSize(QSize(24, 24));
@@ -34,7 +34,7 @@ void Edit::Abstract::slotExecute()
    const PoviderNameMap& nameMap = getProviderNames();
    for (PoviderNameMap::const_iterator it = nameMap.constBegin(); it != nameMap.constEnd(); it++)
    {
-      const Model::Provider provider = it.key();
+      const Data::Provider provider = it.key();
 
       for (uint8_t graphIndex = 0; graphIndex < 16; graphIndex++)
       {

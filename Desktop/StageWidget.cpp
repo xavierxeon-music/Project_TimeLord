@@ -1,10 +1,7 @@
 #include "StageWidget.h"
 
 #include <QAction>
-
-#include <QToolBar>
 #include <QTreeView>
-#include <QVBoxLayout>
 
 #include "DelegateSpinBox.h"
 #include "MainWidget.h"
@@ -13,7 +10,7 @@ StageWidget::StageWidget(MainWidget* mainWidget, StageModel* stageModel)
    : AbstractWidget(mainWidget)
    , stageModel(stageModel)
    , selectionModel(nullptr)
-   , provider(Model::Provider::None)
+   , provider(Data::Provider::None)
    , graphIndex(0)
    , selectedStageIndex(0)
 {
@@ -41,7 +38,7 @@ StageWidget::StageWidget(MainWidget* mainWidget, StageModel* stageModel)
    addPayload(staggeTreeView);
 }
 
-void StageWidget::slotGraphSelected(const Model::Provider& newProvider, const uint8_t& newGraphIndex)
+void StageWidget::slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex)
 {
    provider = newProvider;
    graphIndex = newGraphIndex;

@@ -13,7 +13,7 @@ public:
    StageWidget(MainWidget* mainWidget, StageModel* stageModel);
 
 public slots:
-   void slotGraphSelected(const Model::Provider& newProvider, const uint8_t& newGraphIndex);
+   void slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex);
 
 private slots:
    void slotInsertPoint();
@@ -30,7 +30,7 @@ private:
    StageModel* stageModel;
    QItemSelectionModel* selectionModel;
 
-   Model::Provider provider;
+   Data::Provider provider;
    uint8_t graphIndex;
    uint8_t selectedStageIndex;
 };

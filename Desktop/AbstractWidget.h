@@ -9,7 +9,7 @@
 
 class MainWidget;
 
-class AbstractWidget : public QWidget, public DataCore
+class AbstractWidget : public QWidget, public Data::Core
 {
    Q_OBJECT
 public:

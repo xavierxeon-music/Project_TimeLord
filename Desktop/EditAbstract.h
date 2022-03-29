@@ -10,7 +10,7 @@ class PolyRampWidget;
 
 namespace Edit
 {
-   class Abstract : public QToolBar, public DataCore
+   class Abstract : public QToolBar, public Data::Core
    {
       Q_OBJECT
    public:

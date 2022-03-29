@@ -17,7 +17,7 @@ PolyRampWidget::PolyRampWidget(MainWidget* mainWidget, PolyRampModel* polyRampMo
    , lengthEdit(nullptr)
    , divisionEdit(nullptr)
    , loopEdit(nullptr)
-   , selectedProvider(Model::Provider::None)
+   , selectedProvider(Data::Provider::None)
    , selectedGraphIndex(0)
 {
    setMinimumWidth(150);
@@ -93,12 +93,12 @@ void PolyRampWidget::slotCurrentSelectionChanged(const QModelIndex& current, con
    Q_UNUSED(previous);
 
    QStandardItem* item = polyRampModel->itemFromIndex(current);
-   const QVariant itemDataProvider = item->data(Model::Role::Provider);
+   const QVariant itemDataProvider = item->data(Data::Role::Provider);
    if (itemDataProvider.isNull())
       return;
 
-   selectedProvider = itemDataProvider.value<Model::Provider>();
-   selectedGraphIndex = item->data(Model::Role::GraphIndex).toInt();
+   selectedProvider = itemDataProvider.value<Data::Provider>();
+   selectedGraphIndex = item->data(Data::Role::GraphIndex).toInt();
 
    emit signalGraphSelected(selectedProvider, selectedGraphIndex);
 }

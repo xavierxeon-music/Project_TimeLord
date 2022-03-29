@@ -11,7 +11,7 @@ PolyRampVisu::PolyRampVisu(MainWidget* mainWidget)
    : AbstractWidget(mainWidget)
    , graphicsView(nullptr)
    , stageMap()
-   , selectedProvider(Model::Provider::None)
+   , selectedProvider(Data::Provider::None)
    , selectedGraphIndex(0)
    , zoomLevel(10)
 {
@@ -42,7 +42,7 @@ PolyRampVisu::PolyRampVisu(MainWidget* mainWidget)
    graphicsView->scene()->addLine(0, 0, 0, 150, whitePen); // to force height even withou graph data
 }
 
-void PolyRampVisu::slotGraphSelected(const Model::Provider& newProvider, const uint8_t& newGraphIndex)
+void PolyRampVisu::slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex)
 {
    selectedProvider = newProvider;
    selectedGraphIndex = newGraphIndex;
@@ -102,7 +102,7 @@ void PolyRampVisu::slotUpdate()
    const PoviderNameMap& nameMap = getProviderNames();
    for (PoviderNameMap::const_iterator it = nameMap.constBegin(); it != nameMap.constEnd(); it++)
    {
-      const Model::Provider provider = it.key();
+      const Data::Provider provider = it.key();
 
       for (uint8_t graphIndex = 0; graphIndex < 16; graphIndex++)
       {

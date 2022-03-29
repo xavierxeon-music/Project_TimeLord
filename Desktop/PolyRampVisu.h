@@ -12,7 +12,7 @@ public:
    PolyRampVisu(MainWidget* mainWidget);
 
 public slots:
-   void slotGraphSelected(const Model::Provider& newProvider, const uint8_t& newGraphIndex);
+   void slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex);
 
 private:
    struct Stage
@@ -32,7 +32,7 @@ private:
    QGraphicsView* graphicsView;
    Stage::Map stageMap;
 
-   Model::Provider selectedProvider;
+   Data::Provider selectedProvider;
    uint8_t selectedGraphIndex;
 
    uint8_t zoomLevel;

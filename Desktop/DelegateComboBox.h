@@ -8,7 +8,7 @@ class QStandardItemModel;
 
 namespace Delegate
 {
-   class ComboBox : public QStyledItemDelegate, public DataCore
+   class ComboBox : public QStyledItemDelegate, public Data::Core
    {
       Q_OBJECT
 

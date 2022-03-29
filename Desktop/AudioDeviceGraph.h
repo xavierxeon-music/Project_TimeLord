@@ -20,7 +20,7 @@ public:
    const Tempo* getTempo() const;
 
 private:
-   friend class DataCore;
+   friend class Data::Core;
 
 private: // things to remeber
    using PolyRampList_ = Remember::RefArray<PolyRamp, 16>;

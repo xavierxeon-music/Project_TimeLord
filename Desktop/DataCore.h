@@ -5,7 +5,7 @@
 
 class MainWidget;
 
-namespace Model
+namespace Data
 {
    Q_NAMESPACE
 
@@ -38,27 +38,28 @@ namespace Model
    };
 
    Q_ENUM_NS(Provider)
-} // namespace Model
 
-// all graph data access and manipulation should happen via this class
-class DataCore
-{
-public:
-   using PoviderNameMap = QMap<Model::Provider, QString>;
+   // all graph data access and manipulation should happen via this class
+   class Core
+   {
+   public:
+      using PoviderNameMap = QMap<Provider, QString>;
 
-public:
-   DataCore(MainWidget* mainWidget);
+   public:
+      Core(MainWidget* mainWidget);
 
-protected:
-   PoviderNameMap getProviderNames() const;
-   PolyRamp* getPolyRamp(const Model::Provider& provider, const uint8_t& index);
+   protected:
+      PoviderNameMap getProviderNames() const;
+      PolyRamp* getPolyRamp(const Provider& provider, const uint8_t& index);
 
-protected:
-   MainWidget* mainWidget;
-   static bool lockGraphSize;
+   protected:
+      MainWidget* mainWidget;
+      static bool lockGraphSize;
 
-private:
-   static const PoviderNameMap providerNameMap;
-};
+   private:
+      static const PoviderNameMap providerNameMap;
+   };
+
+} // namespace Data
 
 #endif // DataCoreH

@@ -3,24 +3,24 @@
 #include "AudioDeviceGraph.h"
 #include "MainWidget.h"
 
-const DataCore::PoviderNameMap DataCore::providerNameMap = {{Model::Provider::DaisyPatch, "Daisy"}, {Model::Provider::AudioDeviceGraph, "ES-8"}};
-bool DataCore::lockGraphSize = true;
+const Data::Core::PoviderNameMap Data::Core::providerNameMap = {{Provider::DaisyPatch, "Daisy"}, {Provider::AudioDeviceGraph, "ES-8"}};
+bool Data::Core::lockGraphSize = true;
 
-DataCore::DataCore(MainWidget* mainWidget)
+Data::Core::Core(MainWidget* mainWidget)
    : mainWidget(mainWidget)
 {
 }
 
-DataCore::PoviderNameMap DataCore::getProviderNames() const
+Data::Core::PoviderNameMap Data::Core::getProviderNames() const
 {
    return providerNameMap;
 }
 
-PolyRamp* DataCore::getPolyRamp(const Model::Provider& provider, const uint8_t& index)
+PolyRamp* Data::Core::getPolyRamp(const Provider& provider, const uint8_t& index)
 {
-   if (Model::Provider::DaisyPatch == provider)
+   if (Provider::DaisyPatch == provider)
       return &(mainWidget->polyRamps[index]);
-   else if (Model::Provider::AudioDeviceGraph == provider)
+   else if (Provider::AudioDeviceGraph == provider)
       return &(mainWidget->audioDevice->polyRamps[index]);
    else
       return nullptr;

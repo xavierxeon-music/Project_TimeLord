@@ -4,17 +4,17 @@
 #include "DataCore.h"
 #include <QStandardItemModel>
 
-class StageModel : public QStandardItemModel, public DataCore
+class StageModel : public QStandardItemModel, public Data::Core
 {
    Q_OBJECT
 public:
    StageModel(MainWidget* mainWidget);
 
 signals:
-   void signalGraphLengthChanged(const Model::Provider& provider, const uint8_t& graphIndex);
+   void signalGraphLengthChanged(const Data::Provider& provider, const uint8_t& graphIndex);
 
 public:
-   void rebuild(const Model::Provider provider, const uint8_t& graphIndex, bool lengthChanged);
+   void rebuild(const Data::Provider provider, const uint8_t& graphIndex, bool lengthChanged);
 
 private:
    void update(PolyRamp* polyRamp, const uint8_t& stageIndex);

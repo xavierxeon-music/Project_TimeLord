@@ -6,7 +6,7 @@
 
 namespace Delegate
 {
-   class SpinBox : public QStyledItemDelegate, public DataCore
+   class SpinBox : public QStyledItemDelegate, public Data::Core
    {
       Q_OBJECT
 

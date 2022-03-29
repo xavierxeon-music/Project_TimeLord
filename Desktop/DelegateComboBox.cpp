@@ -5,7 +5,7 @@
 
 Delegate::ComboBox::ComboBox(QObject* parent, MainWidget* mainWidget, QStandardItemModel* model)
    : QStyledItemDelegate(parent)
-   , DataCore(mainWidget)
+   , Data::Core(mainWidget)
    , model(model)
 {
 }
@@ -24,16 +24,16 @@ QWidget* Delegate::ComboBox::createEditor(QWidget* parent, const QStyleOptionVie
 void Delegate::ComboBox::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
    QComboBox* comboBox = static_cast<QComboBox*>(editor);
-   const QVariant& itemData = index.model()->data(index, Model::Role::Data);
+   const QVariant& itemData = index.model()->data(index, Data::Role::Data);
 
-   const int comboIndex = comboBox->findData(itemData, Model::Role::Data);
+   const int comboIndex = comboBox->findData(itemData, Data::Role::Data);
    comboBox->setCurrentIndex(comboIndex);
 }
 
 void Delegate::ComboBox::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
    QComboBox* comboBox = static_cast<QComboBox*>(editor);
-   const QVariant data = comboBox->currentData(Model::Role::Data);
+   const QVariant data = comboBox->currentData(Data::Role::Data);
 
    model->setData(index, data, Qt::EditRole);
 }

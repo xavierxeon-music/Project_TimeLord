@@ -18,7 +18,7 @@ public:
    PolyRampWidget(MainWidget* mainWidget, PolyRampModel* polyRampModel);
 
 signals:
-   void signalGraphSelected(const Model::Provider provider, const uint8_t& index);
+   void signalGraphSelected(const Data::Provider provider, const uint8_t& index);
 
 public:
    void hideEditStack();
@@ -36,7 +36,7 @@ private:
    Edit::Length* lengthEdit;
    Edit::Division* divisionEdit;
    Edit::Loop* loopEdit;
-   Model::Provider selectedProvider;
+   Data::Provider selectedProvider;
    int selectedGraphIndex;
 };
 

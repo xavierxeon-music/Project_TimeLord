@@ -13,7 +13,7 @@ DivisionModel::DivisionModel(QObject* parent)
 
       const std::string name = Tempo::getName(division);
       item->setText(QString::fromStdString(name));
-      item->setData(QVariant::fromValue(division), Model::Role::Data);
+      item->setData(QVariant::fromValue(division), Data::Role::Data);
 
       invisibleRootItem()->appendRow(item);
    };
