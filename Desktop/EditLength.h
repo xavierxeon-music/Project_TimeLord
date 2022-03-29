@@ -1,16 +1,16 @@
-#ifndef GraphEditLengthH
-#define GraphEditLengthH
+#ifndef EditLengthH
+#define EditLengthH
 
-#include "GraphEditAbstract.h"
+#include "EditAbstract.h"
 
 #include <QSpinBox>
 
-namespace GraphEdit
+namespace Edit
 {
    class Length : public Abstract
    {
    public:
-      Length(GraphWidget* graphWidget, MainWidget* mainWidget);
+      Length(PolyRampWidget* polyRampWidget, MainWidget* mainWidget);
 
    private:
       void execute(Graph* graph) override;
@@ -18,6 +18,6 @@ namespace GraphEdit
    private:
       QSpinBox* lengthSpin;
    };
-} // namespace GraphEdit
+} // namespace Edit
 
-#endif // NOT GraphEditLengthH
+#endif // NOT EditLengthH

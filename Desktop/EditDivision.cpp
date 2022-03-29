@@ -1,9 +1,9 @@
-#include "GraphEditDivision.h"
+#include "EditDivision.h"
 
 #include "DivisionModel.h"
 
-GraphEdit::Division::Division(GraphWidget* graphWidget, MainWidget* mainWidget)
-   : Abstract(graphWidget, mainWidget)
+Edit::Division::Division(PolyRampWidget* polyRampWidget, MainWidget* mainWidget)
+   : Abstract(polyRampWidget, mainWidget)
    , divisionCombo(nullptr)
 {
    divisionCombo = new QComboBox(this);
@@ -12,7 +12,7 @@ GraphEdit::Division::Division(GraphWidget* graphWidget, MainWidget* mainWidget)
    setPayload(divisionCombo, "Division");
 }
 
-void GraphEdit::Division::execute(Graph* graph)
+void Edit::Division::execute(Graph* graph)
 {
    const QVariant data = divisionCombo->currentData(Model::Role::Data);
    const Tempo::Division stepSize = data.value<Tempo::Division>();

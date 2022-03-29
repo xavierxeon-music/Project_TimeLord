@@ -1,16 +1,16 @@
-#ifndef GraphEditDivisionH
-#define GraphEditDivisionH
+#ifndef EditDivisionH
+#define EditDivisionH
 
-#include "GraphEditAbstract.h"
+#include "EditAbstract.h"
 
 #include <QComboBox>
 
-namespace GraphEdit
+namespace Edit
 {
    class Division : public Abstract
    {
    public:
-      Division(GraphWidget* graphWidget, MainWidget* mainWidget);
+      Division(PolyRampWidget* polyRampWidget, MainWidget* mainWidget);
 
    private:
       void execute(Graph* graph) override;
@@ -18,6 +18,6 @@ namespace GraphEdit
    private:
       QComboBox* divisionCombo;
    };
-} // namespace GraphEdit
+} // namespace Edit
 
-#endif // NOT GraphEditDivisionH
+#endif // NOT EditDivisionH

@@ -1,16 +1,16 @@
-#ifndef GraphEditLoopH
-#define GraphEditLoopH
+#ifndef EditLoopH
+#define EditLoopH
 
-#include "GraphEditAbstract.h"
+#include "EditAbstract.h"
 
 #include <QCheckBox>
 
-namespace GraphEdit
+namespace Edit
 {
    class Loop : public Abstract
    {
    public:
-      Loop(GraphWidget* graphWidget, MainWidget* mainWidget);
+      Loop(PolyRampWidget* polyRampWidget, MainWidget* mainWidget);
 
    private:
       void execute(Graph* graph) override;
@@ -18,6 +18,6 @@ namespace GraphEdit
    private:
       QCheckBox* loopCheck;
    };
-} // namespace GraphEdit
+} // namespace Edit
 
-#endif // NOT GraphEditLoopH
+#endif // NOT EditLoopH

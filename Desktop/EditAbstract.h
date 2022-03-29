@@ -1,20 +1,20 @@
-#ifndef GraphEditAbstractH
-#define GraphEditAbstractH
+#ifndef EditAbstractH
+#define EditAbstractH
 
 #include "DataCore.h"
 #include <QToolBar>
 
 #include <QHBoxLayout>
 
-class GraphWidget;
+class PolyRampWidget;
 
-namespace GraphEdit
+namespace Edit
 {
    class Abstract : public QToolBar, public DataCore
    {
       Q_OBJECT
    public:
-      Abstract(GraphWidget* graphWidget, MainWidget* mainWidget);
+      Abstract(PolyRampWidget* polyRampWidget, MainWidget* mainWidget);
 
    protected:
       void setPayload(QWidget* widget, const QString& text);
@@ -25,8 +25,8 @@ namespace GraphEdit
       void slotExecute();
 
    private:
-      GraphWidget* graphWidget;
+      PolyRampWidget* polyRampWidget;
    };
-} // namespace GraphEdit
+} // namespace Edit
 
-#endif // NOT GraphEditAbstractH
+#endif // NOT EditAbstractH

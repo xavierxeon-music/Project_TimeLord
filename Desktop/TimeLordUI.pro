@@ -14,40 +14,40 @@ include(../../../Base/DesktopApp.pri)
 HEADERS += \
    AbstractWidget.h \
    AudioDeviceGraph.h \
-   DelegateComboBox.h \
    DataCore.h \
-   DivisionModel.h \
-   GraphEditAbstract.h \
-   GraphEditDivision.h \
-   GraphEditLength.h \
-   GraphEditLoop.h \
-   GraphModel.h \
-   GraphVisuWidget.h \
-   GraphWidget.h \
-   MainWidget.h \
+   DelegateComboBox.h \
    DelegateSpinBox.h \
+   DivisionModel.h \
+   EditAbstract.h \
+   EditDivision.h \
+   EditLength.h \
+   EditLoop.h \
+   GraphVisuWidget.h \
+   MainWidget.h \
+   PolyRampModel.h \
+   PolyRampWidget.h \
    StageModel.h \
    StageWidget.h \
-   TempoWidget.h
+   TempoWidget.h \
 
 SOURCES += \
    AbstractWidget.cpp \
    AudioDeviceGraph.cpp \
-   DelegateComboBox.cpp \
    DataCore.cpp \
-   DivisionModel.cpp \
-   GraphEditAbstract.cpp \
-   GraphEditDivision.cpp \
-   GraphEditLength.cpp \
-   GraphEditLoop.cpp \
-   GraphModel.cpp \
-   GraphVisuWidget.cpp \
-   GraphWidget.cpp \
-   MainWidget.cpp \
+   DelegateComboBox.cpp \
    DelegateSpinBox.cpp \
+   DivisionModel.cpp \
+   EditAbstract.cpp \
+   EditDivision.cpp \
+   EditLength.cpp \
+   EditLoop.cpp \
+   GraphVisuWidget.cpp \
+   MainWidget.cpp \
+   PolyRampModel.cpp \
+   PolyRampWidget.cpp \
    StageModel.cpp \
    StageWidget.cpp \
-   TempoWidget.cpp
+   TempoWidget.cpp \
 
 FORMS +=
 

@@ -1,19 +1,19 @@
-#include "GraphEditAbstract.h"
+#include "EditAbstract.h"
 
 #include <QLabel>
 
-#include "GraphWidget.h"
 #include "MainWidget.h"
+#include "PolyRampWidget.h"
 
-GraphEdit::Abstract::Abstract(GraphWidget* graphWidget, MainWidget* mainWidget)
-   : QToolBar(graphWidget)
+Edit::Abstract::Abstract(PolyRampWidget* polyRampWidget, MainWidget* mainWidget)
+   : QToolBar(polyRampWidget)
    , DataCore(mainWidget)
-   , graphWidget(graphWidget)
+   , polyRampWidget(polyRampWidget)
 {
    setIconSize(QSize(24, 24));
 }
 
-void GraphEdit::Abstract::setPayload(QWidget* widget, const QString& text)
+void Edit::Abstract::setPayload(QWidget* widget, const QString& text)
 {
    addAction(QIcon(":/Cancel.svg"), "Cancel", this, &Abstract::slotCancel);
    addAction(QIcon(":/Execute.svg"), "Execute", this, &Abstract::slotExecute);
@@ -24,12 +24,12 @@ void GraphEdit::Abstract::setPayload(QWidget* widget, const QString& text)
    addWidget(widget);
 }
 
-void GraphEdit::Abstract::slotCancel()
+void Edit::Abstract::slotCancel()
 {
-   graphWidget->hideEditStack();
+   polyRampWidget->hideEditStack();
 }
 
-void GraphEdit::Abstract::slotExecute()
+void Edit::Abstract::slotExecute()
 {
    const PoviderNameMap& nameMap = getProviderNames();
    for (PoviderNameMap::const_iterator it = nameMap.constBegin(); it != nameMap.constEnd(); it++)
@@ -43,6 +43,6 @@ void GraphEdit::Abstract::slotExecute()
       }
    }
 
-   graphWidget->hideEditStack();
+   polyRampWidget->hideEditStack();
    mainWidget->forceRebuildModels();
 }

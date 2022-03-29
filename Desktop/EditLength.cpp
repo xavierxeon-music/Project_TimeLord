@@ -1,9 +1,9 @@
-#include "GraphEditLength.h"
+#include "EditLength.h"
 
 #include <QSpinBox>
 
-GraphEdit::Length::Length(GraphWidget* graphWidget, MainWidget* mainWidget)
-   : Abstract(graphWidget, mainWidget)
+Edit::Length::Length(PolyRampWidget* polyRampWidget, MainWidget* mainWidget)
+   : Abstract(polyRampWidget, mainWidget)
    , lengthSpin(nullptr)
 {
    lengthSpin = new QSpinBox(this);
@@ -14,7 +14,7 @@ GraphEdit::Length::Length(GraphWidget* graphWidget, MainWidget* mainWidget)
    setPayload(lengthSpin, "Length");
 }
 
-void GraphEdit::Length::execute(Graph* graph)
+void Edit::Length::execute(Graph* graph)
 {
    lengthSpin->interpretText();
    const uint32_t value = lengthSpin->value();

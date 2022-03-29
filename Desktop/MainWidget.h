@@ -11,9 +11,9 @@
 #include <FileStorage.h>
 #include <MidiBridge.h>
 
-#include "GraphModel.h"
 #include "GraphVisuWidget.h"
-#include "GraphWidget.h"
+#include "PolyRampModel.h"
+#include "PolyRampWidget.h"
 #include "StageModel.h"
 #include "StageWidget.h"
 
@@ -62,8 +62,8 @@ private:
    QSplitter* splitter;
    QStatusBar* statusBar;
 
-   GraphWidget* graphWidget;
-   GraphModel* graphModel;
+   PolyRampWidget* polyRampWidget;
+   PolyRampModel* polyRampModel;
 
    StageWidget* stageWidget;
    StageModel* stageModel;

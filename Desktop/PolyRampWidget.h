@@ -1,21 +1,21 @@
-#ifndef GraphWidgetH
-#define GraphWidgetH
+#ifndef PolyRampWidgetH
+#define PolyRampWidgetH
 
 #include "AbstractWidget.h"
 
 #include <QStackedWidget>
 
-#include "GraphEditDivision.h"
-#include "GraphEditLength.h"
-#include "GraphEditLoop.h"
+#include "EditDivision.h"
+#include "EditLength.h"
+#include "EditLoop.h"
 
-class GraphModel;
+class PolyRampModel;
 
-class GraphWidget : public AbstractWidget
+class PolyRampWidget : public AbstractWidget
 {
    Q_OBJECT
 public:
-   GraphWidget(MainWidget* mainWidget, GraphModel* graphModel);
+   PolyRampWidget(MainWidget* mainWidget, PolyRampModel* polyRampModel);
 
 signals:
    void signalGraphSelected(const Model::Provider provider, const uint8_t& index);
@@ -31,13 +31,13 @@ private slots:
    void slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous);
 
 private:
-   GraphModel* graphModel;
+   PolyRampModel* polyRampModel;
    QStackedWidget* editStack;
-   GraphEdit::Length* lengthEdit;
-   GraphEdit::Division* divisionEdit;
-   GraphEdit::Loop* loopEdit;
+   Edit::Length* lengthEdit;
+   Edit::Division* divisionEdit;
+   Edit::Loop* loopEdit;
    Model::Provider selectedProvider;
    int selectedGraphIndex;
 };
 
-#endif // GraphWidgetH
+#endif // PolyRampWidgetH

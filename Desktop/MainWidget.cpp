@@ -25,8 +25,8 @@ MainWidget::MainWidget()
    , fileStorageDevice(audioDevice)
    , splitter(nullptr)
    , statusBar(nullptr)
-   , graphWidget(nullptr)
-   , graphModel(nullptr)
+   , polyRampWidget(nullptr)
+   , polyRampModel(nullptr)
    , stageWidget(nullptr)
    , stageModel(nullptr)
    , graphVisuWidget(nullptr)
@@ -35,22 +35,22 @@ MainWidget::MainWidget()
 
    midiBridge.initMidi();
 
-   graphModel = new GraphModel(this);
+   polyRampModel = new PolyRampModel(this);
    stageModel = new StageModel(this);
 
-   graphWidget = new GraphWidget(this, graphModel);
+   polyRampWidget = new PolyRampWidget(this, polyRampModel);
    stageWidget = new StageWidget(this, stageModel);
    graphVisuWidget = new GraphVisuWidget(this);
 
-   connect(graphWidget, &GraphWidget::signalGraphSelected, stageWidget, &StageWidget::slotGraphSelected);
-   connect(graphWidget, &GraphWidget::signalGraphSelected, graphVisuWidget, &GraphVisuWidget::slotGraphSelected);
-   connect(stageModel, &StageModel::signalGraphLengthChanged, graphModel, &GraphModel::slotGraphLengthChanged);
-   graphModel->rebuild();
+   connect(polyRampWidget, &PolyRampWidget::signalGraphSelected, stageWidget, &StageWidget::slotGraphSelected);
+   connect(polyRampWidget, &PolyRampWidget::signalGraphSelected, graphVisuWidget, &GraphVisuWidget::slotGraphSelected);
+   connect(stageModel, &StageModel::signalGraphLengthChanged, polyRampModel, &PolyRampModel::slotGraphLengthChanged);
+   polyRampModel->rebuild();
 
    splitter = new QSplitter(Qt::Horizontal, this);
    splitter->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
    splitter->setObjectName("ModelSplitter");
-   splitter->addWidget(graphWidget);
+   splitter->addWidget(polyRampWidget);
    splitter->addWidget(stageWidget);
 
    statusBar = new QStatusBar(this);
@@ -83,7 +83,7 @@ MainWidget::MainWidget()
 
 void MainWidget::forceRebuildModels()
 {
-   graphModel->rebuild();
+   polyRampModel->rebuild();
    stageModel->rebuild(Model::Provider::None, 0, false);
 }
 
@@ -193,7 +193,7 @@ void MainWidget::closeEvent(QCloseEvent* ce)
 // main function
 
 int main(int argc, char** argv)
-{  
+{
    QApplication::setApplicationName("TimeLordUI");
    QApplication::setOrganizationDomain("eu.schweinesystem");
 

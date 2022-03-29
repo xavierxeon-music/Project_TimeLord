@@ -1,15 +1,15 @@
-#include "GraphModel.h"
+#include "PolyRampModel.h"
 
 #include "MainWidget.h"
 
-GraphModel::GraphModel(MainWidget* mainWidget)
+PolyRampModel::PolyRampModel(MainWidget* mainWidget)
    : QStandardItemModel(mainWidget)
    , DataCore(mainWidget)
 {
    setHorizontalHeaderLabels({"name", "length", "division", "loop", "count"});
 }
 
-void GraphModel::slotGraphLengthChanged(const Model::Provider& provider, const uint8_t& graphIndex)
+void PolyRampModel::slotGraphLengthChanged(const Model::Provider& provider, const uint8_t& graphIndex)
 {
    for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
    {
@@ -33,7 +33,7 @@ void GraphModel::slotGraphLengthChanged(const Model::Provider& provider, const u
    }
 }
 
-void GraphModel::rebuild()
+void PolyRampModel::rebuild()
 {
    clear();
    setHorizontalHeaderLabels({"name", "length", "division", "loop", "count"});
@@ -101,7 +101,7 @@ void GraphModel::rebuild()
    }
 }
 
-bool GraphModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool PolyRampModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
    bool result = QStandardItemModel::setData(index, value, role);
    if (Qt::EditRole != role && Qt::CheckStateRole != role)
