@@ -7,13 +7,13 @@ Stage::Model::Model(MainWidget* mainWidget)
    , Data::Core(mainWidget)
 
 {
-   setHorizontalHeaderLabels({"index", "position", "length", "height"});
+   setHorizontalHeaderLabels({"index", "start position", "length", "start height"});
 }
 
 void Stage::Model::rebuild(const Data::Provider provider, const uint8_t& graphIndex, bool lengthChanged)
 {
    clear();
-   setHorizontalHeaderLabels({"index", "position", "length", "height"});
+   setHorizontalHeaderLabels({"index", "start position", "length", "start height"});
 
    PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
    if (!polyRamp)

@@ -6,13 +6,13 @@ PolyLine::Model::Model(MainWidget* mainWidget)
    : QStandardItemModel(mainWidget)
    , Data::Core(mainWidget)
 {
-   setHorizontalHeaderLabels({"position", "height", "type"});
+   setHorizontalHeaderLabels({"start position", "type", "end height", "note"});
 }
 
 void PolyLine::Model::rebuild(const Data::Provider provider, const uint8_t& graphIndex, bool lengthChanged)
 {
    clear();
-   setHorizontalHeaderLabels({"position", "height", "type"});
+   setHorizontalHeaderLabels({"start position", "type", "end height", "note"});
 
    PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
    if (!polyRamp)
