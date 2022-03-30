@@ -17,8 +17,7 @@ Ramp::Widget::Widget(MainWidget* mainWidget, Model* polyRampModel)
    , lengthEdit(nullptr)
    , divisionEdit(nullptr)
    , loopEdit(nullptr)
-   , selectedProvider(Data::Provider::None)
-   , selectedGraphIndex(0)
+   , identifier()
 {
    setMinimumWidth(150);
 
@@ -61,13 +60,13 @@ void Ramp::Widget::hideEditStack()
 
 void Ramp::Widget::slotTrimCurrentGraph()
 {
-   PolyRamp* polyRamp = getPolyRamp(selectedProvider, selectedGraphIndex);
+   PolyRamp* polyRamp = getPolyRamp(identifier);
    if (!polyRamp)
       return;
 
    polyRamp->trimLength();
 
-   polyRampModel->slotGraphLengthChanged(selectedProvider, selectedGraphIndex);
+   polyRampModel->slotGraphLengthChanged(identifier);
 }
 
 void Ramp::Widget::slotSetLengthAllGraphs()
@@ -97,8 +96,8 @@ void Ramp::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const
    if (itemDataProvider.isNull())
       return;
 
-   selectedProvider = itemDataProvider.value<Data::Provider>();
-   selectedGraphIndex = item->data(Data::Role::GraphIndex).toInt();
+   identifier.provider = itemDataProvider.value<Data::Provider>();
+   identifier.rampIndex = item->data(Data::Role::GraphIndex).toInt();
 
-   emit signalGraphSelected(selectedProvider, selectedGraphIndex);
+   emit signalGraphSelected(identifier);
 }

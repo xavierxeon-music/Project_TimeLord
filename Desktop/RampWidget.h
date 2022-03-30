@@ -20,7 +20,7 @@ namespace Ramp
       Widget(MainWidget* mainWidget, Model* polyRampModel);
 
    signals:
-      void signalGraphSelected(const Data::Provider provider, const uint8_t& index);
+      void signalGraphSelected(const Data::Identifier& newIdentifier);
 
    public:
       void hideEditStack();
@@ -38,8 +38,8 @@ namespace Ramp
       Edit::Length* lengthEdit;
       Edit::Division* divisionEdit;
       Edit::Loop* loopEdit;
-      Data::Provider selectedProvider;
-      int selectedGraphIndex;
+
+      Data::Identifier identifier;
    };
 } // namespace Ramp
 

@@ -9,17 +9,17 @@ Ramp::Model::Model(MainWidget* mainWidget)
    setHorizontalHeaderLabels({"name", "length", "division", "loop", "count"});
 }
 
-void Ramp::Model::slotGraphLengthChanged(const Data::Provider& provider, const uint8_t& graphIndex)
+void Ramp::Model::slotGraphLengthChanged(const Data::Identifier& identifier)
 {
    for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
    {
       QStandardItem* nameItem = invisibleRootItem()->child(row, 0);
-      if (nameItem->data(Data::Role::Provider).value<Data::Provider>() != provider)
+      if (nameItem->data(Data::Role::Provider).value<Data::Provider>() != identifier.provider)
          continue;
-      if (nameItem->data(Data::Role::GraphIndex).value<uint8_t>() != graphIndex)
+      if (nameItem->data(Data::Role::GraphIndex).value<uint8_t>() != identifier.rampIndex)
          continue;
 
-      PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+      PolyRamp* polyRamp = getPolyRamp(identifier);
 
       QStandardItem* lengthItem = invisibleRootItem()->child(row, 1);
       const QString length = QString::number(polyRamp->getLength());
@@ -43,19 +43,20 @@ void Ramp::Model::rebuild()
    {
       const Data::Provider provider = it.key();
 
-      for (uint8_t graphIndex = 0; graphIndex < 16; graphIndex++)
+      for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
       {
-         PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+         Data::Identifier identifier(provider, rampIndex);
+         PolyRamp* polyRamp = getPolyRamp(identifier);
 
          QStandardItem* nameItem = new QStandardItem();
          {
-            QString name = QString::number(graphIndex + 1);
+            QString name = QString::number(rampIndex + 1);
             if (1 == name.length())
                name = QString("0") + name;
 
             nameItem->setText(it.value() + " " + name);
             nameItem->setData(QVariant::fromValue(provider), Data::Role::Provider);
-            nameItem->setData(QVariant::fromValue(graphIndex), Data::Role::GraphIndex);
+            nameItem->setData(QVariant::fromValue(rampIndex), Data::Role::GraphIndex);
             nameItem->setEditable(false);
          }
 
@@ -64,7 +65,7 @@ void Ramp::Model::rebuild()
             const QString length = QString::number(polyRamp->getLength());
             lengthItem->setText(length);
             lengthItem->setData(QVariant::fromValue(provider), Data::Role::Provider);
-            lengthItem->setData(QVariant::fromValue(graphIndex), Data::Role::GraphIndex);
+            lengthItem->setData(QVariant::fromValue(rampIndex), Data::Role::GraphIndex);
             lengthItem->setData(QVariant::fromValue(Data::Target::GraphLength), Data::Role::Target);
          }
 
@@ -73,7 +74,7 @@ void Ramp::Model::rebuild()
             const std::string stepSize = Tempo::getName(polyRamp->getStepSize());
             stepSizeItem->setText(QString::fromStdString(stepSize));
             stepSizeItem->setData(QVariant::fromValue(provider), Data::Role::Provider);
-            stepSizeItem->setData(QVariant::fromValue(graphIndex), Data::Role::GraphIndex);
+            stepSizeItem->setData(QVariant::fromValue(rampIndex), Data::Role::GraphIndex);
             stepSizeItem->setData(QVariant::fromValue(polyRamp->getStepSize()), Data::Role::Data);
             stepSizeItem->setData(QVariant::fromValue(Data::Target::GraphStepSize), Data::Role::Target);
          }
@@ -83,7 +84,7 @@ void Ramp::Model::rebuild()
             loopItem->setCheckable(true);
             loopItem->setCheckState(polyRamp->isLooping() ? Qt::Checked : Qt::Unchecked);
             loopItem->setData(QVariant::fromValue(provider), Data::Role::Provider);
-            loopItem->setData(QVariant::fromValue(graphIndex), Data::Role::GraphIndex);
+            loopItem->setData(QVariant::fromValue(rampIndex), Data::Role::GraphIndex);
             loopItem->setData(QVariant::fromValue(Data::Target::GraphLoop), Data::Role::Target);
          }
 
@@ -92,7 +93,7 @@ void Ramp::Model::rebuild()
             const QString count = QString::number(polyRamp->stageCount());
             countItem->setText(count);
             countItem->setData(QVariant::fromValue(provider), Data::Role::Provider);
-            countItem->setData(QVariant::fromValue(graphIndex), Data::Role::GraphIndex);
+            countItem->setData(QVariant::fromValue(rampIndex), Data::Role::GraphIndex);
             countItem->setEditable(false);
          }
 
@@ -112,9 +113,10 @@ bool Ramp::Model::setData(const QModelIndex& index, const QVariant& value, int r
       return result;
 
    const Data::Provider provider = data(index, Data::Role::Provider).value<Data::Provider>();
-   const uint8_t graphIndex = data(index, Data::Role::GraphIndex).value<uint8_t>();
+   const uint8_t rampIndex = data(index, Data::Role::GraphIndex).value<uint8_t>();
 
-   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+   Data::Identifier identifier(provider, rampIndex);
+   PolyRamp* polyRamp = getPolyRamp(identifier);
 
    const Data::Target target = targetData.value<Data::Target>();
    if (Data::Target::GraphLength == target)

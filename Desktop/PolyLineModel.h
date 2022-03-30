@@ -12,10 +12,21 @@ namespace PolyLine
       Model(MainWidget* mainWidget);
 
    signals:
-      void signalGraphLengthChanged(const Data::Provider& provider, const uint8_t& graphIndex);
+      void signalGraphLengthChanged(const Data::Identifier& identifier);
 
    public:
-      void rebuild(const Data::Provider provider, const uint8_t& graphIndex, bool lengthChanged);
+      void rebuild(const Data::Identifier& identifier);
+
+   private:
+      struct Items
+      {
+         QStandardItem* startPosItem;
+         QStandardItem* typeItem;
+         QStandardItem* endHeightItem;
+         QStandardItem* noteItem;
+
+         Items(Model* model, const Data::Identifier& identifier);
+      };
    };
 } // namespace PolyLine
 

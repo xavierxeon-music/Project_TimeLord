@@ -37,9 +37,11 @@ void Abstract::Edit::slotExecute()
    {
       const Data::Provider provider = it.key();
 
-      for (uint8_t graphIndex = 0; graphIndex < 16; graphIndex++)
+      for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
       {
-         PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+         Data::Identifier identifier(provider, rampIndex);
+
+         PolyRamp* polyRamp = getPolyRamp(identifier);
          execute(polyRamp);
       }
    }

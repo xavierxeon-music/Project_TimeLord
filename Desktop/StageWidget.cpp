@@ -10,8 +10,7 @@ Stage::Widget::Widget(MainWidget* mainWidget, Model* stageModel)
    : Abstract::Widget(mainWidget)
    , stageModel(stageModel)
    , selectionModel(nullptr)
-   , provider(Data::Provider::None)
-   , graphIndex(0)
+   , identifier()
    , selectedStageIndex(0)
 {
    QAction* lockAction = toolBar->addAction(QIcon(":/Lock.svg"), "Lock Graph Size", this, &Widget::slotLockGraphSize);
@@ -38,41 +37,40 @@ Stage::Widget::Widget(MainWidget* mainWidget, Model* stageModel)
    addPayload(staggeTreeView);
 }
 
-void Stage::Widget::slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex)
+void Stage::Widget::slotGraphSelected(const Data::Identifier& newIdentifier)
 {
-   provider = newProvider;
-   graphIndex = newGraphIndex;
+   identifier = newIdentifier;
 
-   stageModel->rebuild(provider, graphIndex, false);
+   stageModel->rebuild(identifier, false);
    selectedStageIndex = 0;
 }
 
 void Stage::Widget::slotInsertPoint()
 {
-   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+   PolyRamp* polyRamp = getPolyRamp(identifier);
    if (!polyRamp)
       return;
 
    polyRamp->addStage(selectedStageIndex);
 
-   stageModel->rebuild(provider, graphIndex, true);
+   stageModel->rebuild(identifier, true);
    setSelection(selectedStageIndex);
 }
 
 void Stage::Widget::slotRemovePoint()
 {
-   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+   PolyRamp* polyRamp = getPolyRamp(identifier);
    if (!polyRamp)
       return;
 
    polyRamp->removeStage(selectedStageIndex);
 
-   stageModel->rebuild(provider, graphIndex, true);
+   stageModel->rebuild(identifier, true);
 }
 
 void Stage::Widget::slotMoveBack()
 {
-   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+   PolyRamp* polyRamp = getPolyRamp(identifier);
    if (!polyRamp)
       return;
 
@@ -81,13 +79,13 @@ void Stage::Widget::slotMoveBack()
 
    polyRamp->moveStage(selectedStageIndex, selectedStageIndex - 1);
 
-   stageModel->rebuild(provider, graphIndex, false);
+   stageModel->rebuild(identifier, false);
    setSelection(selectedStageIndex - 1);
 }
 
 void Stage::Widget::slotMoveForward()
 {
-   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+   PolyRamp* polyRamp = getPolyRamp(identifier);
    if (!polyRamp)
       return;
 
@@ -96,7 +94,7 @@ void Stage::Widget::slotMoveForward()
 
    polyRamp->moveStage(selectedStageIndex, selectedStageIndex + 1);
 
-   stageModel->rebuild(provider, graphIndex, false);
+   stageModel->rebuild(identifier, false);
    setSelection(selectedStageIndex + 1);
 }
 

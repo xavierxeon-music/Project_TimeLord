@@ -2,6 +2,60 @@
 
 #include "MainWidget.h"
 
+// items
+
+Stage::Model::Items::Items(Model* model, const Data::Identifier& identifier)
+{
+   indexItem = new QStandardItem();
+   {
+      QString name = QString::number(identifier.stageIndex + 1);
+      while (3 != name.length())
+         name = QString("0") + name;
+
+      indexItem->setText(name);
+      indexItem->setData(QVariant::fromValue(identifier.provider), Data::Role::Provider);
+      indexItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::GraphIndex);
+      indexItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
+      indexItem->setEditable(false);
+   }
+
+   startPosItem = new QStandardItem();
+   {
+      startPosItem->setData(QVariant::fromValue(identifier.provider), Data::Role::Provider);
+      startPosItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::GraphIndex);
+      startPosItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
+      startPosItem->setEditable(false);
+   }
+
+   lengthItem = new QStandardItem();
+   {
+      lengthItem->setData(QVariant::fromValue(identifier.provider), Data::Role::Provider);
+      lengthItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::GraphIndex);
+      lengthItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
+      lengthItem->setData(QVariant::fromValue(Data::Target::StageLength), Data::Role::Target);
+   }
+
+   startHeigthItem = new QStandardItem();
+   {
+      startHeigthItem->setData(QVariant::fromValue(identifier.provider), Data::Role::Provider);
+      startHeigthItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::GraphIndex);
+      startHeigthItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
+      startHeigthItem->setData(QVariant::fromValue(Data::Target::StageStartHeight), Data::Role::Target);
+   }
+
+   model->invisibleRootItem()->appendRow({indexItem, startPosItem, lengthItem, startHeigthItem});
+}
+
+Stage::Model::Items::Items(Model* model, const int& row)
+{
+   indexItem = model->invisibleRootItem()->child(row, 0);
+   startPosItem = model->invisibleRootItem()->child(row, 1);
+   lengthItem = model->invisibleRootItem()->child(row, 2);
+   startHeigthItem = model->invisibleRootItem()->child(row, 3);
+}
+
+// model
+
 Stage::Model::Model(MainWidget* mainWidget)
    : QStandardItemModel(mainWidget)
    , Data::Core(mainWidget)
@@ -10,63 +64,30 @@ Stage::Model::Model(MainWidget* mainWidget)
    setHorizontalHeaderLabels({"index", "start position", "length", "start height"});
 }
 
-void Stage::Model::rebuild(const Data::Provider provider, const uint8_t& graphIndex, bool lengthChanged)
+void Stage::Model::rebuild(const Data::Identifier& identifier, bool lengthChanged)
 {
    clear();
    setHorizontalHeaderLabels({"index", "start position", "length", "start height"});
 
-   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+   PolyRamp* polyRamp = getPolyRamp(identifier);
    if (!polyRamp)
       return;
 
-   QStandardItem* parentItem = new QStandardItem(polyRamp->stageCount());
-   parentItem->setEditable(false);
-
    for (uint8_t stageIndex = 0; stageIndex < polyRamp->stageCount(); stageIndex++)
    {
-      QStandardItem* indexItem = new QStandardItem();
-      {
-         QString name = QString::number(stageIndex + 1);
-         while (3 != name.length())
-            name = QString("0") + name;
+      Items items(this, identifier);
 
-         indexItem->setText(name);
-         indexItem->setData(QVariant::fromValue(provider), Data::Role::Provider);
-         indexItem->setData(QVariant::fromValue(graphIndex), Data::Role::GraphIndex);
-         indexItem->setData(QVariant::fromValue(stageIndex), Data::Role::StageIndex);
-         indexItem->setEditable(false);
-      }
+      QString name = QString::number(stageIndex + 1);
+      while (3 != name.length())
+         name = QString("0") + name;
 
-      QStandardItem* posItem = new QStandardItem();
-      {
-         posItem->setData(QVariant::fromValue(provider), Data::Role::Provider);
-         posItem->setData(QVariant::fromValue(graphIndex), Data::Role::GraphIndex);
-         posItem->setData(QVariant::fromValue(stageIndex), Data::Role::StageIndex);
-         posItem->setEditable(false);
-      }
+      items.indexItem->setText(name);
 
-      QStandardItem* lengthItem = new QStandardItem();
-      {
-         lengthItem->setData(QVariant::fromValue(provider), Data::Role::Provider);
-         lengthItem->setData(QVariant::fromValue(graphIndex), Data::Role::GraphIndex);
-         lengthItem->setData(QVariant::fromValue(stageIndex), Data::Role::StageIndex);
-         lengthItem->setData(QVariant::fromValue(Data::Target::StageLength), Data::Role::Target);
-      }
-
-      QStandardItem* startItem = new QStandardItem();
-      {
-         startItem->setData(QVariant::fromValue(provider), Data::Role::Provider);
-         startItem->setData(QVariant::fromValue(graphIndex), Data::Role::GraphIndex);
-         startItem->setData(QVariant::fromValue(stageIndex), Data::Role::StageIndex);
-         startItem->setData(QVariant::fromValue(Data::Target::StageHeight), Data::Role::Target);
-      }
-
-      invisibleRootItem()->appendRow({indexItem, posItem, lengthItem, startItem});
       update(polyRamp, stageIndex);
    }
 
    if (lengthChanged)
-      emit signalGraphLengthChanged(provider, graphIndex);
+      emit signalGraphLengthChanged(identifier);
 }
 
 void Stage::Model::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
@@ -74,38 +95,36 @@ void Stage::Model::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
    uint32_t startPos = 0;
    for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
    {
-      QStandardItem* nameItem = invisibleRootItem()->child(row, 0);
-      const uint8_t stageIndex = nameItem->data(Data::Role::StageIndex).value<uint8_t>();
+      Items items(this, row);
+
+      const uint8_t stageIndex = items.indexItem->data(Data::Role::StageIndex).value<uint8_t>();
 
       const uint8_t nextIndex = (stageIndex + 1 < polyRamp->stageCount()) ? stageIndex + 1 : 0;
       const uint8_t startHeight = polyRamp->getStageStartHeight(stageIndex);
       const uint8_t endHeight = polyRamp->getStageStartHeight(nextIndex);
       const uint8_t length = polyRamp->getStageLength(stageIndex);
 
-      QStandardItem* posItem = invisibleRootItem()->child(row, 1);
       QString posText = QString::number(startPos);
-      posItem->setText(posText);
+      items.startPosItem->setText(posText);
 
       if (0 == length && 0 != nextIndex)
-         posItem->setIcon(QIcon(":/TrendDrop.svg"));
+         items.startPosItem->setIcon(QIcon(":/TrendStep.svg"));
       else if (startHeight < endHeight)
-         posItem->setIcon(QIcon(":/TrendUp.svg"));
+         items.startPosItem->setIcon(QIcon(":/TrendRise.svg"));
       else if (startHeight > endHeight)
-         posItem->setIcon(QIcon(":/TrendDown.svg"));
+         items.startPosItem->setIcon(QIcon(":/TrendFall.svg"));
       else
-         posItem->setIcon(QIcon(":/TrendStable.svg"));
+         items.startPosItem->setIcon(QIcon(":/TrendStable.svg"));
 
       if (stageIndex == itemStageIndex)
       {
-         QStandardItem* lengthItem = invisibleRootItem()->child(row, 2);
          QString lengthText = QString::number(length);
          if (stageIndex + 1 == polyRamp->stageCount())
             lengthText += "*";
-         lengthItem->setText(lengthText);
+         items.lengthItem->setText(lengthText);
 
-         QStandardItem* startItem = invisibleRootItem()->child(row, 3);
          const QString startHeightText = QString::number(startHeight);
-         startItem->setText(startHeightText);
+         items.startHeigthItem->setText(startHeightText);
       }
 
       startPos += polyRamp->getStageLength(stageIndex);
@@ -122,15 +141,16 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
       return QStandardItemModel::setData(index, value, role);
 
    const Data::Provider provider = data(index, Data::Role::Provider).value<Data::Provider>();
-   const uint8_t graphIndex = data(index, Data::Role::GraphIndex).value<uint8_t>();
+   const uint8_t rampIndex = data(index, Data::Role::GraphIndex).value<uint8_t>();
 
-   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+   Data::Identifier identifier(provider, rampIndex);
+   PolyRamp* polyRamp = getPolyRamp(identifier);
    const uint8_t stageIndex = data(index, Data::Role::StageIndex).value<uint8_t>();
 
    QVariant targeValue = value;
 
    const Data::Target target = targetData.value<Data::Target>();
-   if (Data::Target::StageHeight == target)
+   if (Data::Target::StageStartHeight == target)
    {
       const uint8_t height = value.toInt();
       polyRamp->setStageStartHeight(stageIndex, height);
@@ -147,7 +167,7 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
          if (stageIndex + 1 == polyRamp->stageCount())
             length += "*";
          targeValue = length;
-         emit signalGraphLengthChanged(provider, graphIndex);
+         emit signalGraphLengthChanged(identifier);
       }
    }
 

@@ -1,28 +1,28 @@
 <RCC>
- <qresource prefix="/">
-  <file>Add.svg</file>
-  <file>Cancel.svg</file>
-  <file>Division.svg</file>
-  <file>Execute.svg</file>
-  <file>Length.svg</file>
-  <file>LoadFromFile.svg</file>
-  <file>Lock.svg</file>
-  <file>Loop.svg</file>
-  <file>MoveBack.svg</file>
-  <file>MoveDown.svg</file>
-  <file>MoveForward.svg</file>
-  <file>MoveUp.svg</file>
-  <file>Remove.svg</file>
-  <file>SaveNewFile.svg</file>
-  <file>SaveToDaisy.svg</file>
-  <file>SaveToFile.svg</file>
-  <file>TrendDown.svg</file>
-  <file>TrendDrop.svg</file>
-  <file>TrendStable.svg</file>
-  <file>TrendStep.svg</file>
-  <file>TrendUp.svg</file>
-  <file>Trim.svg</file>
-  <file>ZoomIn.svg</file>
-  <file>ZoomOut.svg</file>
- </qresource>
+    <qresource prefix="/">
+        <file>Add.svg</file>
+        <file>Cancel.svg</file>
+        <file>Division.svg</file>
+        <file>Execute.svg</file>
+        <file>Length.svg</file>
+        <file>LoadFromFile.svg</file>
+        <file>Lock.svg</file>
+        <file>Loop.svg</file>
+        <file>MoveBack.svg</file>
+        <file>MoveDown.svg</file>
+        <file>MoveForward.svg</file>
+        <file>MoveUp.svg</file>
+        <file>Remove.svg</file>
+        <file>SaveNewFile.svg</file>
+        <file>SaveToDaisy.svg</file>
+        <file>SaveToFile.svg</file>
+        <file>TrendAnchor.svg</file>
+        <file>TrendFall.svg</file>
+        <file>TrendRise.svg</file>
+        <file>TrendStable.svg</file>
+        <file>TrendStep.svg</file>
+        <file>Trim.svg</file>
+        <file>ZoomIn.svg</file>
+        <file>ZoomOut.svg</file>
+    </qresource>
 </RCC>

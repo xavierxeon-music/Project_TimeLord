@@ -13,10 +13,22 @@ namespace Stage
       Model(MainWidget* mainWidget);
 
    signals:
-      void signalGraphLengthChanged(const Data::Provider& provider, const uint8_t& graphIndex);
+      void signalGraphLengthChanged(const Data::Identifier& identifier);
 
    public:
-      void rebuild(const Data::Provider provider, const uint8_t& graphIndex, bool lengthChanged);
+      void rebuild(const Data::Identifier& identifier, bool lengthChanged);
+
+   private:
+      struct Items
+      {
+         QStandardItem* indexItem;
+         QStandardItem* startPosItem;
+         QStandardItem* lengthItem;
+         QStandardItem* startHeigthItem;
+
+         Items(Model* model, const Data::Identifier& identifier);
+         Items(Model* model, const int& row);
+      };
 
    private:
       void update(PolyRamp* polyRamp, const uint8_t& stageIndex);

@@ -14,7 +14,7 @@ namespace Ramp
       Visu(MainWidget* mainWidget);
 
    public slots:
-      void slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex);
+      void slotGraphSelected(const Data::Identifier& newIdentifier);
 
    private:
       struct Stage
@@ -34,9 +34,7 @@ namespace Ramp
       QGraphicsView* graphicsView;
       Stage::Map stageMap;
 
-      Data::Provider selectedProvider;
-      uint8_t selectedGraphIndex;
-
+      Data::Identifier identifier;
       uint8_t zoomLevel;
    };
 } // namespace Ramp

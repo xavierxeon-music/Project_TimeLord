@@ -8,8 +8,7 @@ PolyLine::Widget::Widget(MainWidget* mainWidget, Model* polyLineModel)
    : Abstract::Widget(mainWidget)
    , polyLineModel(polyLineModel)
    , selectionModel(nullptr)
-   , provider(Data::Provider::None)
-   , graphIndex(0)
+   , identifier()
    , selectedStageIndex(0)
 {
    setMinimumWidth(150);
@@ -27,36 +26,35 @@ PolyLine::Widget::Widget(MainWidget* mainWidget, Model* polyLineModel)
    addPayload(polyLineTreeView);
 }
 
-void PolyLine::Widget::slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex)
+void PolyLine::Widget::slotGraphSelected(const Data::Identifier& newIdentifier)
 {
-   provider = newProvider;
-   graphIndex = newGraphIndex;
+   identifier = newIdentifier;
 
-   polyLineModel->rebuild(provider, graphIndex, false);
+   polyLineModel->rebuild(identifier);
    selectedStageIndex = 0;
 }
 
 void PolyLine::Widget::slotInsertPoint()
 {
-   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+   PolyRamp* polyRamp = getPolyRamp(identifier);
    if (!polyRamp)
       return;
 
    polyRamp->addStage(selectedStageIndex);
 
-   polyLineModel->rebuild(provider, graphIndex, true);
+   polyLineModel->rebuild(identifier);
    setSelection(selectedStageIndex);
 }
 
 void PolyLine::Widget::slotRemovePoint()
 {
-   PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+   PolyRamp* polyRamp = getPolyRamp(identifier);
    if (!polyRamp)
       return;
 
    polyRamp->removeStage(selectedStageIndex);
 
-   polyLineModel->rebuild(provider, graphIndex, true);
+   polyLineModel->rebuild(identifier);
 }
 
 void PolyLine::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)

@@ -46,9 +46,10 @@ MainWidget::MainWidget()
    stageWidget = new Stage::Widget(this, stageModel);
    polyLineWidget = new PolyLine::Widget(this, polyLineModel);
 
-   connect(polyRampWidget, &Ramp::Widget::signalGraphSelected, stageWidget, &Stage::Widget::slotGraphSelected);
    connect(polyRampWidget, &Ramp::Widget::signalGraphSelected, polyRampVisu, &Ramp::Visu::slotGraphSelected);
    connect(stageModel, &Stage::Model::signalGraphLengthChanged, polyRampModel, &Ramp::Model::slotGraphLengthChanged);
+   connect(polyRampWidget, &Ramp::Widget::signalGraphSelected, stageWidget, &Stage::Widget::slotGraphSelected);
+   connect(polyRampWidget, &Ramp::Widget::signalGraphSelected, polyLineWidget, &PolyLine::Widget::slotGraphSelected);
    polyRampModel->rebuild();
 
    splitter = new QSplitter(Qt::Horizontal, this);
@@ -89,7 +90,7 @@ MainWidget::MainWidget()
 void MainWidget::forceRebuildModels()
 {
    polyRampModel->rebuild();
-   stageModel->rebuild(Data::Provider::None, 0, false);
+   stageModel->rebuild(Data::Identifier(), false);
 }
 
 void MainWidget::slotLoadFromFile()

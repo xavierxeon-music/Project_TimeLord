@@ -16,7 +16,7 @@ namespace Stage
       Widget(MainWidget* mainWidget, Model* stageModel);
 
    public slots:
-      void slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex);
+      void slotGraphSelected(const Data::Identifier& newIdentifier);
 
    private slots:
       void slotInsertPoint();
@@ -33,8 +33,7 @@ namespace Stage
       Model* stageModel;
       QItemSelectionModel* selectionModel;
 
-      Data::Provider provider;
-      uint8_t graphIndex;
+      Data::Identifier identifier;
       uint8_t selectedStageIndex;
    };
 } // namespace Stage

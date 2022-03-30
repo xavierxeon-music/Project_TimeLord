@@ -16,8 +16,10 @@ namespace Data
       GraphStepSize,
       GraphLoop,
       GraphStageCount,
-      StageHeight,
-      StageLength
+      StageStartHeight,
+      StageEndHeight,
+      StageLength,
+      StageType
    };
    Q_ENUM_NS(Target)
 
@@ -36,8 +38,26 @@ namespace Data
       DaisyPatch,
       AudioDeviceGraph
    };
-
    Q_ENUM_NS(Provider)
+
+   enum class Type : uint8_t
+   {
+      Anchor,
+      Rise,
+      Fall,
+      Stable,
+      Step
+   };
+   Q_ENUM_NS(Type)
+
+   struct Identifier
+   {
+      Data::Provider provider;
+      uint8_t rampIndex;
+      uint8_t stageIndex;
+
+      Identifier(const Data::Provider& provider = Provider::None, const uint8_t& rampIndex = 0, const uint8_t& stageIndex = 0);
+   };
 
    // all graph data access and manipulation should happen via this class
    class Core
@@ -50,7 +70,7 @@ namespace Data
 
    protected:
       PoviderNameMap getProviderNames() const;
-      PolyRamp* getPolyRamp(const Provider& provider, const uint8_t& index);
+      PolyRamp* getPolyRamp(const Identifier& identifier);
 
    protected:
       MainWidget* mainWidget;

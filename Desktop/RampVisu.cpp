@@ -11,8 +11,7 @@ Ramp::Visu::Visu(MainWidget* mainWidget)
    : Abstract::Widget(mainWidget)
    , graphicsView(nullptr)
    , stageMap()
-   , selectedProvider(Data::Provider::None)
-   , selectedGraphIndex(0)
+   , identifier()
    , zoomLevel(10)
 {
    setFixedHeight(200);
@@ -42,10 +41,10 @@ Ramp::Visu::Visu(MainWidget* mainWidget)
    graphicsView->scene()->addLine(0, 0, 0, 150, whitePen); // to force height even withou graph data
 }
 
-void Ramp::Visu::slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex)
+void Ramp::Visu::slotGraphSelected(const Data::Identifier& newIdentifier)
 {
-   selectedProvider = newProvider;
-   selectedGraphIndex = newGraphIndex;
+   identifier = newIdentifier;
+
    slotUpdate();
 }
 
@@ -54,7 +53,7 @@ void Ramp::Visu::slotUpdate()
    static const QPen blackPen(QColor(0, 0, 0), 2);
    static const QPen grayPen(QColor(200, 200, 200));
 
-   PolyRamp* selectedPolyRamp = getPolyRamp(selectedProvider, selectedGraphIndex);
+   PolyRamp* selectedPolyRamp = getPolyRamp(identifier);
 
    auto drawGraph = [&](PolyRamp* polyRamp)
    {
@@ -101,12 +100,10 @@ void Ramp::Visu::slotUpdate()
 
    const PoviderNameMap& nameMap = getProviderNames();
    for (PoviderNameMap::const_iterator it = nameMap.constBegin(); it != nameMap.constEnd(); it++)
-   {
-      const Data::Provider provider = it.key();
-
-      for (uint8_t graphIndex = 0; graphIndex < 16; graphIndex++)
+   {     
+      for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
       {
-         PolyRamp* polyRamp = getPolyRamp(provider, graphIndex);
+         PolyRamp* polyRamp = getPolyRamp(identifier);
          drawGraph(polyRamp);
       }
    }

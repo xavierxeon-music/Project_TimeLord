@@ -16,7 +16,7 @@ namespace PolyLine
       Widget(MainWidget* mainWidget, Model* polyLineModel);
 
    public slots:
-      void slotGraphSelected(const Data::Provider& newProvider, const uint8_t& newGraphIndex);
+      void slotGraphSelected(const Data::Identifier& newIdentifier);
 
    private slots:
       void slotInsertPoint();
@@ -30,8 +30,7 @@ namespace PolyLine
       Model* polyLineModel;
       QItemSelectionModel* selectionModel;
 
-      Data::Provider provider;
-      uint8_t graphIndex;
+      Data::Identifier identifier;
       uint8_t selectedStageIndex;
    };
 } // namespace PolyLine
