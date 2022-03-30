@@ -13,10 +13,10 @@ namespace Stage
       Model(MainWidget* mainWidget);
 
    signals:
-      void signalGraphLengthChanged(const Data::Identifier& identifier);
+      void signalRampChanged(const Data::Identifier& identifier);
 
    public:
-      void rebuild(const Data::Identifier& identifier, bool lengthChanged);
+      void rebuild(const Data::Identifier& identifier);
 
    private:
       struct Items

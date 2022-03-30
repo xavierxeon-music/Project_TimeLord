@@ -9,7 +9,7 @@ PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
    startPosItem = new QStandardItem();
    {
       startPosItem->setData(QVariant::fromValue(identifier.provider), Data::Role::Provider);
-      startPosItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::GraphIndex);
+      startPosItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
       startPosItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
       startPosItem->setEditable(false);
    }
@@ -17,7 +17,7 @@ PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
    typeItem = new QStandardItem();
    {
       typeItem->setData(QVariant::fromValue(identifier.provider), Data::Role::Provider);
-      typeItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::GraphIndex);
+      typeItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
       typeItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
       typeItem->setData(QVariant::fromValue(Data::Target::StageType), Data::Role::Target);
    }
@@ -25,7 +25,7 @@ PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
    endHeightItem = new QStandardItem();
    {
       endHeightItem->setData(QVariant::fromValue(identifier.provider), Data::Role::Provider);
-      endHeightItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::GraphIndex);
+      endHeightItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
       endHeightItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
       endHeightItem->setData(QVariant::fromValue(Data::Target::StageEndHeight), Data::Role::Target);
    }
@@ -33,7 +33,7 @@ PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
    noteItem = new QStandardItem();
    {
       noteItem->setData(QVariant::fromValue(identifier.provider), Data::Role::Provider);
-      noteItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::GraphIndex);
+      noteItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
       noteItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
       noteItem->setEditable(false);
    }
@@ -79,6 +79,8 @@ void PolyLine::Model::rebuild(const Data::Identifier& identifier)
       items.noteItem->setText(QString::fromStdString(note.name));
    }
 
+   Data::Identifier stageIdentifier = identifier;
+
    uint32_t startPos = 0;
    for (uint8_t stageIndex = 0; stageIndex < polyRamp->stageCount(); stageIndex++)
    {
@@ -87,7 +89,8 @@ void PolyLine::Model::rebuild(const Data::Identifier& identifier)
       const uint8_t endHeight = polyRamp->getStageStartHeight(nextIndex);
       const uint8_t length = polyRamp->getStageLength(stageIndex);
 
-      Items items(this, identifier);
+      stageIdentifier.stageIndex = stageIndex;
+      Items items(this, stageIdentifier);
 
       items.startPosItem->setText(QString::number(startPos));
 

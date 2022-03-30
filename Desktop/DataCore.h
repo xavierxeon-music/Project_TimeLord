@@ -26,7 +26,7 @@ namespace Data
    struct Role
    {
       static constexpr int Provider = Qt::UserRole + 10;
-      static constexpr int GraphIndex = Qt::UserRole + 11;
+      static constexpr int RampIndex = Qt::UserRole + 11;
       static constexpr int StageIndex = Qt::UserRole + 12;
       static constexpr int Data = Qt::UserRole + 13;   // non integer data in original format
       static constexpr int Target = Qt::UserRole + 14; // the target enum

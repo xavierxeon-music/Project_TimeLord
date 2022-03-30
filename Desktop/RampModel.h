@@ -13,7 +13,7 @@ namespace Ramp
       Model(MainWidget* mainWidget);
 
    public slots:
-      void slotGraphLengthChanged(const Data::Identifier& identifier);
+      void slotRampChanged(const Data::Identifier& identifier);
 
    public:
       void rebuild();

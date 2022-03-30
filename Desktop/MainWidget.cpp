@@ -47,7 +47,7 @@ MainWidget::MainWidget()
    polyLineWidget = new PolyLine::Widget(this, polyLineModel);
 
    connect(polyRampWidget, &Ramp::Widget::signalGraphSelected, polyRampVisu, &Ramp::Visu::slotGraphSelected);
-   connect(stageModel, &Stage::Model::signalGraphLengthChanged, polyRampModel, &Ramp::Model::slotGraphLengthChanged);
+   connect(stageModel, &Stage::Model::signalRampChanged, polyRampModel, &Ramp::Model::slotRampChanged);
    connect(polyRampWidget, &Ramp::Widget::signalGraphSelected, stageWidget, &Stage::Widget::slotGraphSelected);
    connect(polyRampWidget, &Ramp::Widget::signalGraphSelected, polyLineWidget, &PolyLine::Widget::slotGraphSelected);
    polyRampModel->rebuild();
@@ -90,7 +90,7 @@ MainWidget::MainWidget()
 void MainWidget::forceRebuildModels()
 {
    polyRampModel->rebuild();
-   stageModel->rebuild(Data::Identifier(), false);
+   stageModel->rebuild(Data::Identifier());
 }
 
 void MainWidget::slotLoadFromFile()

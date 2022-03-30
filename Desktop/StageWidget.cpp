@@ -41,7 +41,7 @@ void Stage::Widget::slotGraphSelected(const Data::Identifier& newIdentifier)
 {
    identifier = newIdentifier;
 
-   stageModel->rebuild(identifier, false);
+   stageModel->rebuild(identifier);
    selectedStageIndex = 0;
 }
 
@@ -53,7 +53,7 @@ void Stage::Widget::slotInsertPoint()
 
    polyRamp->addStage(selectedStageIndex);
 
-   stageModel->rebuild(identifier, true);
+   stageModel->rebuild(identifier);
    setSelection(selectedStageIndex);
 }
 
@@ -65,7 +65,7 @@ void Stage::Widget::slotRemovePoint()
 
    polyRamp->removeStage(selectedStageIndex);
 
-   stageModel->rebuild(identifier, true);
+   stageModel->rebuild(identifier);
 }
 
 void Stage::Widget::slotMoveBack()
@@ -79,7 +79,7 @@ void Stage::Widget::slotMoveBack()
 
    polyRamp->moveStage(selectedStageIndex, selectedStageIndex - 1);
 
-   stageModel->rebuild(identifier, false);
+   stageModel->rebuild(identifier);
    setSelection(selectedStageIndex - 1);
 }
 
@@ -94,7 +94,7 @@ void Stage::Widget::slotMoveForward()
 
    polyRamp->moveStage(selectedStageIndex, selectedStageIndex + 1);
 
-   stageModel->rebuild(identifier, false);
+   stageModel->rebuild(identifier);
    setSelection(selectedStageIndex + 1);
 }
 

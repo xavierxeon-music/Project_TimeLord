@@ -100,10 +100,12 @@ void Ramp::Visu::slotUpdate()
 
    const PoviderNameMap& nameMap = getProviderNames();
    for (PoviderNameMap::const_iterator it = nameMap.constBegin(); it != nameMap.constEnd(); it++)
-   {     
+   {
+      Data::Identifier drawIdentifier(it.key());
       for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
       {
-         PolyRamp* polyRamp = getPolyRamp(identifier);
+         drawIdentifier.rampIndex = rampIndex;
+         PolyRamp* polyRamp = getPolyRamp(drawIdentifier);
          drawGraph(polyRamp);
       }
    }

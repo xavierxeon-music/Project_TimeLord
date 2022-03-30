@@ -66,7 +66,7 @@ void Ramp::Widget::slotTrimCurrentGraph()
 
    polyRamp->trimLength();
 
-   polyRampModel->slotGraphLengthChanged(identifier);
+   polyRampModel->slotRampChanged(identifier);
 }
 
 void Ramp::Widget::slotSetLengthAllGraphs()
@@ -97,7 +97,7 @@ void Ramp::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const
       return;
 
    identifier.provider = itemDataProvider.value<Data::Provider>();
-   identifier.rampIndex = item->data(Data::Role::GraphIndex).toInt();
+   identifier.rampIndex = item->data(Data::Role::RampIndex).toInt();
 
    emit signalGraphSelected(identifier);
 }
