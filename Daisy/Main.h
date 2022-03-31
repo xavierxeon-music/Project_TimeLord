@@ -6,9 +6,9 @@
 #include <Midi/MidiHandlerInternal.h>
 #include <Storage/FlashSettings.h>
 
-#include <Blocks/Graph.h>
+#include <Blocks/PolyRamp.h>
 #include <Midi/MidiHandlerUSB.h>
-#include <Midi/MidiInterfaceFlameCC.h>
+#include <Midi/MidiDeviceFlameCC.h>
 #include <Music/ClockedTempo.h>
 
 class Main : public Abstract::Patch, public FlashSettings, public Midi::Handler::Internal
@@ -17,24 +17,24 @@ public:
    Main();
 
 private: // things to remeber
-   using GraphList_ = Remember::RefArray<Graph, 16>;
+   using PolyRampList_ = Remember::RefArray<PolyRamp, 16>;
 
 private:
    void audioLoop(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size) override;
    void nonAudioLoop() override;
 
-   void receiveControllerChangeMidi(const Midi::ControllerMessage& message, const uint8_t& value);
+   void receiveControllerChangeMidi(const Midi::Channel& channel, const Midi::ControllerMessage& message, const uint8_t& value);
 
    // gates
    void clockTick();
    void clockReset();
 
 private:
-   GraphList_ graphs;
+   PolyRampList_ ramps;
    ClockedTempo tempo;
 
    Midi::Handler::USB usbMidiHandler;
-   Midi::Interface::FlameCC expander;
+   Midi::Device::FlameCC expander;
 };
 
 #endif // MainH

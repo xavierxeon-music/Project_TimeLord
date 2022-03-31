@@ -57,7 +57,7 @@ private:
    PolyRampList_ polyRamps;
    AudioDeviceGraph* audioDevice;
 
-   MidiBridge midiBridge;
+   Midi::Bridge midiBridge;
    FileStorage fileStorageDaisy;
    FileStorage fileStorageDevice;
 

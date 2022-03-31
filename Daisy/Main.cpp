@@ -8,7 +8,7 @@ Main::Main()
    : Abstract::Patch("TimeLord")
    , FlashSettings(this, 33)
    , Midi::Handler::Internal(&daisy, 1, this)
-   , graphs(this)
+   , ramps(this)
    , tempo()
    , usbMidiHandler(this)
    , expander(&usbMidiHandler)
@@ -18,8 +18,8 @@ Main::Main()
 
    load();
 
-   for (uint8_t index = 0; index < graphs.getSize(); index++)
-      graphs[index].clockReset();
+   for (uint8_t index = 0; index < ramps.getSize(); index++)
+      ramps[index].clockReset();
 
    pageManager.addPage(new PageOverview(this, tempo));
 
@@ -63,21 +63,22 @@ void Main::nonAudioLoop()
    ensureSettignsValid();
 }
 
-void Main::receiveControllerChangeMidi(const Midi::ControllerMessage& message, const uint8_t& value)
+void Main::receiveControllerChangeMidi(const Midi::Channel& channel, const Midi::ControllerMessage& message, const uint8_t& value)
 {
+   (void)channel;
    usbMidiHandler.settingsUpdate(this, message, value);
 }
 
 void Main::clockTick()
 {
-   for (uint8_t index = 0; index < graphs.getSize(); index++)
-      graphs[index].clockTick();
+   for (uint8_t index = 0; index < ramps.getSize(); index++)
+      ramps[index].clockTick();
 }
 
 void Main::clockReset()
 {
-   for (uint8_t index = 0; index < graphs.getSize(); index++)
-      graphs[index].clockReset();
+   for (uint8_t index = 0; index < ramps.getSize(); index++)
+      ramps[index].clockReset();
 }
 
 // main function
