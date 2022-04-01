@@ -9,7 +9,7 @@
 
 #include <AppSettings.h>
 
-#include "AudioDeviceGraph.h"
+#include "RampDeviceAudio.h"
 #include "TempoWidget.h"
 
 using Channel = AudioDevice::Channel;
@@ -17,12 +17,8 @@ using Frame = AudioDevice::Frame;
 
 MainWidget::MainWidget()
    : QWidget(nullptr)
-   , Remember::Root()
-   , polyRamps(this)
-   , audioDevice(new AudioDeviceGraph(this))
-   , midiBridge(this)
-   , fileStorageDaisy(this)
-   , fileStorageDevice(audioDevice)
+   , audioDevice(this)
+   , raspiDevice(this)
    , splitter(nullptr)
    , statusBar(nullptr)
    , polyRampModel(nullptr)
@@ -34,8 +30,6 @@ MainWidget::MainWidget()
    , polyLineWidget(nullptr)
 {
    setWindowTitle("Time Lord UI[*]");
-
-   midiBridge.initMidi();
 
    polyRampModel = new Ramp::Model(this);
    stageModel = new Stage::Model(this);
@@ -62,7 +56,7 @@ MainWidget::MainWidget()
    statusBar = new QStatusBar(this);
    statusBar->setSizeGripEnabled(true);
 
-   TempoWidget* tempoWidget = new TempoWidget(this, audioDevice->getTempo());
+   TempoWidget* tempoWidget = new TempoWidget(this, audioDevice.getTempo());
    statusBar->addPermanentWidget(tempoWidget);
 
    QVBoxLayout* masterLayout = new QVBoxLayout(this);
@@ -82,9 +76,7 @@ MainWidget::MainWidget()
    connect(modfifiedCheckTimer, &QTimer::timeout, this, &MainWidget::slotCheckDataModified);
    modfifiedCheckTimer->start(1000);
 
-   for (uint8_t index = 0; index < 16; index++)
-      polyRamps[index].clockReset();
-   audioDevice->clockReset();
+   audioDevice.clockReset();
 }
 
 void MainWidget::forceRebuildModels()
@@ -131,14 +123,14 @@ void MainWidget::slotSaveNewFile()
    saveInternal(fileName);
 }
 
-void MainWidget::slotSaveToDaisy()
+void MainWidget::slotSaveToRaspi()
 {
-   midiBridge.saveToDaisy();
+   raspiDevice.pushToServer();
 }
 
 void MainWidget::slotCheckDataModified()
 {
-   if (isUnsynced() || audioDevice->isUnsynced())
+   if (raspiDevice.isUnsynced() || audioDevice.isUnsynced())
       setWindowModified(true);
    else
       setWindowModified(false);
@@ -156,8 +148,11 @@ void MainWidget::loadLastFile()
 
 void MainWidget::loadInternal(const QString& fileName)
 {
-   fileStorageDaisy.loadFromFile(fileName);
-   fileStorageDevice.loadFromFile(fileName + ".device");
+   FileStorage fileStorageRaspi(&raspiDevice);
+   fileStorageRaspi.loadFromFile(fileName + ".raspi");
+
+   FileStorage fileStorageDevice(&audioDevice);
+   fileStorageDevice.loadFromFile(fileName + ".audio");
 
    updateWindowTitle(fileName);
    forceRebuildModels();
@@ -167,8 +162,11 @@ void MainWidget::loadInternal(const QString& fileName)
 
 void MainWidget::saveInternal(const QString& fileName)
 {
-   fileStorageDaisy.saveToFile(fileName);
-   fileStorageDevice.saveToFile(fileName + ".device");
+   FileStorage fileStorageRaspi(&raspiDevice);
+   fileStorageRaspi.saveToFile(fileName + ".raspi");
+
+   FileStorage fileStorageDevice(&audioDevice);
+   fileStorageDevice.saveToFile(fileName + ".audio");
 
    updateWindowTitle(fileName);
 

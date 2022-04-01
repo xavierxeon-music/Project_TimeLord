@@ -1,34 +1,32 @@
-#include "AudioDeviceGraph.h"
+#include "RampDeviceAudio.h"
 
-AudioDeviceGraph::AudioDeviceGraph(QObject* parent)
+RampDevice::Audio::Audio(QObject* parent)
    : QObject(parent)
-   , Remember::Root()
-   , polyRamps(this)
+   , Abstract()
    , audioDriver(AudioDevice::Common::Device::ES8, AudioDevice::Common::SampleRate::Normal)
    , tempo(&audioDriver, 0, 1)
    , outputs()
 {
-   audioDriver.registerAudioLoopFunction(this, &AudioDeviceGraph::audioLoop);
+   audioDriver.registerAudioLoopFunction(this, &RampDevice::Audio::audioLoop);
    for (uint8_t index = 0; index < 16; index++)
       outputs[index].activate(&audioDriver, index);
 
-   tempo.onClockTick(this, &AudioDeviceGraph::clockTick);
-   tempo.onClockReset(this, &AudioDeviceGraph::clockReset);
-
+   tempo.onClockTick(this, &RampDevice::Audio::clockTick);
+   tempo.onClockReset(this, &RampDevice::Audio::clockReset);
 }
 
-void AudioDeviceGraph::clockReset()
+void RampDevice::Audio::clockReset()
 {
    for (uint8_t index = 0; index < 16; index++)
       polyRamps[index].clockReset();
 }
 
-const Tempo* AudioDeviceGraph::getTempo() const
+const Tempo* RampDevice::Audio::getTempo() const
 {
    return &tempo;
 }
 
-void AudioDeviceGraph::audioLoop(const float& audioCallbackRate)
+void RampDevice::Audio::audioLoop(const float& audioCallbackRate)
 {
    tempo.advance(audioCallbackRate);
 
@@ -48,7 +46,7 @@ void AudioDeviceGraph::audioLoop(const float& audioCallbackRate)
    }
 }
 
-void AudioDeviceGraph::clockTick()
+void RampDevice::Audio::clockTick()
 {
    for (uint8_t index = 0; index < 16; index++)
       polyRamps[index].clockTick();

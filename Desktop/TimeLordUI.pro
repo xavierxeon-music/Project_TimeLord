@@ -14,7 +14,6 @@ include(../../../Base/DesktopApp.pri)
 HEADERS += \
    AbstractEdit.h \
    AbstractWidget.h \
-   AudioDeviceGraph.h \
    DataCore.h \
    DelegateComboBox.h \
    DelegateSpinBox.h \
@@ -25,6 +24,9 @@ HEADERS += \
    MainWidget.h \
    PolyLineModel.h \
    PolyLineWidget.h \
+   RampDeviceAbstract.h \
+   RampDeviceAudio.h \
+   RampDeviceRaspi.h \
    RampModel.h \
    RampVisu.h \
    RampWidget.h \
@@ -35,7 +37,6 @@ HEADERS += \
 SOURCES += \
    AbstractEdit.cpp \
    AbstractWidget.cpp \
-   AudioDeviceGraph.cpp \
    DataCore.cpp \
    DelegateComboBox.cpp \
    DelegateSpinBox.cpp \
@@ -46,6 +47,9 @@ SOURCES += \
    MainWidget.cpp \
    PolyLineModel.cpp \
    PolyLineWidget.cpp \
+   RampDeviceAbstract.cpp \
+   RampDeviceAudio.cpp \
+   RampDeviceRaspi.cpp \
    RampModel.cpp \
    RampVisu.cpp \
    RampWidget.cpp \

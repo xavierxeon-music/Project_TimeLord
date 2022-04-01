@@ -25,20 +25,20 @@ namespace Data
 
    struct Role
    {
-      static constexpr int Provider = Qt::UserRole + 10;
+      static constexpr int Device = Qt::UserRole + 10; // ramp device enum
       static constexpr int RampIndex = Qt::UserRole + 11;
       static constexpr int StageIndex = Qt::UserRole + 12;
       static constexpr int Data = Qt::UserRole + 13;   // non integer data in original format
       static constexpr int Target = Qt::UserRole + 14; // the target enum
    };
 
-   enum class Provider : uint8_t
+   enum class RampDevice : uint8_t
    {
       None,
-      DaisyPatch,
-      AudioDeviceGraph
+      Audio,
+      Raspi
    };
-   Q_ENUM_NS(Provider)
+   Q_ENUM_NS(RampDevice)
 
    enum class Type : uint8_t
    {
@@ -52,24 +52,24 @@ namespace Data
 
    struct Identifier
    {
-      Data::Provider provider;
+      Data::RampDevice device;
       uint8_t rampIndex;
       uint8_t stageIndex;
 
-      Identifier(const Data::Provider& provider = Provider::None, const uint8_t& rampIndex = 0, const uint8_t& stageIndex = 0);
+      Identifier(const Data::RampDevice& device = RampDevice::None, const uint8_t& rampIndex = 0, const uint8_t& stageIndex = 0);
    };
 
    // all graph data access and manipulation should happen via this class
    class Core
    {
    public:
-      using PoviderNameMap = QMap<Provider, QString>;
+      using DeviceNameMap = QMap<RampDevice, QString>;
 
    public:
       Core(MainWidget* mainWidget);
 
    protected:
-      PoviderNameMap getProviderNames() const;
+      DeviceNameMap getDeviceNameMap() const;
       PolyRamp* getPolyRamp(const Identifier& identifier);
 
    protected:
@@ -77,7 +77,7 @@ namespace Data
       static bool lockGraphSize;
 
    private:
-      static const PoviderNameMap providerNameMap;
+      static const DeviceNameMap deviceNameMap;
    };
 
 } // namespace Data

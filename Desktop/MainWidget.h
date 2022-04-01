@@ -9,19 +9,18 @@
 
 #include <Blocks/PolyRamp.h>
 #include <FileStorage.h>
-#include <MidiBridge.h>
 
+#include "RampDeviceAudio.h"
 #include "PolyLineModel.h"
 #include "PolyLineWidget.h"
 #include "RampModel.h"
 #include "RampVisu.h"
 #include "RampWidget.h"
+#include "RampDeviceRaspi.h"
 #include "StageModel.h"
 #include "StageWidget.h"
 
-class AudioDeviceGraph;
-
-class MainWidget : public QWidget, public Remember::Root
+class MainWidget : public QWidget
 {
    Q_OBJECT
 
@@ -35,13 +34,10 @@ public slots:
    void slotLoadFromFile();
    void slotSaveToFile();
    void slotSaveNewFile();
-   void slotSaveToDaisy();
+   void slotSaveToRaspi();
 
 private:
    friend class Data::Core;
-
-private: // things to remeber
-   using PolyRampList_ = Remember::RefArray<PolyRamp, 16>;
 
 private slots:
    void slotCheckDataModified();
@@ -54,12 +50,8 @@ private:
    void closeEvent(QCloseEvent* ce) override;
 
 private:
-   PolyRampList_ polyRamps;
-   AudioDeviceGraph* audioDevice;
-
-   Midi::Bridge midiBridge;
-   FileStorage fileStorageDaisy;
-   FileStorage fileStorageDevice;
+   RampDevice::Audio audioDevice;
+   RampDevice::Raspi raspiDevice;
 
    QSplitter* splitter;
    QStatusBar* statusBar;

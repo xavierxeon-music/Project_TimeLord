@@ -13,7 +13,7 @@ Stage::Model::Items::Items(Model* model, const Data::Identifier& identifier)
          name = QString("0") + name;
 
       indexItem->setText(name);
-      indexItem->setData(QVariant::fromValue(identifier.provider), Data::Role::Provider);
+      indexItem->setData(QVariant::fromValue(identifier.device), Data::Role::Device);
       indexItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
       indexItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
       indexItem->setEditable(false);
@@ -21,7 +21,7 @@ Stage::Model::Items::Items(Model* model, const Data::Identifier& identifier)
 
    startPosItem = new QStandardItem();
    {
-      startPosItem->setData(QVariant::fromValue(identifier.provider), Data::Role::Provider);
+      startPosItem->setData(QVariant::fromValue(identifier.device), Data::Role::Device);
       startPosItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
       startPosItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
       startPosItem->setEditable(false);
@@ -29,7 +29,7 @@ Stage::Model::Items::Items(Model* model, const Data::Identifier& identifier)
 
    lengthItem = new QStandardItem();
    {
-      lengthItem->setData(QVariant::fromValue(identifier.provider), Data::Role::Provider);
+      lengthItem->setData(QVariant::fromValue(identifier.device), Data::Role::Device);
       lengthItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
       lengthItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
       lengthItem->setData(QVariant::fromValue(Data::Target::StageLength), Data::Role::Target);
@@ -37,7 +37,7 @@ Stage::Model::Items::Items(Model* model, const Data::Identifier& identifier)
 
    startHeigthItem = new QStandardItem();
    {
-      startHeigthItem->setData(QVariant::fromValue(identifier.provider), Data::Role::Provider);
+      startHeigthItem->setData(QVariant::fromValue(identifier.device), Data::Role::Device);
       startHeigthItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
       startHeigthItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
       startHeigthItem->setData(QVariant::fromValue(Data::Target::StageStartHeight), Data::Role::Target);
@@ -142,7 +142,7 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
    if (targetData.isNull())
       return QStandardItemModel::setData(index, value, role);
 
-   const Data::Provider provider = data(index, Data::Role::Provider).value<Data::Provider>();
+   const Data::RampDevice provider = data(index, Data::Role::Device).value<Data::RampDevice>();
    const uint8_t rampIndex = data(index, Data::Role::RampIndex).value<uint8_t>();
 
    Data::Identifier identifier(provider, rampIndex);

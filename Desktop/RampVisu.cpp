@@ -22,7 +22,7 @@ Ramp::Visu::Visu(MainWidget* mainWidget)
    toolBar->addAction(QIcon(":/SaveNewFile.svg"), "Save To New File", mainWidget, &MainWidget::slotSaveNewFile);
 
    toolBar->addSeparator();
-   toolBar->addAction(QIcon(":/SaveToDaisy.svg"), "Save To Daisy", mainWidget, &MainWidget::slotSaveToDaisy);
+   toolBar->addAction(QIcon(":/SaveToDaisy.svg"), "Save To RasPi", mainWidget, &MainWidget::slotSaveToRaspi);
 
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/ZoomIn.svg"), "Zoom In", this, &Visu::slotZoomIn);
@@ -98,8 +98,8 @@ void Ramp::Visu::slotUpdate()
       }
    };
 
-   const PoviderNameMap& nameMap = getProviderNames();
-   for (PoviderNameMap::const_iterator it = nameMap.constBegin(); it != nameMap.constEnd(); it++)
+   const DeviceNameMap& nameMap = getDeviceNameMap();
+   for (DeviceNameMap::const_iterator it = nameMap.constBegin(); it != nameMap.constEnd(); it++)
    {
       Data::Identifier drawIdentifier(it.key());
       for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)

@@ -32,10 +32,10 @@ void Abstract::Edit::slotCancel()
 
 void Abstract::Edit::slotExecute()
 {
-   const PoviderNameMap& nameMap = getProviderNames();
-   for (PoviderNameMap::const_iterator it = nameMap.constBegin(); it != nameMap.constEnd(); it++)
+   const DeviceNameMap& nameMap = getDeviceNameMap();
+   for (DeviceNameMap::const_iterator it = nameMap.constBegin(); it != nameMap.constEnd(); it++)
    {
-      const Data::Provider provider = it.key();
+      const Data::RampDevice provider = it.key();
 
       for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
       {

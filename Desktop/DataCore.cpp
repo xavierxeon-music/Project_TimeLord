@@ -1,16 +1,16 @@
 #include "DataCore.h"
 
-#include "AudioDeviceGraph.h"
+#include "RampDeviceAudio.h"
 #include "MainWidget.h"
 
-Data::Identifier::Identifier(const Data::Provider& provider, const uint8_t& rampIndex, const uint8_t& stageIndex)
-   : provider(provider)
+Data::Identifier::Identifier(const Data::RampDevice& device, const uint8_t& rampIndex, const uint8_t& stageIndex)
+   : device(device)
    , rampIndex(rampIndex)
    , stageIndex(stageIndex)
 {
 }
 
-const Data::Core::PoviderNameMap Data::Core::providerNameMap = {{Provider::DaisyPatch, "Daisy"}, {Provider::AudioDeviceGraph, "ES-8"}};
+const Data::Core::DeviceNameMap Data::Core::deviceNameMap = {{RampDevice::Audio, "ES-8"}, {RampDevice::Raspi, "Raspi"}};
 bool Data::Core::lockGraphSize = true;
 
 Data::Core::Core(MainWidget* mainWidget)
@@ -18,17 +18,17 @@ Data::Core::Core(MainWidget* mainWidget)
 {
 }
 
-Data::Core::PoviderNameMap Data::Core::getProviderNames() const
+Data::Core::DeviceNameMap Data::Core::getDeviceNameMap() const
 {
-   return providerNameMap;
+   return deviceNameMap;
 }
 
 PolyRamp* Data::Core::getPolyRamp(const Identifier& identifier)
 {
-   if (Provider::DaisyPatch == identifier.provider)
-      return &(mainWidget->polyRamps[identifier.rampIndex]);
-   else if (Provider::AudioDeviceGraph == identifier.provider)
-      return &(mainWidget->audioDevice->polyRamps[identifier.rampIndex]);
+   if (RampDevice::Raspi == identifier.device)
+      return &(mainWidget->raspiDevice.polyRamps[identifier.rampIndex]);
+   else if (RampDevice::Audio == identifier.device)
+      return &(mainWidget->audioDevice.polyRamps[identifier.rampIndex]);
    else
       return nullptr;
 }
