@@ -22,8 +22,8 @@ void RampDevice::Raspi::pushToServer()
 void RampDevice::Raspi::slotAdvanceStep()
 {
    using VoltageList = std::vector<float>;
-   static const std::vector<VoltageList> voltageMap = {{5.0, 0.0, 2.5}, {0.0, 2.5, 5.0}, {2.5, 5.0, 0.0}};
-   static Counter counter(2);
+   static const std::vector<VoltageList> voltageMap = {{4.9, 0.0, 2.5}, {0.0, 2.5, 4.9}, {2.5, 4.9, 0.0}};
+   static Counter counter(3);
 
    const uint8_t index = counter.valueAndNext();
    const VoltageList& voltageList = voltageMap.at(index);
