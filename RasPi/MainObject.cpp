@@ -7,7 +7,7 @@
 MainObject::MainObject()
    : QObject(nullptr)
    , server(this)
-   , device("system:midi_capture_2", "system:midi_playback_2")
+   , device("system:midi_capture_2", "system:midi_playback_2", &device)
 {
    qDebug() << "start";
 
