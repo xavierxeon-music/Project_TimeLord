@@ -10,6 +10,8 @@ MainObject::MainObject()
    , device("blah")
 {
    qDebug() << "start";
+
+   device.initMidi(true);
 }
 
 MainObject::~MainObject()
