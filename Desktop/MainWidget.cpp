@@ -7,7 +7,7 @@
 #include <QTimer>
 #include <QVBoxLayout>
 
-#include <SettingsUI.h>
+#include <AppSettings.h>
 
 #include "AudioDeviceGraph.h"
 #include "TempoWidget.h"
@@ -72,7 +72,7 @@ MainWidget::MainWidget()
    masterLayout->addWidget(splitter);
    masterLayout->addWidget(statusBar);
 
-   SettingsUI widgetSettings("MainWidget");
+   AppSettings widgetSettings("MainWidget");
    restoreGeometry(widgetSettings.bytes("Geometry"));
    splitter->restoreState(widgetSettings.bytes("StateModel"));
 
@@ -99,7 +99,7 @@ void MainWidget::slotLoadFromFile()
    if (fileName.isEmpty())
       return;
 
-   SettingsUI fileSettings;
+   AppSettings fileSettings;
    fileSettings.write("LastFile", fileName);
 
    loadInternal(fileName);
@@ -107,7 +107,7 @@ void MainWidget::slotLoadFromFile()
 
 void MainWidget::slotSaveToFile()
 {
-   SettingsUI fileSettings;
+   AppSettings fileSettings;
    QString fileName = fileSettings.string("LastFile");
 
    if (fileName.isEmpty())
@@ -125,7 +125,7 @@ void MainWidget::slotSaveNewFile()
    if (!fileName.endsWith(".timelord"))
       fileName += ".timelord";
 
-   SettingsUI fileSettings;
+   AppSettings fileSettings;
    fileSettings.write("LastFile", fileName);
 
    saveInternal(fileName);
@@ -146,7 +146,7 @@ void MainWidget::slotCheckDataModified()
 
 void MainWidget::loadLastFile()
 {
-   SettingsUI fileSettings;
+   AppSettings fileSettings;
    QString fileName = fileSettings.string("LastFile");
    if (fileName.isEmpty())
       return;
@@ -189,7 +189,7 @@ void MainWidget::closeEvent(QCloseEvent* ce)
    {
    }
 
-   SettingsUI widgetSettings("MainWidget");
+   AppSettings widgetSettings("MainWidget");
    widgetSettings.write("Geometry", saveGeometry());
    widgetSettings.write("StateModel", splitter->saveState());
 
