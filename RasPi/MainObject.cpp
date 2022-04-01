@@ -7,6 +7,7 @@
 MainObject::MainObject()
    : QObject(nullptr)
    , server(this)
+   , device("blah")
 {
    qDebug() << "start";
 }
