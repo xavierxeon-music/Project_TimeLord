@@ -21,12 +21,15 @@ void RampDevice::Raspi::pushToServer()
 
 void RampDevice::Raspi::slotAdvanceStep()
 {
-   static const std::vector<std::vector<float>> voltages = {{5.0, 0, 0, 2.5}, {0, 0, 2.5, 5.0}, {2.5, 5.0, 0, 0}};
+   using VoltageList = std::vector<float>;
+   static const std::vector<VoltageList> voltageMap = {{5.0, 0.0, 2.5}, {0.0, 2.5, 5.0}, {2.5, 5.0, 0.0}};
    static Counter counter(2);
 
    const uint8_t index = counter.valueAndNext();
+   const VoltageList& voltageList = voltageMap.at(index);
    for (uint8_t port = 0; port < 3; port++)
    {
-      stripA.setCV(port, voltages[index][port]);
+      const float& voltage = voltageList.at(port);
+      stripA.setCV(port, voltage);
    }
 }
