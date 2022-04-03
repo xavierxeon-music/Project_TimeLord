@@ -7,15 +7,18 @@
 MainObject::MainObject()
    : QObject(nullptr)
    , server(this)
-   , device("system:midi_capture_2", "system:midi_playback_2")
+   , inputDevice("system:midi_capture_2")
+   , outputDevice("system:midi_playback_2")
 {
    qInfo() << "start";
 
-   device.initMidi();
-   device.addPassThroughInterface(&device);
+   inputDevice.initMidi();
+   inputDevice.addPassThroughInterface(&outputDevice);
 
-   server.addPassThroughInterface(&device);
-   device.addPassThroughInterface(&server);
+   outputDevice.initMidi();
+
+   server.addPassThroughInterface(&outputDevice);
+   inputDevice.addPassThroughInterface(&server);
 }
 
 MainObject::~MainObject()

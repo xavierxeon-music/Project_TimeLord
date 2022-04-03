@@ -3,8 +3,9 @@
 
 #include <QObject>
 
-#include <MidiDevice.h>
-#include <MidiTunnelServer.h>
+#include <Midi/MidiDeviceInput.h>
+#include <Midi/MidiDeviceOutput.h>
+#include <Midi/MidiTunnelServer.h>
 
 class MainObject : public QObject
 {
@@ -15,7 +16,8 @@ public:
 
 private:
    Midi::Tunnel::Server server;
-   Midi::Device device;
+   Midi::Device::Input inputDevice;
+   Midi::Device::Output outputDevice;
 };
 
 #endif // NOT MainObjectH
