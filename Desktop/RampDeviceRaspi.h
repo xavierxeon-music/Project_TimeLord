@@ -2,7 +2,7 @@
 #define RaspiDeviceGraphH
 
 #include "RampDeviceAbstract.h"
-#include <MidiTunnelClient.h>
+#include <Midi/MidiTunnelClient.h>
 
 #include <Midi/MidiDeviceDoepferQuad.h>
 
