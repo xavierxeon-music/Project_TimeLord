@@ -4,11 +4,18 @@
 #include <Remember.h>
 #include <QObject>
 
+#define WAIT_FOR_FLAME_DEVICE
+
+#ifdef WAIT_FOR_FLAME_DEVICE
+#include <Midi/MidiTargetDoepferQuad.h> // temporary ?
+#endif
+
 #include <Blocks/PolyRamp.h>
 #include <Midi/MidiDeviceInput.h>
 #include <Midi/MidiDeviceOutput.h>
-#include <Midi/MidiTargetDoepferQuad.h> // temporary ?
 #include <Midi/MidiTargetFlameCC.h>
+#include <Midi/MidiToolBridge.h>
+#include <Midi/MidiToolGate.h>
 #include <Midi/MidiTunnelServer.h>
 #include <Music/Tempo.h>
 
@@ -24,21 +31,30 @@ private: // things to remeber
 
 private:
    void loop();
-   void clockTick();
-   void clockReset();
+   void reset();
 
 private:
    PolyRampList_ polyRamps;
+   static const QString storageFileName;
 
    Midi::Tunnel::Server server;
+
    Midi::Device::Input inputDevice;
    Midi::Device::Output outputDevice;
 
-   Midi::Target::DoepferQuad doepferQuad; // use first 8 ramps
-   Midi::Target::FlameCC flameCC;         // last 8 ramps go here
+   Midi::Tool::Bridge bridge;
 
-   static const float callbackRate;
+#ifdef WAIT_FOR_FLAME_DEVICE
+   Midi::Target::DoepferQuad doepferQuad; // use for first 8 ramps
+   Midi::Target::DoepferQuad::Strip quadStrips[4];
+#endif
+   Midi::Target::FlameCC flameCC;
+
+   static const uint16_t callbackRate;
    Tempo tempo;
+   Midi::Tool::Gate clockGate;
+   Midi::Tool::Gate resetGate;
+   bool tickActive;
 };
 
 #endif // NOT MainObjectH

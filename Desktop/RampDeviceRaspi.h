@@ -2,17 +2,16 @@
 #define RaspiDeviceGraphH
 
 #include "RampDeviceAbstract.h"
-#include <Midi/MidiTunnelClient.h>
+#include <QObject>
 
-#include <Midi/MidiDeviceDoepferQuad.h>
+#include <Midi/MidiToolBridge.h>
+#include <Midi/MidiTunnelClient.h>
 
 #include "DataCore.h"
 
-#include <Sound/TableOscilator.h>
-
 namespace RampDevice
 {
-   class Raspi : public Midi::Tunnel::Client, public Abstract
+   class Raspi : public QObject, public Abstract
    {
       Q_OBJECT
    public:
@@ -21,18 +20,12 @@ namespace RampDevice
    public:
       void pushToServer();
 
-   private slots:
-      void slotAdvanceStep();
-
    private:
       friend class Data::Core;
 
    private:
-      Midi::Device::DoepferQuad midiDevice;
-      Midi::Device::DoepferQuad::Strip stripA;
-
-      TableOscilator one;
-      TableOscilator two;
+      Midi::Tunnel::Client client;
+      Midi::Tool::Bridge bridge;
    };
 } // namespace RampDevice
 
