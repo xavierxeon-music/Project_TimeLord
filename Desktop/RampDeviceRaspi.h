@@ -8,6 +8,8 @@
 
 #include "DataCore.h"
 
+#include <Sound/TableOscilator.h>
+
 namespace RampDevice
 {
    class Raspi : public Midi::Tunnel::Client, public Abstract
@@ -28,6 +30,9 @@ namespace RampDevice
    private:
       Midi::Device::DoepferQuad midiDevice;
       Midi::Device::DoepferQuad::Strip stripA;
+
+      TableOscilator one;
+      TableOscilator two;
    };
 } // namespace RampDevice
 

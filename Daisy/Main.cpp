@@ -7,7 +7,7 @@
 Main::Main()
    : Abstract::Patch("TimeLord")
    , FlashSettings(this, 33)
-   , Midi::Handler::Internal(&daisy, 1, this)
+   , Midi::Handler::Internal(&daisy, this, 8)
    , ramps(this)
    , tempo()
    , usbMidiHandler(this)
