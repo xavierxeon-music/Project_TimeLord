@@ -2,13 +2,20 @@
 
 #include <QCoreApplication>
 
+#include <QTimer>
+
 #include <ConsoleApplication.h>
 
 MainObject::MainObject()
    : QObject(nullptr)
+   , Remember::Root()
+   , polyRamps(this)
    , server(this)
    , inputDevice("system:midi_capture_2")
    , outputDevice("system:midi_playback_2")
+   , doepferQuad(&outputDevice)
+   , flameCC(&outputDevice)
+   , tempo()
 {
    qInfo() << "start";
 
@@ -16,6 +23,7 @@ MainObject::MainObject()
    inputDevice.addPassThroughInterface(&outputDevice);
 
    outputDevice.initMidi();
+   flameCC.init();
 
    server.addPassThroughInterface(&outputDevice);
    inputDevice.addPassThroughInterface(&server);
@@ -24,6 +32,18 @@ MainObject::MainObject()
 MainObject::~MainObject()
 {
    qInfo() << "end";
+}
+
+void MainObject::loop()
+{
+}
+
+void MainObject::clockTick()
+{
+}
+
+void MainObject::clockReset()
+{
 }
 
 // main
