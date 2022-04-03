@@ -8,6 +8,7 @@
 #include <QVBoxLayout>
 
 #include <AppSettings.h>
+#include <FileSettings.h>
 
 #include "RampDeviceAudio.h"
 #include "TempoWidget.h"
@@ -87,13 +88,14 @@ void MainWidget::forceRebuildModels()
 
 void MainWidget::slotLoadFromFile()
 {
-   const QString fileName = QFileDialog::getOpenFileName(this, "Save Data", QString(), "*.timelord");
+   const QString fileName = QFileDialog::getOpenFileName(this, "Save Data", QString(), "*.timelord.json");
    if (fileName.isEmpty())
       return;
 
    AppSettings fileSettings;
    fileSettings.write("LastFile", fileName);
 
+   FileSettings::setFileName(fileName);
    loadInternal(fileName);
 }
 
@@ -110,16 +112,22 @@ void MainWidget::slotSaveToFile()
 
 void MainWidget::slotSaveNewFile()
 {
-   QString fileName = QFileDialog::getSaveFileName(this, "Save Data", QString(), "*.timelord");
+   QString fileName = QFileDialog::getSaveFileName(this, "Save Data", QString(), "*.json");
    if (fileName.isEmpty())
       return;
 
-   if (!fileName.endsWith(".timelord"))
-      fileName += ".timelord";
+   if (!fileName.endsWith(".timelord.json"))
+   {
+      if (!fileName.endsWith(".json"))
+         fileName += ".timelord.json";
+      else
+         fileName.replace(".json", ".timelord.json");
+   }
 
    AppSettings fileSettings;
    fileSettings.write("LastFile", fileName);
 
+   FileSettings::setFileName(fileName);
    saveInternal(fileName);
 }
 
@@ -143,16 +151,20 @@ void MainWidget::loadLastFile()
    if (fileName.isEmpty())
       return;
 
+   if (!QFile::exists(fileName))
+      return;
+
+   FileSettings::setFileName(fileName);
    loadInternal(fileName);
 }
 
 void MainWidget::loadInternal(const QString& fileName)
 {
    FileStorage fileStorageRaspi(&raspiDevice);
-   fileStorageRaspi.loadFromFile(fileName + ".raspi");
+   fileStorageRaspi.loadFromFile(QString(fileName).replace(".json", ".raspi"));
 
    FileStorage fileStorageDevice(&audioDevice);
-   fileStorageDevice.loadFromFile(fileName + ".audio");
+   fileStorageDevice.loadFromFile(QString(fileName).replace(".json", ".audio"));
 
    updateWindowTitle(fileName);
    forceRebuildModels();
@@ -163,10 +175,10 @@ void MainWidget::loadInternal(const QString& fileName)
 void MainWidget::saveInternal(const QString& fileName)
 {
    FileStorage fileStorageRaspi(&raspiDevice);
-   fileStorageRaspi.saveToFile(fileName + ".raspi");
+   fileStorageRaspi.saveToFile(QString(fileName).replace(".json", ".raspi"));
 
    FileStorage fileStorageDevice(&audioDevice);
-   fileStorageDevice.saveToFile(fileName + ".audio");
+   fileStorageDevice.saveToFile(QString(fileName).replace(".json", ".audio"));
 
    updateWindowTitle(fileName);
 
