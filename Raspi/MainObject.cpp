@@ -43,6 +43,7 @@ MainObject::MainObject()
    inputDevice.addPassThroughInterface(&server);
 
    QTimer* loopTimer = new QTimer(this);
+   loopTimer->setTimerType(Qt::PreciseTimer);
    connect(loopTimer, &QTimer::timeout, this, &MainObject::loop);
    loopTimer->setInterval(callbackRate);
    loopTimer->start();
