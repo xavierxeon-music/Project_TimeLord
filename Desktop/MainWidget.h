@@ -10,13 +10,12 @@
 #include <Blocks/PolyRamp.h>
 #include <FileStorage.h>
 
-#include "RampDeviceAudio.h"
 #include "PolyLineModel.h"
 #include "PolyLineWidget.h"
+#include "RampDeviceRaspi.h"
 #include "RampModel.h"
 #include "RampVisu.h"
 #include "RampWidget.h"
-#include "RampDeviceRaspi.h"
 #include "StageModel.h"
 #include "StageWidget.h"
 
@@ -35,6 +34,7 @@ public slots:
    void slotSaveToFile();
    void slotSaveNewFile();
    void slotSaveToRaspi();
+   void slotEnableMidiOutput(bool enabled);
 
 private:
    friend class Data::Core;
@@ -50,7 +50,6 @@ private:
    void closeEvent(QCloseEvent* ce) override;
 
 private:
-   RampDevice::Audio audioDevice;
    RampDevice::Raspi raspiDevice;
 
    QSplitter* splitter;

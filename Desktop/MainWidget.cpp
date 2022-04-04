@@ -10,15 +10,10 @@
 #include <AppSettings.h>
 #include <FileSettings.h>
 
-#include "RampDeviceAudio.h"
 #include "TempoWidget.h"
-
-using Channel = AudioDevice::Channel;
-using Frame = AudioDevice::Frame;
 
 MainWidget::MainWidget()
    : QWidget(nullptr)
-   , audioDevice(this)
    , raspiDevice(this)
    , splitter(nullptr)
    , statusBar(nullptr)
@@ -57,8 +52,8 @@ MainWidget::MainWidget()
    statusBar = new QStatusBar(this);
    statusBar->setSizeGripEnabled(true);
 
-   TempoWidget* tempoWidget = new TempoWidget(this, audioDevice.getTempo());
-   statusBar->addPermanentWidget(tempoWidget);
+   //TempoWidget* tempoWidget = new TempoWidget(this, audioDevice.getTempo());
+   //statusBar->addPermanentWidget(tempoWidget);
 
    QVBoxLayout* masterLayout = new QVBoxLayout(this);
    masterLayout->setContentsMargins(0, 0, 0, 0);
@@ -76,8 +71,6 @@ MainWidget::MainWidget()
    QTimer* modfifiedCheckTimer = new QTimer(this);
    connect(modfifiedCheckTimer, &QTimer::timeout, this, &MainWidget::slotCheckDataModified);
    modfifiedCheckTimer->start(1000);
-
-   audioDevice.clockReset();
 }
 
 void MainWidget::forceRebuildModels()
@@ -136,9 +129,14 @@ void MainWidget::slotSaveToRaspi()
    raspiDevice.pushToServer();
 }
 
+void MainWidget::slotEnableMidiOutput(bool enabled)
+{
+   raspiDevice.enableMidiPort(enabled);
+}
+
 void MainWidget::slotCheckDataModified()
 {
-   if (raspiDevice.isUnsynced() || audioDevice.isUnsynced())
+   if (raspiDevice.isUnsynced())
       setWindowModified(true);
    else
       setWindowModified(false);
@@ -163,9 +161,6 @@ void MainWidget::loadInternal(const QString& fileName)
    FileStorage fileStorageRaspi(&raspiDevice);
    fileStorageRaspi.loadFromFile(QString(fileName).replace(".json", ".raspi"));
 
-   FileStorage fileStorageDevice(&audioDevice);
-   fileStorageDevice.loadFromFile(QString(fileName).replace(".json", ".audio"));
-
    updateWindowTitle(fileName);
    forceRebuildModels();
 
@@ -176,9 +171,6 @@ void MainWidget::saveInternal(const QString& fileName)
 {
    FileStorage fileStorageRaspi(&raspiDevice);
    fileStorageRaspi.saveToFile(QString(fileName).replace(".json", ".raspi"));
-
-   FileStorage fileStorageDevice(&audioDevice);
-   fileStorageDevice.saveToFile(QString(fileName).replace(".json", ".audio"));
 
    updateWindowTitle(fileName);
 

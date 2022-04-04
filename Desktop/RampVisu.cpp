@@ -23,6 +23,8 @@ Ramp::Visu::Visu(MainWidget* mainWidget)
 
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/SaveToDaisy.svg"), "Save To RasPi", mainWidget, &MainWidget::slotSaveToRaspi);
+   QAction* portAction = toolBar->addAction(QIcon(":/Port.svg"), "Enable Midi Output", mainWidget, &MainWidget::slotEnableMidiOutput);
+   portAction->setCheckable(true);
 
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/ZoomIn.svg"), "Zoom In", this, &Visu::slotZoomIn);
@@ -98,16 +100,11 @@ void Ramp::Visu::slotUpdate()
       }
    };
 
-   const DeviceNameMap& nameMap = getDeviceNameMap();
-   for (DeviceNameMap::const_iterator it = nameMap.constBegin(); it != nameMap.constEnd(); it++)
+   for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
    {
-      Data::Identifier drawIdentifier(it.key());
-      for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
-      {
-         drawIdentifier.rampIndex = rampIndex;
-         PolyRamp* polyRamp = getPolyRamp(drawIdentifier);
-         drawGraph(polyRamp);
-      }
+      Data::Identifier drawIdentifier(rampIndex);
+      PolyRamp* polyRamp = getPolyRamp(drawIdentifier);
+      drawGraph(polyRamp);
    }
 
    drawGraph(selectedPolyRamp);

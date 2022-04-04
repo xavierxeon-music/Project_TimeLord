@@ -8,7 +8,6 @@ PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
 {
    startPosItem = new QStandardItem();
    {
-      startPosItem->setData(QVariant::fromValue(identifier.device), Data::Role::Device);
       startPosItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
       startPosItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
       startPosItem->setEditable(false);
@@ -16,7 +15,6 @@ PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
 
    typeItem = new QStandardItem();
    {
-      typeItem->setData(QVariant::fromValue(identifier.device), Data::Role::Device);
       typeItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
       typeItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
       typeItem->setData(QVariant::fromValue(Data::Target::StageType), Data::Role::Target);
@@ -24,7 +22,6 @@ PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
 
    endHeightItem = new QStandardItem();
    {
-      endHeightItem->setData(QVariant::fromValue(identifier.device), Data::Role::Device);
       endHeightItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
       endHeightItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
       endHeightItem->setData(QVariant::fromValue(Data::Target::StageEndHeight), Data::Role::Target);
@@ -32,7 +29,6 @@ PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
 
    noteItem = new QStandardItem();
    {
-      noteItem->setData(QVariant::fromValue(identifier.device), Data::Role::Device);
       noteItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
       noteItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
       noteItem->setEditable(false);

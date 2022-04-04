@@ -92,11 +92,6 @@ void Ramp::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const
    Q_UNUSED(previous);
 
    QStandardItem* item = polyRampModel->itemFromIndex(current);
-   const QVariant itemDataProvider = item->data(Data::Role::Device);
-   if (itemDataProvider.isNull())
-      return;
-
-   identifier.device = itemDataProvider.value<Data::RampDevice>();
    identifier.rampIndex = item->data(Data::Role::RampIndex).toInt();
 
    emit signalGraphSelected(identifier);

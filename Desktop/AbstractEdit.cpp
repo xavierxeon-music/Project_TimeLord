@@ -32,18 +32,12 @@ void Abstract::Edit::slotCancel()
 
 void Abstract::Edit::slotExecute()
 {
-   const DeviceNameMap& nameMap = getDeviceNameMap();
-   for (DeviceNameMap::const_iterator it = nameMap.constBegin(); it != nameMap.constEnd(); it++)
+   for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
    {
-      const Data::RampDevice provider = it.key();
+      Data::Identifier identifier(rampIndex);
 
-      for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
-      {
-         Data::Identifier identifier(provider, rampIndex);
-
-         PolyRamp* polyRamp = getPolyRamp(identifier);
-         execute(polyRamp);
-      }
+      PolyRamp* polyRamp = getPolyRamp(identifier);
+      execute(polyRamp);
    }
 
    polyRampWidget->hideEditStack();
