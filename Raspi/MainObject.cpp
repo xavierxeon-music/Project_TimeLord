@@ -49,7 +49,8 @@ MainObject::MainObject()
    loopTimer->start();
 
    FileStorage fileStorage(this);
-   fileStorage.loadFromFile(storageFileName);
+   if(fileStorage.loadFromFile(storageFileName))
+      qInfo() << "restored settings";
 
    bridge.onPulledFromRemote(this, &MainObject::receviedSettings);
 }
@@ -141,9 +142,8 @@ void MainObject::receviedSettings()
    reset();
 
    FileStorage fileStorage(this);
-   fileStorage.saveToFile(storageFileName);
-
-   qInfo() << "saved settings";
+   if(fileStorage.saveToFile(storageFileName))
+      qInfo() << "saved settings";
 }
 
 // main
