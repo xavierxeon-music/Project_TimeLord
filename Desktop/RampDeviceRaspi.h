@@ -33,7 +33,7 @@ namespace RampDevice
       Midi::Tunnel::Client client;
       Midi::Tool::Bridge bridge;
       Midi::Virtual::Output passThrough;
-      //Midi::Tool::Tempo tempo;
+      Midi::Tool::Tempo tempo;
    };
 } // namespace RampDevice
 

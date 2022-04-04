@@ -6,8 +6,8 @@ RampDevice::Raspi::Raspi(QObject* parent)
    , polyRamps(this)
    , client(parent, "192.168.1.180")
    , bridge(this, &client, &client, 11, 10)
-   , passThrough("TimeLordMirror")
-//, tempo(&client)
+   , passThrough(this, "TimeLordMirror")
+   , tempo(&client)
 {
    client.addPassThroughInterface(&passThrough);
 }
