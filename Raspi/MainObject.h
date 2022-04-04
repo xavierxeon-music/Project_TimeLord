@@ -32,6 +32,7 @@ private: // things to remeber
 private:
    void loop();
    void reset();
+   void receviedSettings();
 
 private:
    PolyRampList_ polyRamps;

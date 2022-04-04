@@ -51,7 +51,7 @@ MainObject::MainObject()
    FileStorage fileStorage(this);
    fileStorage.loadFromFile(storageFileName);
 
-   bridge.onPulledFromRemote(this, &MainObject::reset);
+   bridge.onPulledFromRemote(this, &MainObject::receviedSettings);
 }
 
 MainObject::~MainObject()
@@ -98,7 +98,6 @@ void MainObject::loop()
       if (index < 8)
       {
          bool isPitch = (0 == index % 2);
-         qDebug() << index << isPitch;
          if (isPitch)
          {
             const Midi::Channel channel = index / 2;
@@ -135,6 +134,16 @@ void MainObject::reset()
    }
 #endif
    tickActive = false;
+}
+
+void MainObject::receviedSettings()
+{
+   reset();
+
+   FileStorage fileStorage(this);
+   fileStorage.saveToFile(storageFileName);
+
+   qInfo() << "saved settings";
 }
 
 // main
