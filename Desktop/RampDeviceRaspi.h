@@ -32,8 +32,8 @@ namespace RampDevice
       PolyRampList_ polyRamps;
       Midi::Tunnel::Client client;
       Midi::Tool::Bridge bridge;
-      Midi::Virtual::Output output;
-      Midi::Tool::Tempo tempo;
+      Midi::Virtual::Output passThrough;
+      //Midi::Tool::Tempo tempo;
    };
 } // namespace RampDevice
 

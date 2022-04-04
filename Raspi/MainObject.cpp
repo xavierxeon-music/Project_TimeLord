@@ -7,6 +7,8 @@
 #include <ConsoleApplication.h>
 #include <FileStorage.h>
 
+#include <Midi/MidiToolTempo.h>
+
 const QString MainObject::storageFileName = "timelord.bin";
 const uint16_t MainObject::callbackRate = 100;
 
@@ -53,6 +55,8 @@ MainObject::MainObject()
       qInfo() << "restored settings";
 
    bridge.onPulledFromRemote(this, &MainObject::receviedSettings);
+
+   new Midi::Tool::Tempo(&server);
 }
 
 MainObject::~MainObject()

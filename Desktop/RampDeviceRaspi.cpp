@@ -6,18 +6,18 @@ RampDevice::Raspi::Raspi(QObject* parent)
    , polyRamps(this)
    , client(parent, "192.168.1.180")
    , bridge(this, &client, &client, 11, 10)
-   , output("TimeLordMirror")
-   , tempo(&client)
+   , passThrough("TimeLordMirror")
+//, tempo(&client)
 {
-   client.addPassThroughInterface(&output);
+   client.addPassThroughInterface(&passThrough);
 }
 
 void RampDevice::Raspi::enableMidiPort(bool enabled)
 {
    if (enabled)
-      output.open();
+      passThrough.open();
    else
-      output.close();
+      passThrough.close();
 }
 
 void RampDevice::Raspi::pushToServer()
