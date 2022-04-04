@@ -17,7 +17,7 @@
 #include <Midi/MidiToolBridge.h>
 #include <Midi/MidiToolGate.h>
 #include <Midi/MidiTunnelServer.h>
-#include <Music/Tempo.h>
+#include <Music/TriggerdTempo.h>
 
 class MainObject : public QObject, public Remember::Root
 {
@@ -52,7 +52,7 @@ private:
    Midi::Target::FlameCC flameCC;
 
    static const uint16_t callbackRate;
-   Tempo tempo;
+   TriggerdTempo tempo;
    Midi::Tool::Gate clockGate;
    Midi::Tool::Gate resetGate;
    bool tickActive;
