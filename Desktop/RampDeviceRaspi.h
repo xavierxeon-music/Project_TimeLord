@@ -6,6 +6,7 @@
 
 #include <Blocks/PolyRamp.h>
 #include <Midi/MidiToolBridge.h>
+#include <Midi/MidiToolTempo.h>
 #include <Midi/MidiTunnelClient.h>
 #include <Midi/MidiVirtualOutput.h>
 
@@ -32,6 +33,7 @@ namespace RampDevice
       Midi::Tunnel::Client client;
       Midi::Tool::Bridge bridge;
       Midi::Virtual::Output output;
+      Midi::Tool::Tempo tempo;
    };
 } // namespace RampDevice
 

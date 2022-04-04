@@ -7,6 +7,7 @@ RampDevice::Raspi::Raspi(QObject* parent)
    , client(parent, "192.168.1.180")
    , bridge(this, &client, &client, 11, 10)
    , output("TimeLordMirror")
+   , tempo(&client)
 {
    client.addPassThroughInterface(&output);
 }
