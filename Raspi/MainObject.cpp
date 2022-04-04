@@ -33,10 +33,10 @@ MainObject::MainObject()
    for (Midi::Channel channel = 0; channel < 4; channel++)
       quadStrips[channel] = doepferQuad.create(channel);
 
-   inputDevice.initMidi();
+   inputDevice.open();
    inputDevice.addPassThroughInterface(&outputDevice);
 
-   outputDevice.initMidi();
+   outputDevice.open();
    flameCC.init();
 
    server.addPassThroughInterface(&outputDevice);
