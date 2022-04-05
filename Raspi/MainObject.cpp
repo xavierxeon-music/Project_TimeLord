@@ -19,7 +19,7 @@ MainObject::MainObject()
    , server(this)
    , inputDevice(this, "system:midi_capture_2")
    , outputDevice(this, "system:midi_playback_2")
-   , bridge(this, &server, &server, 10, 11)
+   , bridge(this, &server, &server, Midi::Device::Raspi, Midi::Device::MacBook)
 #ifdef WAIT_FOR_FLAME_DEVICE
    , doepferQuad(&outputDevice)
    , quadStrips()
@@ -55,7 +55,7 @@ MainObject::MainObject()
    loopTimer->start();
 
    FileStorage fileStorage(this);
-   if(fileStorage.loadFromFile(storageFileName))
+   if (fileStorage.loadFromFile(storageFileName))
       qInfo() << "restored settings";
 
    bridge.onPulledFromRemote(this, &MainObject::receviedSettings);
@@ -169,7 +169,7 @@ void MainObject::receviedSettings()
    reset();
 
    FileStorage fileStorage(this);
-   if(fileStorage.saveToFile(storageFileName))
+   if (fileStorage.saveToFile(storageFileName))
       qInfo() << "saved settings";
 }
 

@@ -5,7 +5,7 @@ RampDevice::Raspi::Raspi(QObject* parent)
    , Remember::Root()
    , polyRamps(this)
    , client(parent, "192.168.1.180")
-   , bridge(this, &client, &client, 11, 10)
+   , bridge(this, &client, &client, Midi::Device::MacBook, Midi::Device::Raspi)
    , passThrough(this, "TimeLordMirror")
    , tempo(&client)
 {
