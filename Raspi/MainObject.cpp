@@ -25,10 +25,14 @@ MainObject::MainObject()
    , quadStrips()
 #endif
    , flameCC(&outputDevice)
+#ifndef DO_NOT_USE_MIDI_CLOCK
+   , tempo(&inputDevice)
+#else  // NOT DO_NOT_USE_MIDI_CLOCK
    , tempo()
    , clockGate(&inputDevice, 10, Note::fromMidi(36))
    , resetGate(&inputDevice, 10, Note::fromMidi(37))
    , tickActive(false)
+#endif // NOT DO_NOT_USE_MIDI_CLOCK
 {
    qInfo() << "start";
 
@@ -66,6 +70,19 @@ MainObject::~MainObject()
 
 void MainObject::loop()
 {
+#ifndef DO_NOT_USE_MIDI_CLOCK
+   if (tempo.isReset())
+   {
+      for (uint8_t index = 0; index < polyRamps.getSize(); index++)
+         polyRamps[index].clockReset();
+   }
+   else if (tempo.isTick())
+   {
+      for (uint8_t index = 0; index < polyRamps.getSize(); index++)
+         polyRamps[index].clockReset();
+   }
+   tempo.advance(callbackRate);
+#else  // NOT DO_NOT_USE_MIDI_CLOCK
    if (resetGate.isOn())
    {
       tempo.clockReset();
@@ -89,6 +106,7 @@ void MainObject::loop()
       tempo.advance(callbackRate);
       tickActive = false;
    }
+#endif // NOT DO_NOT_USE_MIDI_CLOCK
 
    for (uint8_t index = 0; index < polyRamps.getSize(); index++)
    {
@@ -124,7 +142,13 @@ void MainObject::loop()
 
 void MainObject::reset()
 {
+#ifndef DO_NOT_USE_MIDI_CLOCK
+// TODO : clock reset?
+#else  // DO_NOT_USE_MIDI_CLOCK
    tempo.clockReset();
+   tickActive = false;
+#endif // DO_NOT_USE_MIDI_CLOCK
+
    for (uint8_t index = 0; index < polyRamps.getSize(); index++)
    {
       polyRamps[index].clockReset();
@@ -138,7 +162,6 @@ void MainObject::reset()
       quadStrips[channel].setCV3(0.0);
    }
 #endif
-   tickActive = false;
 }
 
 void MainObject::receviedSettings()

@@ -23,6 +23,7 @@ namespace RampDevice
    public:
       void pushToServer();
       void enableMidiPort(bool enabled);
+      Tempo* getTempo();
 
    private:
       friend class Data::Core;

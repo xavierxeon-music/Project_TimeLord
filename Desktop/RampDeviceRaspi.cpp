@@ -12,6 +12,11 @@ RampDevice::Raspi::Raspi(QObject* parent)
    client.addPassThroughInterface(&passThrough);
 }
 
+void RampDevice::Raspi::pushToServer()
+{
+   bridge.pushToRemote();
+}
+
 void RampDevice::Raspi::enableMidiPort(bool enabled)
 {
    if (enabled)
@@ -20,8 +25,7 @@ void RampDevice::Raspi::enableMidiPort(bool enabled)
       passThrough.close();
 }
 
-void RampDevice::Raspi::pushToServer()
+Tempo* RampDevice::Raspi::getTempo()
 {
-   bridge.pushToRemote();
+   return &tempo;
 }
-

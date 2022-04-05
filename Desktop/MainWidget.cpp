@@ -52,8 +52,8 @@ MainWidget::MainWidget()
    statusBar = new QStatusBar(this);
    statusBar->setSizeGripEnabled(true);
 
-   //TempoWidget* tempoWidget = new TempoWidget(this, audioDevice.getTempo());
-   //statusBar->addPermanentWidget(tempoWidget);
+   TempoWidget* tempoWidget = new TempoWidget(this, raspiDevice.getTempo());
+   statusBar->addPermanentWidget(tempoWidget);
 
    QVBoxLayout* masterLayout = new QVBoxLayout(this);
    masterLayout->setContentsMargins(0, 0, 0, 0);
