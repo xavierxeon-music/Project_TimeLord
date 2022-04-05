@@ -4,7 +4,9 @@
 
 #include <QTimer>
 
-TempoWidget::TempoWidget(QWidget* parent, const Tempo* tempo)
+const uint16_t callbackRate = 50;
+
+TempoWidget::TempoWidget(QWidget* parent, Tempo* tempo)
    : QWidget(parent)
    , tempo(tempo)
    , bpmInfo(nullptr)
@@ -16,14 +18,16 @@ TempoWidget::TempoWidget(QWidget* parent, const Tempo* tempo)
    masterLayout->addWidget(bpmInfo);
 
    QTimer* statusUpdateTimer = new QTimer(this);
+   statusUpdateTimer->setTimerType(Qt::PreciseTimer);
    connect(statusUpdateTimer, &QTimer::timeout, this, &TempoWidget::slotStatusUpdate);
-   statusUpdateTimer->start(100);
+   statusUpdateTimer->start(callbackRate);
 }
 
 void TempoWidget::slotStatusUpdate()
 {
+   tempo->advance(1000.0 / callbackRate);
+
    const Tempo::RunState& runState = tempo->getRunState();
-   const uint8_t& beatsPerMinute = tempo->getBeatsPerMinute();
 
    if (Tempo::RunState::Running == runState)
    {
