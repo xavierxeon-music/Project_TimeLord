@@ -53,7 +53,7 @@ namespace Data
    class Core
    {
    public:
-      Core(MainWidget* mainWidget);
+      Core();
 
    protected:
       PolyRamp* getPolyRamp(const Identifier& identifier); // ignores stage index
@@ -61,10 +61,16 @@ namespace Data
       virtual void modelHasChanged(const Identifier& identifier);
 
    protected:
-      MainWidget* mainWidget;
       static bool lockGraphSize;
 
    private:
+      friend class MainWidget;
+
+   private:
+      static void init(RampDevice::Raspi* raspiDevice);
+
+   private:
+      static RampDevice::Raspi* raspiDevice;
       static QList<Core*> instanceList;
    };
 
