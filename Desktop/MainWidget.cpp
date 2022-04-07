@@ -10,6 +10,7 @@
 #include <AppSettings.h>
 #include <FileSettings.h>
 
+#include "DataCore.h"
 #include "TempoWidget.h"
 
 MainWidget::MainWidget()
@@ -27,6 +28,7 @@ MainWidget::MainWidget()
 {
    setWindowTitle("Time Lord UI[*]");
    setMinimumSize(1400, 900);
+   Data::Core::init(&raspiDevice);
 
    polyRampModel = new Ramp::Model(this);
    stageModel = new Stage::Model(this);
