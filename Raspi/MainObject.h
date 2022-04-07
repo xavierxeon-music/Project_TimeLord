@@ -12,8 +12,8 @@
 #endif
 
 #include <Blocks/PolyRamp.h>
-#include <Midi/MidiDeviceInput.h>
-#include <Midi/MidiDeviceOutput.h>
+#include <Midi/MidiPhysicalInput.h>
+#include <Midi/MidiPhysicalOutput.h>
 #include <Midi/MidiTargetFlameCC.h>
 #include <Midi/MidiToolBridge.h>
 #include <Midi/MidiTunnelServer.h>
@@ -46,8 +46,8 @@ private:
 
    Midi::Tunnel::Server server;
 
-   Midi::Device::Input inputDevice;
-   Midi::Device::Output outputDevice;
+   Midi::Physical::Input inputDevice;
+   Midi::Physical::Output outputDevice;
 
    Midi::Tool::Bridge bridge;
 

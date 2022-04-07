@@ -26,6 +26,7 @@ MainWidget::MainWidget()
    , polyLineWidget(nullptr)
 {
    setWindowTitle("Time Lord UI[*]");
+   setMinimumSize(1400, 900);
 
    polyRampModel = new Ramp::Model(this);
    stageModel = new Stage::Model(this);

@@ -78,9 +78,10 @@ void Ramp::Visu::slotUpdate()
          delete stage.lineItem;
       }
 
-      uint16_t offsetY = 10;
-      uint32_t startX = 5;
+      const uint16_t offsetY = 10;
+      const uint32_t offsetX = 5;
 
+      uint32_t startX = offsetX;
       for (uint8_t startIndex = 0; startIndex < polyRamp->stageCount(); startIndex++)
       {
          uint32_t stageLength = polyRamp->getStageLength(startIndex);
@@ -89,7 +90,7 @@ void Ramp::Visu::slotUpdate()
          uint32_t startY = 128 - (0.5 * polyRamp->getStageStartHeight(startIndex));
          uint32_t endY = 128 - (0.5 * polyRamp->getStageStartHeight(endIndex));
 
-         uint32_t endX = (endIndex == 0) ? polyRamp->getLength() : startX + stageLength;
+         uint32_t endX = (endIndex == 0) ? offsetX + polyRamp->getLength() : startX + stageLength;
 
          QGraphicsLineItem* lineItem = stageList[startIndex].lineItem;
          lineItem->setLine(zoomLevel * startX, offsetY + startY, zoomLevel * endX, offsetY + endY);
@@ -104,6 +105,9 @@ void Ramp::Visu::slotUpdate()
    {
       Data::Identifier drawIdentifier(rampIndex);
       PolyRamp* polyRamp = getPolyRamp(drawIdentifier);
+      if (selectedPolyRamp == polyRamp)
+         continue;
+
       drawGraph(polyRamp);
    }
 
