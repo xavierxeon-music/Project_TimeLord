@@ -17,7 +17,7 @@ namespace Abstract
    {
       Q_OBJECT
    public:
-      Edit(Ramp::Widget* polyRampWidget, MainWidget* mainWidget);
+      Edit(Ramp::Widget* polyRampWidget);
 
    protected:
       void setPayload(QWidget* widget, const QString& text);

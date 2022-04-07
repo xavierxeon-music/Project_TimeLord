@@ -6,9 +6,9 @@
 #include "MainWidget.h"
 #include "RampWidget.h"
 
-Abstract::Edit::Edit(Ramp::Widget* polyRampWidget, MainWidget* mainWidget)
+Abstract::Edit::Edit(Ramp::Widget* polyRampWidget)
    : QToolBar(polyRampWidget)
-   , Data::Core(mainWidget)
+   , Data::Core()
    , polyRampWidget(polyRampWidget)
 {
    setIconSize(QSize(24, 24));
@@ -41,5 +41,5 @@ void Abstract::Edit::slotExecute()
    }
 
    polyRampWidget->hideEditStack();
-   mainWidget->forceRebuildModels();
+   //? mainWidget->forceRebuildModels();
 }

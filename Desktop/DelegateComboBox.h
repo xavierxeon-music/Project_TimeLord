@@ -13,7 +13,7 @@ namespace Delegate
       Q_OBJECT
 
    public:
-      ComboBox(QObject* parent, MainWidget* mainWidget, QStandardItemModel* model);
+      ComboBox(QObject* parent, QStandardItemModel* model);
 
    public:
       QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;

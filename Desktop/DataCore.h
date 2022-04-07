@@ -5,6 +5,11 @@
 
 class MainWidget;
 
+namespace RampDevice
+{
+   class Raspi;
+};
+
 namespace Data
 {
    Q_NAMESPACE
@@ -64,7 +69,7 @@ namespace Data
       static bool lockGraphSize;
 
    private:
-      friend class MainWidget;
+      friend class ::MainWidget;
 
    private:
       static void init(RampDevice::Raspi* raspiDevice);

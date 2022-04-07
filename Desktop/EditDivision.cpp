@@ -2,8 +2,8 @@
 
 #include "DivisionModel.h"
 
-Edit::Division::Division(Ramp::Widget* polyRampWidget, MainWidget* mainWidget)
-   : Abstract::Edit(polyRampWidget, mainWidget)
+Edit::Division::Division(Ramp::Widget* polyRampWidget)
+   : Abstract::Edit(polyRampWidget)
    , divisionCombo(nullptr)
 {
    divisionCombo = new QComboBox(this);

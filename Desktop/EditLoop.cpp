@@ -1,7 +1,7 @@
 #include "EditLoop.h"
 
-Edit::Loop::Loop(Ramp::Widget* polyRampWidget, MainWidget* mainWidget)
-   : Abstract::Edit(polyRampWidget, mainWidget)
+Edit::Loop::Loop(Ramp::Widget* polyRampWidget)
+   : Abstract::Edit(polyRampWidget)
    , loopCheck(nullptr)
 {
    loopCheck = new QCheckBox(this);

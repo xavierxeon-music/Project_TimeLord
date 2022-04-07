@@ -27,8 +27,8 @@ Stage::Widget::Widget(MainWidget* mainWidget, Model* stageModel)
 
    QTreeView* staggeTreeView = new QTreeView(this);
    staggeTreeView->setModel(stageModel);
-   staggeTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this, mainWidget));
-   staggeTreeView->setItemDelegateForColumn(2, new Delegate::SpinBox(this, mainWidget));
+   staggeTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
+   staggeTreeView->setItemDelegateForColumn(2, new Delegate::SpinBox(this));
    staggeTreeView->setRootIsDecorated(false);
 
    selectionModel = staggeTreeView->selectionModel();

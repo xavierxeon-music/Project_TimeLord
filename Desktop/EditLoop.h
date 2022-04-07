@@ -10,7 +10,7 @@ namespace Edit
    class Loop : public Abstract::Edit
    {
    public:
-      Loop(Ramp::Widget* polyRampWidget, MainWidget* mainWidget);
+      Loop(Ramp::Widget* polyRampWidget);
 
    private:
       void execute(PolyRamp* polyRamp) override;

@@ -3,9 +3,9 @@
 #include <QComboBox>
 #include <QStandardItemModel>
 
-Delegate::ComboBox::ComboBox(QObject* parent, MainWidget* mainWidget, QStandardItemModel* model)
+Delegate::ComboBox::ComboBox(QObject* parent, QStandardItemModel* model)
    : QStyledItemDelegate(parent)
-   , Data::Core(mainWidget)
+   , Data::Core()
    , model(model)
 {
 }

@@ -10,7 +10,7 @@ namespace Stage
    {
       Q_OBJECT
    public:
-      Model(MainWidget* mainWidget);
+      Model(QObject* parent);
 
    signals:
       void signalRampChanged(const Data::Identifier& identifier);

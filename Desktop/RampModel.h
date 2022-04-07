@@ -10,7 +10,7 @@ namespace Ramp
    {
       Q_OBJECT
    public:
-      Model(MainWidget* mainWidget);
+      Model(QObject* parent);
 
    public slots:
       void slotRampChanged(const Data::Identifier& identifier);

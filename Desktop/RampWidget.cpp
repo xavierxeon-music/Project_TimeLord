@@ -32,21 +32,21 @@ Ramp::Widget::Widget(MainWidget* mainWidget, Model* polyRampModel)
    editStack->hide();
    editStack->setFixedHeight(30);
 
-   lengthEdit = new Edit::Length(this, mainWidget);
+   lengthEdit = new Edit::Length(this);
    editStack->addWidget(lengthEdit);
 
-   divisionEdit = new Edit::Division(this, mainWidget);
+   divisionEdit = new Edit::Division(this);
    editStack->addWidget(divisionEdit);
 
-   loopEdit = new Edit::Loop(this, mainWidget);
+   loopEdit = new Edit::Loop(this);
    editStack->addWidget(loopEdit);
 
    addPayload(editStack);
 
    QTreeView* polyRampTreeView = new QTreeView(this);
    polyRampTreeView->setModel(polyRampModel);
-   polyRampTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this, mainWidget));
-   polyRampTreeView->setItemDelegateForColumn(2, new Delegate::ComboBox(this, mainWidget, new DivisionModel(this)));
+   polyRampTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
+   polyRampTreeView->setItemDelegateForColumn(2, new Delegate::ComboBox(this, new DivisionModel(this)));
    polyRampTreeView->setRootIsDecorated(false);
    connect(polyRampTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &Widget::slotCurrentSelectionChanged);
 
@@ -92,7 +92,7 @@ void Ramp::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const
    Q_UNUSED(previous);
 
    QStandardItem* item = polyRampModel->itemFromIndex(current);
-   identifier.rampIndex = item->data(Data::Role::RampIndex).toInt();
+   identifier = item->data(Data::Role::Identifier).value<Data::Identifier>();
 
    emit signalGraphSelected(identifier);
 }

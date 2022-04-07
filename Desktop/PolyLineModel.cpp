@@ -8,29 +8,25 @@ PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
 {
    startPosItem = new QStandardItem();
    {
-      startPosItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
-      startPosItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
+      startPosItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
       startPosItem->setEditable(false);
    }
 
    typeItem = new QStandardItem();
    {
-      typeItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
-      typeItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
+      typeItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
       typeItem->setData(QVariant::fromValue(Data::Target::StageType), Data::Role::Target);
    }
 
    endHeightItem = new QStandardItem();
    {
-      endHeightItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
-      endHeightItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
+      endHeightItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
       endHeightItem->setData(QVariant::fromValue(Data::Target::StageEndHeight), Data::Role::Target);
    }
 
    noteItem = new QStandardItem();
    {
-      noteItem->setData(QVariant::fromValue(identifier.rampIndex), Data::Role::RampIndex);
-      noteItem->setData(QVariant::fromValue(identifier.stageIndex), Data::Role::StageIndex);
+      noteItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
       noteItem->setEditable(false);
    }
 
@@ -38,9 +34,9 @@ PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
 }
 // model
 
-PolyLine::Model::Model(MainWidget* mainWidget)
-   : QStandardItemModel(mainWidget)
-   , Data::Core(mainWidget)
+PolyLine::Model::Model(QObject* parent)
+   : QStandardItemModel(parent)
+   , Data::Core()
 {
    setHorizontalHeaderLabels({"start position", "type", "end height", "note"});
 }

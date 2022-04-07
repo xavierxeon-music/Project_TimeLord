@@ -10,7 +10,7 @@ namespace Edit
    class Division : public Abstract::Edit
    {
    public:
-      Division(Ramp::Widget* polyRampWidget, MainWidget* mainWidget);
+      Division(Ramp::Widget* polyRampWidget);
 
    private:
       void execute(PolyRamp* polyRamp) override;

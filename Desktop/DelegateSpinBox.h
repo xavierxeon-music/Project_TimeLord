@@ -11,7 +11,7 @@ namespace Delegate
       Q_OBJECT
 
    public:
-      SpinBox(QObject* parent, MainWidget* mainWidget);
+      SpinBox(QObject* parent);
 
    public:
       QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;

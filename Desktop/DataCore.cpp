@@ -30,7 +30,8 @@ PolyRamp* Data::Core::getPolyRamp(const Identifier& identifier)
 {
    if (!raspiDevice)
       return nullptr;
-   return raspiDevice->polyRamps[identifier.rampIndex]);
+
+   return &(raspiDevice->polyRamps[identifier.rampIndex]);
 }
 
 void Data::Core::sendModelChanged(const Identifier& identifier)
@@ -51,5 +52,5 @@ void Data::Core::modelHasChanged(const Identifier& identifier)
 
 void Data::Core::init(RampDevice::Raspi* raspiDevice)
 {
-   this->raspiDevice = raspiDevice;
+   Core::raspiDevice = raspiDevice;
 }

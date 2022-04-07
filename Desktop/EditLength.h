@@ -10,7 +10,7 @@ namespace Edit
    class Length : public Abstract::Edit
    {
    public:
-      Length(Ramp::Widget* polyRampWidget, MainWidget* mainWidget);
+      Length(Ramp::Widget* polyRampWidget);
 
    private:
       void execute(PolyRamp* polyRamp) override;

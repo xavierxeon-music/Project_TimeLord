@@ -8,8 +8,9 @@ namespace PolyLine
 {
    class Model : public QStandardItemModel, public Data::Core
    {
+      Q_OBJECT
    public:
-      Model(MainWidget* mainWidget);
+      Model(QObject* parent);
 
    signals:
       void signalRampChanged(const Data::Identifier& identifier);

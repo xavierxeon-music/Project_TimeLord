@@ -2,8 +2,8 @@
 
 #include <QSpinBox>
 
-Edit::Length::Length(Ramp::Widget* polyRampWidget, MainWidget* mainWidget)
-   : Abstract::Edit(polyRampWidget, mainWidget)
+Edit::Length::Length(Ramp::Widget* polyRampWidget)
+   : Abstract::Edit(polyRampWidget)
    , lengthSpin(nullptr)
 {
    lengthSpin = new QSpinBox(this);
