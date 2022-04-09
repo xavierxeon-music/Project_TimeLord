@@ -16,11 +16,12 @@ HEADERS += \
    DataCore.h \
    DelegateComboBox.h \
    DelegateSpinBox.h \
-   DivisionModel.h \
    EditDivision.h \
    EditLength.h \
    EditLoop.h \
    MainWidget.h \
+   ModelDivision.h \
+   ModelTrend.h \
    PolyLineModel.h \
    PolyLineWidget.h \
    RampDeviceRaspi.h \
@@ -37,11 +38,12 @@ SOURCES += \
    DataCore.cpp \
    DelegateComboBox.cpp \
    DelegateSpinBox.cpp \
-   DivisionModel.cpp \
    EditDivision.cpp \
    EditLength.cpp \
    EditLoop.cpp \
    MainWidget.cpp \
+   ModelDivision.cpp \
+   ModelTrend.cpp \
    PolyLineModel.cpp \
    PolyLineWidget.cpp \
    RampDeviceRaspi.cpp \

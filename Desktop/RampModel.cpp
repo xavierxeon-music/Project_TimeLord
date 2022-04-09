@@ -103,7 +103,8 @@ bool Ramp::Model::setData(const QModelIndex& index, const QVariant& value, int r
    const Data::Identifier identifier = data(index, Data::Role::Identifier).value<Data::Identifier>();
    PolyRamp* polyRamp = getPolyRamp(identifier);
 
-   const Data::Target target = targetData.value<Data::Target>();
+   const Data::Target::Value target = targetData.value<Data::Target::Value>();
+
    if (Data::Target::GraphLength == target)
    {
       const uint8_t length = value.toInt();

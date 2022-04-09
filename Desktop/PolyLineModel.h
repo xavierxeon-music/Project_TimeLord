@@ -15,7 +15,7 @@ namespace PolyLine
    private:
       struct Items
       {
-         QStandardItem* startPosItem;
+         QStandardItem* posItem;
          QStandardItem* typeItem;
          QStandardItem* endHeightItem;
          QStandardItem* noteItem;
@@ -27,6 +27,7 @@ namespace PolyLine
 
    private:
       void rebuildModel(const Data::Identifier& identifier) override;
+      bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
    };
 } // namespace PolyLine
 

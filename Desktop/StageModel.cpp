@@ -138,8 +138,8 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
    PolyRamp* polyRamp = getPolyRamp(identifier);
 
    QVariant targeValue = value;
+   const Data::Target::Value target = targetData.value<Data::Target::Value>();
 
-   const Data::Target target = targetData.value<Data::Target>();
    if (Data::Target::StageStartHeight == target)
    {
       const uint8_t height = value.toInt();

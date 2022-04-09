@@ -14,19 +14,23 @@ namespace Data
 {
    Q_NAMESPACE
 
-   enum class Target : uint8_t
+   struct Target
    {
-      None,
-      GraphLength,
-      GraphStepSize,
-      GraphLoop,
-      GraphStageCount,
-      StageStartHeight,
-      StageEndHeight,
-      StageLength,
-      StageType
+      enum Value : uint8_t
+      {
+         None,
+         GraphLength,
+         GraphStepSize,
+         GraphLoop,
+         GraphStageCount,
+         StageStartHeight,
+         StageEndHeight,
+         StageLength,
+         StageType,
+         StageStartPosition
+
+      };
    };
-   Q_ENUM_NS(Target)
 
    struct Identifier
    {
@@ -44,15 +48,20 @@ namespace Data
       static constexpr int Data = Qt::UserRole + 13;       // non integer data in original format
    };
 
-   enum class Type : uint8_t
+   struct Type
    {
-      Anchor,
-      Rise,
-      Fall,
-      Stable,
-      Step
+      enum Value : uint8_t
+      {
+         Anchor,
+         Rise,
+         Fall,
+         Stable,
+         Step
+      };
+
+      static QString getName(const Value& type);
+      static QIcon getIcon(const Value& type);
    };
-   Q_ENUM_NS(Type)
 
    // all graph data access and manipulation should happen via this class
    class Core

@@ -7,8 +7,8 @@
 
 #include "DelegateComboBox.h"
 #include "DelegateSpinBox.h"
-#include "DivisionModel.h"
 #include "MainWidget.h"
+#include "ModelDivision.h"
 #include "RampModel.h"
 
 Ramp::Widget::Widget(MainWidget* mainWidget)
@@ -50,7 +50,7 @@ Ramp::Widget::Widget(MainWidget* mainWidget)
    QTreeView* polyRampTreeView = new QTreeView(this);
    polyRampTreeView->setModel(polyRampModel);
    polyRampTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
-   polyRampTreeView->setItemDelegateForColumn(2, new Delegate::ComboBox(this, new DivisionModel(this)));
+   polyRampTreeView->setItemDelegateForColumn(2, new Delegate::ComboBox(this, new ::Model::Division(this)));
    polyRampTreeView->setRootIsDecorated(false);
    connect(polyRampTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &Widget::slotCurrentSelectionChanged);
 

@@ -2,6 +2,9 @@
 
 #include <QTreeView>
 
+#include "DelegateComboBox.h"
+#include "DelegateSpinBox.h"
+#include "ModelTrend.h"
 #include "PolyLineModel.h"
 
 PolyLine::Widget::Widget(MainWidget* mainWidget)
@@ -20,8 +23,9 @@ PolyLine::Widget::Widget(MainWidget* mainWidget)
 
    QTreeView* polyLineTreeView = new QTreeView(this);
    polyLineTreeView->setModel(polyLineModel);
-   //polyLineTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this, mainWidget));
-   //polyLineTreeView->setItemDelegateForColumn(2, new Delegate::ComboBox(this, mainWidget, new DivisionModel(this)));
+   polyLineTreeView->setItemDelegateForColumn(0, new Delegate::SpinBox(this));
+   polyLineTreeView->setItemDelegateForColumn(1, new Delegate::ComboBox(this, new ::Model::Trend(this)));
+   polyLineTreeView->setItemDelegateForColumn(2, new Delegate::SpinBox(this));
    polyLineTreeView->setRootIsDecorated(false);
    connect(polyLineTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &Widget::slotCurrentSelectionChanged);
 

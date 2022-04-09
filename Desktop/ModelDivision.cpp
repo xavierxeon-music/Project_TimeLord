@@ -1,10 +1,10 @@
-#include "DivisionModel.h"
+#include "ModelDivision.h"
 
 #include <Music/Tempo.h>
 
 #include "DataCore.h"
 
-DivisionModel::DivisionModel(QObject* parent)
+Model::Division::Division(QObject* parent)
    : QStandardItemModel(parent)
 {
    auto addDivisionItem = [&](const Tempo::Division& division)

@@ -15,6 +15,36 @@ bool Data::Identifier::hasStage() const
    return (255 != stageIndex);
 }
 
+// type
+
+QString Data::Type::getName(const Value& type)
+{
+   if (Data::Type::Rise == type)
+      return "Rise";
+   else if (Data::Type::Fall == type)
+      return "Fall";
+   else if (Data::Type::Stable == type)
+      return "Stable";
+   else if (Data::Type::Step == type)
+      return "Step";
+   else
+      return "Anchor";
+}
+
+QIcon Data::Type::getIcon(const Value& type)
+{
+   if (Data::Type::Rise == type)
+      return QIcon(":/TrendRise.svg");
+   else if (Data::Type::Fall == type)
+      return QIcon(":/TrendFall.svg");
+   else if (Data::Type::Stable == type)
+      return QIcon(":/TrendStable.svg");
+   else if (Data::Type::Step == type)
+      return QIcon(":/TrendStep.svg");
+   else
+      return QIcon(":/TrendAnchor.svg");
+}
+
 // core
 
 bool Data::Core::lockGraphSize = true;

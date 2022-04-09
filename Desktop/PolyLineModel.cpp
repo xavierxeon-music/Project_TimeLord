@@ -6,10 +6,10 @@
 
 PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
 {
-   startPosItem = new QStandardItem();
+   posItem = new QStandardItem();
    {
-      startPosItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
-      startPosItem->setEditable(false);
+      posItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
+      posItem->setData(QVariant::fromValue(Data::Target::StageStartPosition), Data::Role::Target);
    }
 
    typeItem = new QStandardItem();
@@ -30,7 +30,7 @@ PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
       noteItem->setEditable(false);
    }
 
-   model->invisibleRootItem()->appendRow({startPosItem, typeItem, endHeightItem, noteItem});
+   model->invisibleRootItem()->appendRow({posItem, typeItem, endHeightItem, noteItem});
 }
 
 // model
@@ -57,11 +57,14 @@ void PolyLine::Model::rebuildModel(const Data::Identifier& identifier)
    {
       Items items(this, identifier);
 
-      items.startPosItem->setText("start");
+      items.posItem->setText("start");
+      items.posItem->setEditable(false);
 
-      items.typeItem->setIcon(QIcon(":/TrendAnchor.svg"));
-      items.typeItem->setText("anchor");
-      items.typeItem->setData(QVariant::fromValue(Data::Type::Step), Data::Role::Data);
+      const Data::Type::Value type = Data::Type::Anchor;
+      items.typeItem->setIcon(Data::Type::getIcon(type));
+      items.typeItem->setText(Data::Type::getName(type));
+      items.typeItem->setData(QVariant::fromValue(type), Data::Role::Data);
+      items.typeItem->setEditable(false);
 
       const uint8_t startHeight = polyRamp->getStageStartHeight(0);
 
@@ -85,32 +88,21 @@ void PolyLine::Model::rebuildModel(const Data::Identifier& identifier)
       stageIdentifier.stageIndex = stageIndex;
       Items items(this, stageIdentifier);
 
-      items.startPosItem->setText(QString::number(startPos));
+      Data::Type::Value type = Data::Type::Anchor;
+      items.posItem->setText(QString::number(startPos));
 
       if (0 == length && 0 != nextIndex)
-      {
-         items.typeItem->setIcon(QIcon(":/TrendStep.svg"));
-         items.typeItem->setText("step");
-         items.typeItem->setData(QVariant::fromValue(Data::Type::Step), Data::Role::Data);
-      }
+         type = Data::Type::Step;
       else if (startHeight < endHeight)
-      {
-         items.typeItem->setIcon(QIcon(":/TrendRise.svg"));
-         items.typeItem->setText("rise");
-         items.typeItem->setData(QVariant::fromValue(Data::Type::Rise), Data::Role::Data);
-      }
+         type = Data::Type::Rise;
       else if (startHeight > endHeight)
-      {
-         items.typeItem->setIcon(QIcon(":/TrendFall.svg"));
-         items.typeItem->setText("fall");
-         items.typeItem->setData(QVariant::fromValue(Data::Type::Fall), Data::Role::Data);
-      }
+         type = Data::Type::Fall;
       else
-      {
-         items.typeItem->setIcon(QIcon(":/TrendStable.svg"));
-         items.typeItem->setText("stable");
-         items.typeItem->setData(QVariant::fromValue(Data::Type::Stable), Data::Role::Data);
-      }
+         type = Data::Type::Stable;
+
+      items.typeItem->setIcon(Data::Type::getIcon(type));
+      items.typeItem->setText(Data::Type::getName(type));
+      items.typeItem->setData(QVariant::fromValue(type), Data::Role::Data);
 
       items.endHeightItem->setText(QString::number(endHeight));
 
@@ -124,11 +116,14 @@ void PolyLine::Model::rebuildModel(const Data::Identifier& identifier)
       {
          Items items(this, identifier);
 
-         items.startPosItem->setText("end");
+         items.posItem->setText(QString::number(polyRamp->stageCount()));
+         items.posItem->setEditable(false);
 
-         items.typeItem->setIcon(QIcon(":/TrendAnchor.svg"));
-         items.typeItem->setText("anchor");
-         items.typeItem->setData(QVariant::fromValue(Data::Type::Step), Data::Role::Data);
+         const Data::Type::Value type = Data::Type::Anchor;
+         items.typeItem->setIcon(Data::Type::getIcon(type));
+         items.typeItem->setText(Data::Type::getName(type));
+         items.typeItem->setData(QVariant::fromValue(type), Data::Role::Data);
+         items.typeItem->setEditable(false);
 
          const uint8_t startHeight = polyRamp->getStageStartHeight(0);
 
@@ -140,4 +135,37 @@ void PolyLine::Model::rebuildModel(const Data::Identifier& identifier)
          items.noteItem->setText(QString::fromStdString(note.name));
       }
    }
+}
+
+bool PolyLine::Model::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+   if (Qt::EditRole != role)
+      return QStandardItemModel::setData(index, value, role);
+
+   const QVariant targetData = data(index, Data::Role::Target);
+   if (targetData.isNull())
+      return QStandardItemModel::setData(index, value, role);
+
+   const Data::Identifier identifier = data(index, Data::Role::Identifier).value<Data::Identifier>();
+   PolyRamp* polyRamp = getPolyRamp(identifier);
+
+   QVariant targeValue = value;
+   const Data::Target::Value target = targetData.value<Data::Target::Value>();
+
+   if (Data::Target::StageStartPosition == target)
+   {
+      const uint8_t startPos = value.toInt();
+   }
+   else if (Data::Target::StageType == target)
+   {
+      const Data::Type::Value type = value.value<Data::Type::Value>();
+   }
+   else if (Data::Target::StageEndHeight == target)
+   {
+      const uint8_t height = value.toInt();
+   }
+
+   bool result = QStandardItemModel::setData(index, targeValue, role);
+   //update(polyRamp, identifier.stageIndex);
+   return result;
 }
