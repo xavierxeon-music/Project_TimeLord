@@ -15,8 +15,8 @@ namespace PolyLine
    private:
       struct Items
       {
-         QStandardItem* posItem;
          QStandardItem* typeItem;
+         QStandardItem* posItem;
          QStandardItem* endHeightItem;
          QStandardItem* noteItem;
 

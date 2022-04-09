@@ -1,21 +1,23 @@
 #include "PolyLineModel.h"
 
 #include "MainWidget.h"
+#include "PolyLineList.h"
 
 // items
 
 PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
 {
-   posItem = new QStandardItem();
-   {
-      posItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
-      posItem->setData(QVariant::fromValue(Data::Target::StageStartPosition), Data::Role::Target);
-   }
-
    typeItem = new QStandardItem();
    {
       typeItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
       typeItem->setData(QVariant::fromValue(Data::Target::StageType), Data::Role::Target);
+      typeItem->setEditable(false);
+   }
+
+   posItem = new QStandardItem();
+   {
+      posItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
+      posItem->setData(QVariant::fromValue(Data::Target::StageStartPosition), Data::Role::Target);
    }
 
    endHeightItem = new QStandardItem();
@@ -30,7 +32,7 @@ PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
       noteItem->setEditable(false);
    }
 
-   model->invisibleRootItem()->appendRow({posItem, typeItem, endHeightItem, noteItem});
+   model->invisibleRootItem()->appendRow({typeItem, posItem, endHeightItem, noteItem});
 }
 
 // model
@@ -39,101 +41,45 @@ PolyLine::Model::Model(QObject* parent)
    : QStandardItemModel(parent)
    , Data::Core()
 {
-   setHorizontalHeaderLabels({"start position", "type", "end height", "note"});
+   setHorizontalHeaderLabels({"type", "start position", "end height", "note"});
 }
 
 void PolyLine::Model::rebuildModel(const Data::Identifier& identifier)
 {
    clear();
-   setHorizontalHeaderLabels({"start position", "type", "end height", "note"});
+   setHorizontalHeaderLabels({"type", "start position", "end height", "note"});
 
-   PolyRamp* polyRamp = getPolyRamp(identifier);
-   if (!polyRamp)
-      return;
+   List list;
+   list.compile(identifier);
 
-   if (0 == polyRamp->stageCount())
-      return;
-
+   for (uint8_t index = 0; index < list.stageCount(); index++)
    {
-      Items items(this, identifier);
+      Stage* stage = list.getStage(index);
 
-      items.posItem->setText("start");
-      items.posItem->setEditable(false);
+      const bool isStartAchor = (Data::Type::StartAnchor == stage->type);
+      const bool isEndAnchor = (Data::Type::EndAnchor == stage->type);
+      const bool isAnchor = (isStartAchor || isEndAnchor);
 
-      const Data::Type::Value type = Data::Type::Anchor;
-      items.typeItem->setIcon(Data::Type::getIcon(type));
-      items.typeItem->setText(Data::Type::getName(type));
-      items.typeItem->setData(QVariant::fromValue(type), Data::Role::Data);
-      items.typeItem->setEditable(false);
+      Data::Identifier stageIdentifier(identifier.rampIndex, isAnchor ? identifier.stageIndex : index - 1);
 
-      const uint8_t startHeight = polyRamp->getStageStartHeight(0);
-
-      items.endHeightItem->setText(QString::number(startHeight));
-
-      const float voltage = static_cast<float>(startHeight * 5.0) / 255.0;
-      const Note note = Note::fromVoltage(voltage);
-      items.noteItem->setText(QString::fromStdString(note.name));
-   }
-
-   Data::Identifier stageIdentifier = identifier;
-
-   uint32_t startPos = 0;
-   for (uint8_t stageIndex = 0; stageIndex < polyRamp->stageCount(); stageIndex++)
-   {
-      const uint8_t nextIndex = (stageIndex + 1 < polyRamp->stageCount()) ? stageIndex + 1 : 0;
-      const uint8_t startHeight = polyRamp->getStageStartHeight(stageIndex);
-      const uint8_t endHeight = polyRamp->getStageStartHeight(nextIndex);
-      const uint8_t length = polyRamp->getStageLength(stageIndex);
-
-      stageIdentifier.stageIndex = stageIndex;
       Items items(this, stageIdentifier);
 
-      Data::Type::Value type = Data::Type::Anchor;
-      items.posItem->setText(QString::number(startPos));
+      items.typeItem->setIcon(Data::Type::getIcon(stage->type));
+      items.typeItem->setText(Data::Type::getName(stage->type));
+      items.typeItem->setData(QVariant::fromValue(stage->type), Data::Role::Data);
 
-      if (0 == length && 0 != nextIndex)
-         type = Data::Type::Step;
-      else if (startHeight < endHeight)
-         type = Data::Type::Rise;
-      else if (startHeight > endHeight)
-         type = Data::Type::Fall;
+      if (isStartAchor)
+         items.posItem->setText("start");
       else
-         type = Data::Type::Stable;
+         items.posItem->setText(QString::number(stage->startPosition));
+      items.posItem->setEditable(!isAnchor);
 
-      items.typeItem->setIcon(Data::Type::getIcon(type));
-      items.typeItem->setText(Data::Type::getName(type));
-      items.typeItem->setData(QVariant::fromValue(type), Data::Role::Data);
+      items.endHeightItem->setText(QString::number(stage->endHeight));
+      items.endHeightItem->setEditable(!isEndAnchor);
 
-      items.endHeightItem->setText(QString::number(endHeight));
-
-      const float voltage = static_cast<float>(endHeight * 5.0) / 255.0;
+      const float voltage = static_cast<float>(stage->endHeight * 5.0) / 255.0;
       const Note note = Note::fromVoltage(voltage);
       items.noteItem->setText(QString::fromStdString(note.name));
-
-      startPos += polyRamp->getStageLength(stageIndex);
-
-      if (stageIndex + 1 == polyRamp->stageCount())
-      {
-         Items items(this, identifier);
-
-         items.posItem->setText(QString::number(polyRamp->stageCount()));
-         items.posItem->setEditable(false);
-
-         const Data::Type::Value type = Data::Type::Anchor;
-         items.typeItem->setIcon(Data::Type::getIcon(type));
-         items.typeItem->setText(Data::Type::getName(type));
-         items.typeItem->setData(QVariant::fromValue(type), Data::Role::Data);
-         items.typeItem->setEditable(false);
-
-         const uint8_t startHeight = polyRamp->getStageStartHeight(0);
-
-         items.endHeightItem->setText(QString::number(startHeight));
-         items.endHeightItem->setEditable(false);
-
-         const float voltage = static_cast<float>(startHeight * 5.0) / 255.0;
-         const Note note = Note::fromVoltage(voltage);
-         items.noteItem->setText(QString::fromStdString(note.name));
-      }
    }
 }
 

@@ -21,7 +21,7 @@ HEADERS += \
    EditLoop.h \
    MainWidget.h \
    ModelDivision.h \
-   ModelTrend.h \
+   PolyLineList.h \
    PolyLineModel.h \
    PolyLineWidget.h \
    RampDeviceRaspi.h \
@@ -43,7 +43,7 @@ SOURCES += \
    EditLoop.cpp \
    MainWidget.cpp \
    ModelDivision.cpp \
-   ModelTrend.cpp \
+   PolyLineList.cpp \
    PolyLineModel.cpp \
    PolyLineWidget.cpp \
    RampDeviceRaspi.cpp \
