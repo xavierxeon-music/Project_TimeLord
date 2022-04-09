@@ -56,17 +56,26 @@ namespace Data
 
    // all graph data access and manipulation should happen via this class
    class Core
-   {
+   {      
    public:
       Core();
 
-   protected:
-      PolyRamp* getPolyRamp(const Identifier& identifier); // ignores stage index
-      void sendModelChanged(const Identifier& identifier);
+   public:
       virtual void modelHasChanged(const Identifier& identifier);
+      virtual void polyRampSelected(const Identifier& identifier);
+      virtual void rebuildModel(const Identifier& identifier);
 
    protected:
-      static bool lockGraphSize;
+      using InstanceFunctionPointer = void (Core::*)(const Identifier&);
+
+   protected:
+      PolyRamp* getPolyRamp(const Identifier& identifier); // ignores stage index
+
+      void callOnAllInstances(const Identifier& identifier, InstanceFunctionPointer instanceFunctionPointer);
+
+      void setLockGraphSize(bool locked);
+      void toggleLockGraphSize();
+      bool getLockGraphSize() const;
 
    private:
       friend class ::MainWidget;
@@ -75,6 +84,7 @@ namespace Data
       static void init(RampDevice::Raspi* raspiDevice);
 
    private:
+      static bool lockGraphSize;
       static RampDevice::Raspi* raspiDevice;
       static QList<Core*> instanceList;
    };

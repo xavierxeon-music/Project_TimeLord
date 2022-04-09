@@ -5,17 +5,18 @@
 
 #include "DelegateSpinBox.h"
 #include "MainWidget.h"
+#include "StageModel.h"
 
-Stage::Widget::Widget(MainWidget* mainWidget, Model* stageModel)
+Stage::Widget::Widget(MainWidget* mainWidget)
    : Abstract::Widget(mainWidget)
-   , stageModel(stageModel)
+   , stageModel(nullptr)
    , selectionModel(nullptr)
    , identifier()
    , selectedStageIndex(0)
 {
    QAction* lockAction = toolBar->addAction(QIcon(":/Lock.svg"), "Lock Graph Size", this, &Widget::slotLockGraphSize);
    lockAction->setCheckable(true);
-   lockAction->setChecked(lockGraphSize);
+   lockAction->setChecked(getLockGraphSize());
 
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/Add.svg"), "Insert Point", this, &Widget::slotInsertPoint);
@@ -24,6 +25,8 @@ Stage::Widget::Widget(MainWidget* mainWidget, Model* stageModel)
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/MoveUp.svg"), "Move Back", this, &Widget::slotMoveBack);
    toolBar->addAction(QIcon(":/MoveDown.svg"), "Move Forward", this, &Widget::slotMoveForward);
+
+   stageModel = new Stage::Model(this);
 
    QTreeView* staggeTreeView = new QTreeView(this);
    staggeTreeView->setModel(stageModel);
@@ -37,14 +40,6 @@ Stage::Widget::Widget(MainWidget* mainWidget, Model* stageModel)
    addPayload(staggeTreeView);
 }
 
-void Stage::Widget::slotGraphSelected(const Data::Identifier& newIdentifier)
-{
-   identifier = newIdentifier;
-
-   stageModel->rebuild(identifier);
-   selectedStageIndex = 0;
-}
-
 void Stage::Widget::slotInsertPoint()
 {
    PolyRamp* polyRamp = getPolyRamp(identifier);
@@ -53,7 +48,7 @@ void Stage::Widget::slotInsertPoint()
 
    polyRamp->addStage(selectedStageIndex);
 
-   stageModel->rebuild(identifier);
+   stageModel->rebuildModel(identifier);
    setSelection(selectedStageIndex);
 }
 
@@ -65,7 +60,7 @@ void Stage::Widget::slotRemovePoint()
 
    polyRamp->removeStage(selectedStageIndex);
 
-   stageModel->rebuild(identifier);
+   stageModel->rebuildModel(identifier);
 }
 
 void Stage::Widget::slotMoveBack()
@@ -79,7 +74,7 @@ void Stage::Widget::slotMoveBack()
 
    polyRamp->moveStage(selectedStageIndex, selectedStageIndex - 1);
 
-   stageModel->rebuild(identifier);
+   stageModel->rebuildModel(identifier);
    setSelection(selectedStageIndex - 1);
 }
 
@@ -94,13 +89,13 @@ void Stage::Widget::slotMoveForward()
 
    polyRamp->moveStage(selectedStageIndex, selectedStageIndex + 1);
 
-   stageModel->rebuild(identifier);
+   stageModel->rebuildModel(identifier);
    setSelection(selectedStageIndex + 1);
 }
 
 void Stage::Widget::slotLockGraphSize()
 {
-   lockGraphSize = !lockGraphSize;
+   toggleLockGraphSize();
 }
 
 void Stage::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)
@@ -117,4 +112,12 @@ void Stage::Widget::setSelection(const uint& stageIndex)
    selectionModel->select(QItemSelection(modelIndexLeft, modelIndexRight), QItemSelectionModel::SelectCurrent);
 
    selectedStageIndex = stageIndex;
+}
+
+void Stage::Widget::polyRampSelected(const Data::Identifier& newIdentifier)
+{
+   identifier = newIdentifier;
+
+   stageModel->rebuildModel(identifier);
+   selectedStageIndex = 0;
 }

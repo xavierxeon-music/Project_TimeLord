@@ -12,11 +12,8 @@ namespace PolyLine
    public:
       Model(QObject* parent);
 
-   signals:
-      void signalRampChanged(const Data::Identifier& identifier);
-
    public:
-      void rebuild(const Data::Identifier& identifier);
+      void rebuildModel(const Data::Identifier& identifier) override;
 
    private:
       struct Items

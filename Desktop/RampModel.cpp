@@ -9,30 +9,7 @@ Ramp::Model::Model(QObject* parent)
    setHorizontalHeaderLabels({"name", "length", "division", "loop", "count"});
 }
 
-void Ramp::Model::slotRampChanged(const Data::Identifier& identifier)
-{
-   for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
-   {
-      QStandardItem* nameItem = invisibleRootItem()->child(row, 0);
-      const Data::Identifier itemIndentifier = nameItem->data(Data::Role::Identifier).value<Data::Identifier>();
-      if (itemIndentifier.rampIndex != identifier.rampIndex)
-         continue;
-
-      PolyRamp* polyRamp = getPolyRamp(identifier);
-
-      QStandardItem* lengthItem = invisibleRootItem()->child(row, 1);
-      const QString length = QString::number(polyRamp->getLength());
-      lengthItem->setText(length);
-
-      QStandardItem* countItem = invisibleRootItem()->child(row, 4);
-      const QString count = QString::number(polyRamp->stageCount());
-      countItem->setText(count);
-
-      break;
-   }
-}
-
-void Ramp::Model::rebuild()
+void Ramp::Model::rebuildModel(const Data::Identifier&)
 {
    clear();
    setHorizontalHeaderLabels({"name", "length", "division", "loop", "count"});
@@ -87,6 +64,29 @@ void Ramp::Model::rebuild()
       }
 
       invisibleRootItem()->appendRow({nameItem, lengthItem, stepSizeItem, loopItem, countItem});
+   }
+}
+
+void Ramp::Model::modelHasChanged(const Data::Identifier& identifier)
+{
+   for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
+   {
+      QStandardItem* nameItem = invisibleRootItem()->child(row, 0);
+      const Data::Identifier itemIndentifier = nameItem->data(Data::Role::Identifier).value<Data::Identifier>();
+      if (itemIndentifier.rampIndex != identifier.rampIndex)
+         continue;
+
+      PolyRamp* polyRamp = getPolyRamp(identifier);
+
+      QStandardItem* lengthItem = invisibleRootItem()->child(row, 1);
+      const QString length = QString::number(polyRamp->getLength());
+      lengthItem->setText(length);
+
+      QStandardItem* countItem = invisibleRootItem()->child(row, 4);
+      const QString count = QString::number(polyRamp->stageCount());
+      countItem->setText(count);
+
+      break;
    }
 }
 

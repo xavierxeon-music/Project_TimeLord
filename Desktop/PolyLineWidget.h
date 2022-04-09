@@ -13,10 +13,7 @@ namespace PolyLine
    {
       Q_OBJECT
    public:
-      Widget(MainWidget* mainWidget, Model* polyLineModel);
-
-   public slots:
-      void slotGraphSelected(const Data::Identifier& newIdentifier);
+      Widget(MainWidget* mainWidget);
 
    private slots:
       void slotInsertPoint();
@@ -25,6 +22,8 @@ namespace PolyLine
 
    private:
       void setSelection(const uint& stageIndex);
+      void polyRampSelected(const Data::Identifier& newIdentifier) override;
+      void modelHasChanged(const Data::Identifier& identifier) override;
 
    private:
       Model* polyLineModel;

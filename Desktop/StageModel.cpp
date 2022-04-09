@@ -56,7 +56,7 @@ Stage::Model::Model(QObject* parent)
    setHorizontalHeaderLabels({"index", "start position", "length", "start height"});
 }
 
-void Stage::Model::rebuild(const Data::Identifier& identifier)
+void Stage::Model::rebuildModel(const Data::Identifier& identifier)
 {
    clear();
    setHorizontalHeaderLabels({"index", "start position", "length", "start height"});
@@ -81,7 +81,7 @@ void Stage::Model::rebuild(const Data::Identifier& identifier)
       update(polyRamp, stageIndex);
    }
 
-   emit signalRampChanged(identifier);
+   callOnAllInstances(identifier, &Core::modelHasChanged);
 }
 
 void Stage::Model::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
@@ -144,12 +144,12 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
    {
       const uint8_t height = value.toInt();
       polyRamp->setStageStartHeight(identifier.stageIndex, height);
-      emit signalRampChanged(identifier);
+      callOnAllInstances(identifier, &Core::modelHasChanged);
    }
    else if (Data::Target::StageLength == target)
    {
       QString length = value.toString().replace("*", "");
-      if (PolyRamp::LengthStatus::Changed != polyRamp->setStageLength(identifier.stageIndex, length.toInt(), !lockGraphSize))
+      if (PolyRamp::LengthStatus::Changed != polyRamp->setStageLength(identifier.stageIndex, length.toInt(), !getLockGraphSize()))
       {
          targeValue = polyRamp->getStageLength(identifier.stageIndex); // UNDO
       }
@@ -158,7 +158,7 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
          if (identifier.stageIndex + 1 == polyRamp->stageCount())
             length += "*";
          targeValue = length;
-         emit signalRampChanged(identifier);
+         callOnAllInstances(identifier, &Core::modelHasChanged);
       }
    }
 

@@ -10,40 +10,26 @@
 #include <AppSettings.h>
 #include <FileSettings.h>
 
-#include "DataCore.h"
 #include "TempoWidget.h"
 
 MainWidget::MainWidget()
    : QWidget(nullptr)
-   , raspiDevice(this)
+   , Data::Core()
    , splitter(nullptr)
    , statusBar(nullptr)
-   , polyRampModel(nullptr)
    , polyRampVisu(nullptr)
    , polyRampWidget(nullptr)
-   , stageModel(nullptr)
    , stageWidget(nullptr)
-   , polyLineModel(nullptr)
    , polyLineWidget(nullptr)
 {
    setWindowTitle("Time Lord UI[*]");
    setMinimumSize(1400, 900);
-   Data::Core::init(&raspiDevice);
-
-   polyRampModel = new Ramp::Model(this);
-   stageModel = new Stage::Model(this);
-   polyLineModel = new PolyLine::Model(this);
+   Data::Core::init(new RampDevice::Raspi(this));
 
    polyRampVisu = new Ramp::Visu(this);
-   polyRampWidget = new Ramp::Widget(this, polyRampModel);
-   stageWidget = new Stage::Widget(this, stageModel);
-   polyLineWidget = new PolyLine::Widget(this, polyLineModel);
-
-   connect(polyRampWidget, &Ramp::Widget::signalGraphSelected, polyRampVisu, &Ramp::Visu::slotGraphSelected);
-   connect(stageModel, &Stage::Model::signalRampChanged, polyRampModel, &Ramp::Model::slotRampChanged);
-   connect(polyRampWidget, &Ramp::Widget::signalGraphSelected, stageWidget, &Stage::Widget::slotGraphSelected);
-   connect(polyRampWidget, &Ramp::Widget::signalGraphSelected, polyLineWidget, &PolyLine::Widget::slotGraphSelected);
-   polyRampModel->rebuild();
+   polyRampWidget = new Ramp::Widget(this);
+   stageWidget = new Stage::Widget(this);
+   polyLineWidget = new PolyLine::Widget(this);
 
    splitter = new QSplitter(Qt::Horizontal, this);
    splitter->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
@@ -55,7 +41,7 @@ MainWidget::MainWidget()
    statusBar = new QStatusBar(this);
    statusBar->setSizeGripEnabled(true);
 
-   TempoWidget* tempoWidget = new TempoWidget(this, raspiDevice.getTempo());
+   TempoWidget* tempoWidget = new TempoWidget(this, raspiDevice->getTempo());
    statusBar->addPermanentWidget(tempoWidget);
 
    QVBoxLayout* masterLayout = new QVBoxLayout(this);
@@ -78,8 +64,7 @@ MainWidget::MainWidget()
 
 void MainWidget::forceRebuildModels()
 {
-   polyRampModel->rebuild();
-   stageModel->rebuild(Data::Identifier());
+   callOnAllInstances(Data::Identifier(), &Core::rebuildModel);
 }
 
 void MainWidget::slotLoadFromFile()
@@ -129,17 +114,17 @@ void MainWidget::slotSaveNewFile()
 
 void MainWidget::slotSaveToRaspi()
 {
-   raspiDevice.pushToServer();
+   raspiDevice->pushToServer();
 }
 
 void MainWidget::slotEnableMidiOutput(bool enabled)
 {
-   raspiDevice.enableMidiPort(enabled);
+   raspiDevice->enableMidiPort(enabled);
 }
 
 void MainWidget::slotCheckDataModified()
 {
-   if (raspiDevice.isUnsynced())
+   if (raspiDevice->isUnsynced())
       setWindowModified(true);
    else
       setWindowModified(false);
@@ -161,7 +146,7 @@ void MainWidget::loadLastFile()
 
 void MainWidget::loadInternal(const QString& fileName)
 {
-   FileStorage fileStorageRaspi(&raspiDevice);
+   FileStorage fileStorageRaspi(raspiDevice);
    fileStorageRaspi.loadFromFile(QString(fileName).replace(".json", ".raspi"));
 
    updateWindowTitle(fileName);
@@ -172,7 +157,7 @@ void MainWidget::loadInternal(const QString& fileName)
 
 void MainWidget::saveInternal(const QString& fileName)
 {
-   FileStorage fileStorageRaspi(&raspiDevice);
+   FileStorage fileStorageRaspi(raspiDevice);
    fileStorageRaspi.saveToFile(QString(fileName).replace(".json", ".raspi"));
 
    updateWindowTitle(fileName);

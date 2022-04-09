@@ -4,9 +4,9 @@
 
 #include "PolyLineModel.h"
 
-PolyLine::Widget::Widget(MainWidget* mainWidget, Model* polyLineModel)
+PolyLine::Widget::Widget(MainWidget* mainWidget)
    : Abstract::Widget(mainWidget)
-   , polyLineModel(polyLineModel)
+   , polyLineModel(nullptr)
    , selectionModel(nullptr)
    , identifier()
    , selectedStageIndex(0)
@@ -15,6 +15,8 @@ PolyLine::Widget::Widget(MainWidget* mainWidget, Model* polyLineModel)
 
    toolBar->addAction(QIcon(":/Add.svg"), "Insert Point", this, &Widget::slotInsertPoint);
    toolBar->addAction(QIcon(":/Remove.svg"), "Remove  Point", this, &Widget::slotRemovePoint);
+
+   polyLineModel = new PolyLine::Model(this);
 
    QTreeView* polyLineTreeView = new QTreeView(this);
    polyLineTreeView->setModel(polyLineModel);
@@ -26,14 +28,6 @@ PolyLine::Widget::Widget(MainWidget* mainWidget, Model* polyLineModel)
    addPayload(polyLineTreeView);
 }
 
-void PolyLine::Widget::slotGraphSelected(const Data::Identifier& newIdentifier)
-{
-   identifier = newIdentifier;
-
-   polyLineModel->rebuild(identifier);
-   selectedStageIndex = 0;
-}
-
 void PolyLine::Widget::slotInsertPoint()
 {
    PolyRamp* polyRamp = getPolyRamp(identifier);
@@ -42,7 +36,7 @@ void PolyLine::Widget::slotInsertPoint()
 
    polyRamp->addStage(selectedStageIndex);
 
-   polyLineModel->rebuild(identifier);
+   polyLineModel->rebuildModel(identifier);
    setSelection(selectedStageIndex);
 }
 
@@ -54,7 +48,7 @@ void PolyLine::Widget::slotRemovePoint()
 
    polyRamp->removeStage(selectedStageIndex);
 
-   polyLineModel->rebuild(identifier);
+   polyLineModel->rebuildModel(identifier);
 }
 
 void PolyLine::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)
@@ -71,4 +65,18 @@ void PolyLine::Widget::setSelection(const uint& stageIndex)
    selectionModel->select(QItemSelection(modelIndexLeft, modelIndexRight), QItemSelectionModel::SelectCurrent);
 
    selectedStageIndex = stageIndex;
+}
+
+void PolyLine::Widget::polyRampSelected(const Data::Identifier& newIdentifier)
+{
+   identifier = newIdentifier;
+
+   polyLineModel->rebuildModel(identifier);
+   selectedStageIndex = 0;
+}
+
+void PolyLine::Widget::modelHasChanged(const Data::Identifier& identifier)
+{
+   // TODO get and restore selection
+   polyLineModel->rebuildModel(identifier);
 }

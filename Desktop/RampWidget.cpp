@@ -9,10 +9,11 @@
 #include "DelegateSpinBox.h"
 #include "DivisionModel.h"
 #include "MainWidget.h"
+#include "RampModel.h"
 
-Ramp::Widget::Widget(MainWidget* mainWidget, Model* polyRampModel)
+Ramp::Widget::Widget(MainWidget* mainWidget)
    : Abstract::Widget(mainWidget)
-   , polyRampModel(polyRampModel)
+   , polyRampModel(nullptr)
    , editStack(nullptr)
    , lengthEdit(nullptr)
    , divisionEdit(nullptr)
@@ -43,6 +44,9 @@ Ramp::Widget::Widget(MainWidget* mainWidget, Model* polyRampModel)
 
    addPayload(editStack);
 
+   polyRampModel = new Ramp::Model(this);
+   polyRampModel->rebuildModel();
+
    QTreeView* polyRampTreeView = new QTreeView(this);
    polyRampTreeView->setModel(polyRampModel);
    polyRampTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
@@ -66,7 +70,7 @@ void Ramp::Widget::slotTrimCurrentGraph()
 
    polyRamp->trimLength();
 
-   polyRampModel->slotRampChanged(identifier);
+   polyRampModel->modelHasChanged(identifier);
 }
 
 void Ramp::Widget::slotSetLengthAllGraphs()
@@ -94,5 +98,5 @@ void Ramp::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const
    QStandardItem* item = polyRampModel->itemFromIndex(current);
    identifier = item->data(Data::Role::Identifier).value<Data::Identifier>();
 
-   emit signalGraphSelected(identifier);
+   callOnAllInstances(identifier, &Core::polyRampSelected);
 }

@@ -13,10 +13,7 @@ namespace Stage
    {
       Q_OBJECT
    public:
-      Widget(MainWidget* mainWidget, Model* stageModel);
-
-   public slots:
-      void slotGraphSelected(const Data::Identifier& newIdentifier);
+      Widget(MainWidget* mainWidget);
 
    private slots:
       void slotInsertPoint();
@@ -28,6 +25,7 @@ namespace Stage
 
    private:
       void setSelection(const uint& stageIndex);
+      void polyRampSelected(const Data::Identifier& newIdentifier) override;
 
    private:
       Model* stageModel;

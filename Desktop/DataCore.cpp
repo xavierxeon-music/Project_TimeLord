@@ -26,6 +26,24 @@ Data::Core::Core()
    instanceList.append(this);
 }
 
+void Data::Core::modelHasChanged(const Identifier& identifier)
+{
+   Q_UNUSED(identifier)
+   // do nothing
+}
+
+void Data::Core::polyRampSelected(const Identifier& identifier)
+{
+   Q_UNUSED(identifier)
+   // do nothing
+}
+
+void Data::Core::rebuildModel(const Identifier& identifier)
+{
+   Q_UNUSED(identifier)
+   // do nothing
+}
+
 PolyRamp* Data::Core::getPolyRamp(const Identifier& identifier)
 {
    if (!raspiDevice)
@@ -34,20 +52,29 @@ PolyRamp* Data::Core::getPolyRamp(const Identifier& identifier)
    return &(raspiDevice->polyRamps[identifier.rampIndex]);
 }
 
-void Data::Core::sendModelChanged(const Identifier& identifier)
+void Data::Core::callOnAllInstances(const Identifier& identifier, InstanceFunctionPointer instanceFunctionPointer)
 {
    for (Core* instance : instanceList)
    {
       if (this == instance)
          continue;
-      instance->modelHasChanged(identifier);
+      std::invoke(instanceFunctionPointer, instance, identifier);
    }
 }
 
-void Data::Core::modelHasChanged(const Identifier& identifier)
+void Data::Core::setLockGraphSize(bool locked)
 {
-   Q_UNUSED(identifier)
-   // do nothing
+   lockGraphSize = locked;
+}
+
+void Data::Core::toggleLockGraphSize()
+{
+   lockGraphSize = !lockGraphSize;
+}
+
+bool Data::Core::getLockGraphSize() const
+{
+   return lockGraphSize;
 }
 
 void Data::Core::init(RampDevice::Raspi* raspiDevice)

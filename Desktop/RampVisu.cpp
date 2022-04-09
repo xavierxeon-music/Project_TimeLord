@@ -43,13 +43,6 @@ Ramp::Visu::Visu(MainWidget* mainWidget)
    graphicsView->scene()->addLine(0, 0, 0, 150, whitePen); // to force height even withou graph data
 }
 
-void Ramp::Visu::slotGraphSelected(const Data::Identifier& newIdentifier)
-{
-   identifier = newIdentifier;
-
-   slotUpdate();
-}
-
 void Ramp::Visu::slotUpdate()
 {
    static const QPen blackPen(QColor(0, 0, 0), 2);
@@ -133,5 +126,12 @@ void Ramp::Visu::slotZoomOut()
       return;
 
    zoomLevel--;
+   slotUpdate();
+}
+
+void Ramp::Visu::polyRampSelected(const Data::Identifier& newIdentifier)
+{
+   identifier = newIdentifier;
+
    slotUpdate();
 }

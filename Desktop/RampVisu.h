@@ -13,9 +13,6 @@ namespace Ramp
    public:
       Visu(MainWidget* mainWidget);
 
-   public slots:
-      void slotGraphSelected(const Data::Identifier& newIdentifier);
-
    private:
       struct Stage
       {
@@ -29,6 +26,9 @@ namespace Ramp
       void slotUpdate();
       void slotZoomIn();
       void slotZoomOut();
+
+   private:
+      void polyRampSelected(const Data::Identifier& newIdentifier) override;
 
    private:
       QGraphicsView* graphicsView;

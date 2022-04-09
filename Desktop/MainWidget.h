@@ -1,7 +1,7 @@
 #ifndef MainWidgetH
 #define MainWidgetH
 
-#include <Remember.h>
+#include "DataCore.h"
 #include <QWidget>
 
 #include <QSplitter>
@@ -10,16 +10,13 @@
 #include <Blocks/PolyRamp.h>
 #include <FileStorage.h>
 
-#include "PolyLineModel.h"
 #include "PolyLineWidget.h"
 #include "RampDeviceRaspi.h"
-#include "RampModel.h"
 #include "RampVisu.h"
 #include "RampWidget.h"
-#include "StageModel.h"
 #include "StageWidget.h"
 
-class MainWidget : public QWidget
+class MainWidget : public QWidget, public Data::Core
 {
    Q_OBJECT
 
@@ -36,9 +33,6 @@ public slots:
    void slotSaveToRaspi();
    void slotEnableMidiOutput(bool enabled);
 
-private:
-   friend class Data::Core;
-
 private slots:
    void slotCheckDataModified();
 
@@ -50,19 +44,12 @@ private:
    void closeEvent(QCloseEvent* ce) override;
 
 private:
-   RampDevice::Raspi raspiDevice;
-
    QSplitter* splitter;
    QStatusBar* statusBar;
 
-   Ramp::Model* polyRampModel;
    Ramp::Visu* polyRampVisu;
    Ramp::Widget* polyRampWidget;
-
-   Stage::Model* stageModel;
    Stage::Widget* stageWidget;
-
-   PolyLine::Model* polyLineModel;
    PolyLine::Widget* polyLineWidget;
 };
 

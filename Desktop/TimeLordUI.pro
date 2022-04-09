@@ -5,7 +5,6 @@ QT += widgets svg
 CONFIG += audio midi
 DESTDIR = ../bin
 
-
 win32:RC_ICONS = ApplicaionIcon/TimeLord.ico
 macos:ICON = ApplicaionIcon/TimeLord.icns
 

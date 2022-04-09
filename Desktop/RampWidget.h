@@ -17,10 +17,7 @@ namespace Ramp
    {
       Q_OBJECT
    public:
-      Widget(MainWidget* mainWidget, Model* polyRampModel);
-
-   signals:
-      void signalGraphSelected(const Data::Identifier& newIdentifier);
+      Widget(MainWidget* mainWidget);
 
    public:
       void hideEditStack();

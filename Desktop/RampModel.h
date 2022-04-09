@@ -12,11 +12,9 @@ namespace Ramp
    public:
       Model(QObject* parent);
 
-   public slots:
-      void slotRampChanged(const Data::Identifier& identifier);
-
    public:
-      void rebuild();
+      void rebuildModel(const Data::Identifier& identifier = Data::Identifier()) override;
+      void modelHasChanged(const Data::Identifier& identifier) override;
 
    private:
       bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;

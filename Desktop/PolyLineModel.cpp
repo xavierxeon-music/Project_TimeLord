@@ -32,6 +32,7 @@ PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
 
    model->invisibleRootItem()->appendRow({startPosItem, typeItem, endHeightItem, noteItem});
 }
+
 // model
 
 PolyLine::Model::Model(QObject* parent)
@@ -41,7 +42,7 @@ PolyLine::Model::Model(QObject* parent)
    setHorizontalHeaderLabels({"start position", "type", "end height", "note"});
 }
 
-void PolyLine::Model::rebuild(const Data::Identifier& identifier)
+void PolyLine::Model::rebuildModel(const Data::Identifier& identifier)
 {
    clear();
    setHorizontalHeaderLabels({"start position", "type", "end height", "note"});
