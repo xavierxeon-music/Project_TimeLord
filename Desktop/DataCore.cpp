@@ -19,7 +19,11 @@ bool Data::Identifier::hasStage() const
 
 QString Data::Type::getName(const Value& type)
 {
-   if (Data::Type::Rise == type)
+   if (Data::Type::StartAnchor == type)
+      return "Anchor";
+   else if (Data::Type::EndAnchor == type)
+      return "Anchor";
+   else if (Data::Type::Rise == type)
       return "Rise";
    else if (Data::Type::Fall == type)
       return "Fall";
@@ -28,12 +32,16 @@ QString Data::Type::getName(const Value& type)
    else if (Data::Type::Step == type)
       return "Step";
    else
-      return "Anchor";
+      return "Inkown";
 }
 
 QIcon Data::Type::getIcon(const Value& type)
 {
-   if (Data::Type::Rise == type)
+   if (Data::Type::StartAnchor == type)
+      return QIcon(":/TrendAnchor.svg");
+   else if (Data::Type::EndAnchor == type)
+      return QIcon(":/TrendAnchor.svg");
+   else if (Data::Type::Rise == type)
       return QIcon(":/TrendRise.svg");
    else if (Data::Type::Fall == type)
       return QIcon(":/TrendFall.svg");
@@ -42,7 +50,7 @@ QIcon Data::Type::getIcon(const Value& type)
    else if (Data::Type::Step == type)
       return QIcon(":/TrendStep.svg");
    else
-      return QIcon(":/TrendAnchor.svg");
+      return QIcon();
 }
 
 // core

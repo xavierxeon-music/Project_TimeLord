@@ -49,8 +49,10 @@ void PolyLine::Model::rebuildModel(const Data::Identifier& identifier)
    clear();
    setHorizontalHeaderLabels({"type", "start position", "end height", "note"});
 
+   PolyRamp* polyRamp = getPolyRamp(identifier);
+
    List list;
-   list.compile(identifier);
+   list.compile(polyRamp);
 
    for (uint8_t index = 0; index < list.stageCount(); index++)
    {

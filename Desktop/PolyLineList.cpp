@@ -1,10 +1,7 @@
 #include "PolyLineList.h"
 
-#include <Blocks/PolyRamp.h>
-
 PolyLine::List::List()
-   : Data::Core()
-   , stageList()
+   : stageList()
 {
 }
 
@@ -13,10 +10,11 @@ PolyLine::List::~List()
    clear();
 }
 
-void PolyLine::List::compile(const Data::Identifier& identifier)
+void PolyLine::List::compile(PolyRamp* polyRamp)
 {
    clear();
-   PolyRamp* polyRamp = getPolyRamp(identifier);
+   if (0 == polyRamp->stageCount())
+      return;
 
    auto addAnchorStage = [&](bool first)
    {
@@ -59,9 +57,8 @@ void PolyLine::List::compile(const Data::Identifier& identifier)
    }
 }
 
-void PolyLine::List::apply(const Data::Identifier& identifier)
+void PolyLine::List::apply(PolyRamp* polyRamp)
 {
-   PolyRamp* polyRamp = getPolyRamp(identifier);
 }
 
 void PolyLine::List::clear()

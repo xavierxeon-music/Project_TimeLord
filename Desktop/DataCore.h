@@ -52,6 +52,7 @@ namespace Data
    {
       enum Value : uint8_t
       {
+         Unknown,
          StartAnchor,
          EndAnchor,
          Rise,

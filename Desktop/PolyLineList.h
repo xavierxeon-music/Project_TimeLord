@@ -1,6 +1,8 @@
 #ifndef PolyLineListH
 #define PolyLineListH
 
+#include <Blocks/PolyRamp.h>
+
 #include "DataCore.h"
 
 namespace PolyLine
@@ -12,15 +14,15 @@ namespace PolyLine
       Data::Type::Value type;
    };
 
-   class List : public Data::Core
+   class List
    {
    public:
       List();
       ~List();
 
    public:
-      void compile(const Data::Identifier& identifier);
-      void apply(const Data::Identifier& identifier);
+      void compile(PolyRamp* polyRamp);
+      void apply(PolyRamp* polyRamp);
 
       void clear();
       uint8_t stageCount() const;

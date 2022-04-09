@@ -4,7 +4,6 @@
 
 #include "DelegateComboBox.h"
 #include "DelegateSpinBox.h"
-#include "ModelTrend.h"
 #include "PolyLineModel.h"
 
 PolyLine::Widget::Widget(MainWidget* mainWidget)
