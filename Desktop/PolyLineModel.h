@@ -12,9 +12,6 @@ namespace PolyLine
    public:
       Model(QObject* parent);
 
-   public:
-      void rebuildModel(const Data::Identifier& identifier) override;
-
    private:
       struct Items
       {
@@ -25,6 +22,11 @@ namespace PolyLine
 
          Items(Model* model, const Data::Identifier& identifier);
       };
+
+      friend class Widget;
+
+   private:
+      void rebuildModel(const Data::Identifier& identifier) override;
    };
 } // namespace PolyLine
 

@@ -12,9 +12,6 @@ namespace Stage
    public:
       Model(QObject* parent);
 
-   public:
-      void rebuildModel(const Data::Identifier& identifier) override;
-
    private:
       struct Items
       {
@@ -26,8 +23,10 @@ namespace Stage
          Items(Model* model, const Data::Identifier& identifier);
          Items(Model* model, const int& row);
       };
+      friend class Widget;
 
    private:
+      void rebuildModel(const Data::Identifier& identifier) override;
       void update(PolyRamp* polyRamp, const uint8_t& stageIndex);
       bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
    };
