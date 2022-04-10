@@ -23,8 +23,8 @@ namespace Stage
       friend class Widget;
 
    private:
-      Items create(Model* model, const Data::Identifier& identifier);
-      Items find(Model* model, const int& row);
+      Items create(const Data::Identifier& identifier);
+      Items find(const int& row);
       void rebuildModel(Data::Identifier identifier) override;
       void update(PolyRamp* polyRamp, const uint8_t& stageIndex);
       bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;

@@ -10,7 +10,7 @@ Stage::Model::Model(QObject* parent)
    setHorizontalHeaderLabels({"index", "start position", "length", "start height"});
 }
 
-Stage::Model::Items Stage::Model::create(Model* model, const Data::Identifier& identifier)
+Stage::Model::Items Stage::Model::create(const Data::Identifier& identifier)
 {
    Items items;
    items.indexItem = new QStandardItem();
@@ -42,19 +42,19 @@ Stage::Model::Items Stage::Model::create(Model* model, const Data::Identifier& i
       items.startHeigthItem->setData(QVariant::fromValue(Data::Target::StageStartHeight), Data::Role::Target);
    }
 
-   model->invisibleRootItem()->appendRow({items.indexItem, items.startPosItem, items.lengthItem, items.startHeigthItem});
+   invisibleRootItem()->appendRow({items.indexItem, items.startPosItem, items.lengthItem, items.startHeigthItem});
 
    return items;
 }
 
-Stage::Model::Items Stage::Model::find(Model* model, const int& row)
+Stage::Model::Items Stage::Model::find(const int& row)
 {
    Items items;
 
-   items.indexItem = model->invisibleRootItem()->child(row, 0);
-   items.startPosItem = model->invisibleRootItem()->child(row, 1);
-   items.lengthItem = model->invisibleRootItem()->child(row, 2);
-   items.startHeigthItem = model->invisibleRootItem()->child(row, 3);
+   items.indexItem = invisibleRootItem()->child(row, 0);
+   items.startPosItem = invisibleRootItem()->child(row, 1);
+   items.lengthItem = invisibleRootItem()->child(row, 2);
+   items.startHeigthItem = invisibleRootItem()->child(row, 3);
 
    return items;
 }
@@ -73,7 +73,7 @@ void Stage::Model::rebuildModel(Data::Identifier identifier)
    for (uint8_t stageIndex = 0; stageIndex < polyRamp->stageCount(); stageIndex++)
    {
       stageIdentifier.stageIndex = stageIndex;
-      Items items = create(this, stageIdentifier);
+      Items items = create(stageIdentifier);
 
       QString name = QString::number(stageIndex + 1);
       while (3 != name.length())
@@ -92,7 +92,7 @@ void Stage::Model::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
    uint32_t startPos = 0;
    for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
    {
-      Items items = find(this, row);
+      Items items = find(row);
 
       const Data::Identifier identifier = items.indexItem->data(Data::Role::Identifier).value<Data::Identifier>();
 

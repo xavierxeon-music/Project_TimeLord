@@ -10,7 +10,7 @@ PolyLine::Model::Model(QObject* parent)
    setHorizontalHeaderLabels({"type", "start position", "end height", "note"});
 }
 
-PolyLine::Model::Items PolyLine::Model::create(Model* model, const Data::Identifier& identifier)
+PolyLine::Model::Items PolyLine::Model::create(const Data::Identifier& identifier)
 {
    Items items;
 
@@ -39,19 +39,19 @@ PolyLine::Model::Items PolyLine::Model::create(Model* model, const Data::Identif
       items.noteItem->setEditable(false);
    }
 
-   model->invisibleRootItem()->appendRow({items.typeItem, items.posItem, items.endHeightItem, items.noteItem});
+   invisibleRootItem()->appendRow({items.typeItem, items.posItem, items.endHeightItem, items.noteItem});
 
    return items;
 }
 
-PolyLine::Model::Items PolyLine::Model::find(Model* model, const int& row)
+PolyLine::Model::Items PolyLine::Model::find(const int& row)
 {
    Items items;
 
-   items.typeItem = model->invisibleRootItem()->child(row, 0);
-   items.posItem = model->invisibleRootItem()->child(row, 1);
-   items.endHeightItem = model->invisibleRootItem()->child(row, 2);
-   items.noteItem = model->invisibleRootItem()->child(row, 3);
+   items.typeItem = invisibleRootItem()->child(row, 0);
+   items.posItem = invisibleRootItem()->child(row, 1);
+   items.endHeightItem = invisibleRootItem()->child(row, 2);
+   items.noteItem = invisibleRootItem()->child(row, 3);
 
    return items;
 }
@@ -76,7 +76,7 @@ void PolyLine::Model::rebuildModel(Data::Identifier identifier)
 
       Data::Identifier stageIdentifier(identifier.rampIndex, isAnchor ? identifier.stageIndex : index - 1);
 
-      Items items = create(this, stageIdentifier);
+      Items items = create(stageIdentifier);
 
       items.typeItem->setIcon(Data::Type::getIcon(stage->type));
       items.typeItem->setText(Data::Type::getName(stage->type));
@@ -95,10 +95,13 @@ void PolyLine::Model::rebuildModel(Data::Identifier identifier)
       const Note note = Note::fromVoltage(voltage);
       items.noteItem->setText(QString::fromStdString(note.name));
 
-      if (Data::Type::Step == stage->type)
+      if (0 == index)
+         continue;
+
+      Stage* prevStage = list.getStage(index - 1);
+      if (Data::Type::Step == prevStage->type)
       {
-         QStandardItem* test = new QStandardItem("test");
-         items.typeItem->appendRow(test);
+         items.posItem->setEditable(false);
       }
    }
 }
