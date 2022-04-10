@@ -74,8 +74,8 @@ void MainWidget::slotLoadFromFile()
    if (fileName.isEmpty())
       return;
 
-   AppSettings fileSettings;
-   fileSettings.write("LastFile", fileName);
+   AppSettings appSettings;
+   appSettings.write("LastFile", fileName);
 
    FileSettings::setFileName(fileName);
    loadInternal(fileName);
@@ -83,8 +83,8 @@ void MainWidget::slotLoadFromFile()
 
 void MainWidget::slotSaveToFile()
 {
-   AppSettings fileSettings;
-   QString fileName = fileSettings.string("LastFile");
+   AppSettings appSettings;
+   QString fileName = appSettings.string("LastFile");
 
    if (fileName.isEmpty())
       return slotSaveNewFile();
@@ -106,8 +106,8 @@ void MainWidget::slotSaveNewFile()
          fileName.replace(".json", ".timelord.json");
    }
 
-   AppSettings fileSettings;
-   fileSettings.write("LastFile", fileName);
+   AppSettings appSettings;
+   appSettings.write("LastFile", fileName);
 
    FileSettings::setFileName(fileName);
    saveInternal(fileName);
@@ -133,13 +133,16 @@ void MainWidget::slotCheckDataModified()
 
 void MainWidget::loadLastFile()
 {
-   AppSettings fileSettings;
-   QString fileName = fileSettings.string("LastFile");
+   AppSettings appSettings;
+   QString fileName = appSettings.string("LastFile");
    if (fileName.isEmpty())
       return;
 
    if (!QFile::exists(fileName))
+   {
+      appSettings.write("LastFile", QString());
       return;
+   }
 
    FileSettings::setFileName(fileName);
    loadInternal(fileName);
@@ -147,8 +150,11 @@ void MainWidget::loadLastFile()
 
 void MainWidget::loadInternal(const QString& fileName)
 {
-   FileStorage fileStorageRaspi(raspiDevice);
-   fileStorageRaspi.loadFromFile(QString(fileName).replace(".json", ".raspi"));
+   FileSettings settings;
+   const QByteArray content = settings.bytes("RampData");
+
+   RootStorage storage(raspiDevice);
+   storage.loadFromData(content);
 
    updateWindowTitle(fileName);
    forceRebuildModels();
@@ -161,8 +167,12 @@ void MainWidget::saveInternal(const QString& fileName)
    callOnAllInstances(Data::Identifier(), &Core::saveSettings);
    unsetModified();
 
-   FileStorage fileStorageRaspi(raspiDevice);
-   fileStorageRaspi.saveToFile(QString(fileName).replace(".json", ".raspi"));
+   RootStorage storage(raspiDevice);
+   const QByteArray content = storage.saveToData();
+   raspiDevice->setSynced();
+
+   FileSettings settings;
+   settings.write("RampData", content);
 
    updateWindowTitle(fileName);
 

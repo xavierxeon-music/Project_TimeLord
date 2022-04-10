@@ -4,6 +4,8 @@
 
 #include "MainWidget.h"
 
+static const QString keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 Ramp::Model::Model(QObject* parent)
    : QStandardItemModel(parent)
    , Data::Core()
@@ -29,7 +31,7 @@ void Ramp::Model::rebuildModel(const Data::Identifier&)
          if (1 == name.length())
             name = QString("0") + name;
 
-         const QString key = QString::number(identifier.rampIndex);
+         const QString key = keys.at(identifier.rampIndex);
          name = settings.string(key, name);
 
          nameItem->setText(name);
@@ -106,7 +108,7 @@ void Ramp::Model::saveSettings(const Data::Identifier&)
       const QString name = nameItem->text();
 
       const Data::Identifier itemIndentifier = nameItem->data(Data::Role::Identifier).value<Data::Identifier>();
-      const QString key = QString::number(itemIndentifier.rampIndex);
+      const QString key = keys.at(itemIndentifier.rampIndex);
 
       settings.write(key, name);
    }
