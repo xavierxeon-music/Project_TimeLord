@@ -101,6 +101,7 @@ void PolyLine::Model::rebuildModel(Data::Identifier identifier)
       Stage* prevStage = list.getStage(index - 1);
       if (Data::Type::Step == prevStage->type)
       {
+         items.posItem->setText("=");
          items.posItem->setEditable(false);
       }
    }

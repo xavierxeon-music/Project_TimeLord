@@ -137,6 +137,7 @@ bool Ramp::Model::setData(const QModelIndex& index, const QVariant& value, int r
    {
       const uint8_t length = value.toInt();
       polyRamp->setLength(length);
+      callOnAllInstances(&Core::modelHasChanged, identifier);
    }
    else if (Data::Target::PolyRampStepSize == target)
    {
@@ -145,6 +146,8 @@ bool Ramp::Model::setData(const QModelIndex& index, const QVariant& value, int r
       result = QStandardItemModel::setData(index, QString::fromStdString(name), Qt::EditRole);
 
       polyRamp->setStepSize(stepSize);
+
+      callOnAllInstances(&Core::modelHasChanged, identifier);
    }
    else if (Data::Target::PolyRampLoop == target)
    {

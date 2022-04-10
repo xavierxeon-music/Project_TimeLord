@@ -19,7 +19,7 @@ void PolyLine::List::compile(PolyRamp* polyRamp)
    auto addAnchorStage = [&](bool first)
    {
       Stage* stage = new Stage;
-      stage->startPosition = first ? 0 : polyRamp->stageCount();
+      stage->startPosition = first ? 0 : polyRamp->getLength();
       stage->endHeight = polyRamp->getStageStartHeight(0);
       stage->type = first ? Data::Type::StartAnchor : Data::Type::EndAnchor;
 
