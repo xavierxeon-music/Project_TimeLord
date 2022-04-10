@@ -55,6 +55,7 @@ QIcon Data::Type::getIcon(const Value& type)
 
 // core
 
+bool Data::Core::isModified = false;
 bool Data::Core::lockGraphSize = true;
 RampDevice::Raspi* Data::Core::raspiDevice = nullptr;
 QList<Data::Core*> Data::Core::instanceList = QList<Data::Core*>();
@@ -77,6 +78,12 @@ void Data::Core::polyRampSelected(const Identifier& identifier)
 }
 
 void Data::Core::rebuildModel(const Identifier& identifier)
+{
+   Q_UNUSED(identifier)
+   // do nothing
+}
+
+void Data::Core::saveSettings(const Identifier& identifier)
 {
    Q_UNUSED(identifier)
    // do nothing
@@ -115,7 +122,20 @@ bool Data::Core::getLockGraphSize() const
    return lockGraphSize;
 }
 
-void Data::Core::init(RampDevice::Raspi* raspiDevice)
+void Data::Core::setModified()
 {
-   Core::raspiDevice = raspiDevice;
+   isModified = true;
+}
+
+void Data::Core::createRampDevice(QObject* parent)
+{
+   if (Core::raspiDevice)
+      return;
+
+   Core::raspiDevice = new RampDevice::Raspi(parent);
+}
+
+void Data::Core::unsetModified()
+{
+   isModified = false;
 }

@@ -19,10 +19,11 @@ namespace Data
       enum Value : uint8_t
       {
          None,
-         GraphLength,
-         GraphStepSize,
-         GraphLoop,
-         GraphStageCount,
+         PolyRampName,
+         PolyRampLength,
+         PolyRampStepSize,
+         PolyRampLoop,
+         PolyRampStageCount,
          StageStartHeight,
          StageEndHeight,
          StageLength,
@@ -75,6 +76,7 @@ namespace Data
       virtual void modelHasChanged(const Identifier& identifier);
       virtual void polyRampSelected(const Identifier& identifier);
       virtual void rebuildModel(const Identifier& identifier);
+      virtual void saveSettings(const Identifier& identifier);
 
    protected:
       using InstanceFunctionPointer = void (Core::*)(const Identifier&);
@@ -88,13 +90,17 @@ namespace Data
       void toggleLockGraphSize();
       bool getLockGraphSize() const;
 
+      void setModified();
+
    private:
       friend class ::MainWidget;
 
    private:
-      static void init(RampDevice::Raspi* raspiDevice);
+      void createRampDevice(QObject* parent);
+      void unsetModified();
 
    private:
+      static bool isModified;
       static bool lockGraphSize;
       static RampDevice::Raspi* raspiDevice;
       static QList<Core*> instanceList;

@@ -24,7 +24,15 @@ MainWidget::MainWidget()
 {
    setWindowTitle("Time Lord UI[*]");
    setMinimumSize(1400, 900);
-   Data::Core::init(new RampDevice::Raspi(this));
+   createRampDevice(this);
+
+   statusBar = new QStatusBar(this);
+   statusBar->setSizeGripEnabled(true);
+
+   TempoWidget* tempoWidget = new TempoWidget(this, raspiDevice->getTempo());
+   statusBar->addPermanentWidget(tempoWidget);
+
+   loadLastFile();
 
    polyRampVisu = new Ramp::Visu(this);
    polyRampWidget = new Ramp::Widget(this);
@@ -38,11 +46,6 @@ MainWidget::MainWidget()
    splitter->addWidget(stageWidget);
    splitter->addWidget(polyLineWidget);
 
-   statusBar = new QStatusBar(this);
-   statusBar->setSizeGripEnabled(true);
-
-   TempoWidget* tempoWidget = new TempoWidget(this, raspiDevice->getTempo());
-   statusBar->addPermanentWidget(tempoWidget);
 
    QVBoxLayout* masterLayout = new QVBoxLayout(this);
    masterLayout->setContentsMargins(0, 0, 0, 0);
@@ -54,8 +57,6 @@ MainWidget::MainWidget()
    AppSettings widgetSettings("MainWidget");
    restoreGeometry(widgetSettings.bytes("Geometry"));
    splitter->restoreState(widgetSettings.bytes("StateModel"));
-
-   loadLastFile();
 
    QTimer* modfifiedCheckTimer = new QTimer(this);
    connect(modfifiedCheckTimer, &QTimer::timeout, this, &MainWidget::slotCheckDataModified);
@@ -124,7 +125,7 @@ void MainWidget::slotEnableMidiOutput(bool enabled)
 
 void MainWidget::slotCheckDataModified()
 {
-   if (raspiDevice->isUnsynced())
+   if (raspiDevice->isUnsynced() || isModified)
       setWindowModified(true);
    else
       setWindowModified(false);
@@ -157,6 +158,9 @@ void MainWidget::loadInternal(const QString& fileName)
 
 void MainWidget::saveInternal(const QString& fileName)
 {
+   callOnAllInstances(Data::Identifier(), &Core::saveSettings);
+   unsetModified();
+
    FileStorage fileStorageRaspi(raspiDevice);
    fileStorageRaspi.saveToFile(QString(fileName).replace(".json", ".raspi"));
 

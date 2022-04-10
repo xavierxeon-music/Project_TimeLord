@@ -1,5 +1,7 @@
 #include "RampModel.h"
 
+#include <FileSettings.h>
+
 #include "MainWidget.h"
 
 Ramp::Model::Model(QObject* parent)
@@ -14,6 +16,8 @@ void Ramp::Model::rebuildModel(const Data::Identifier&)
    clear();
    setHorizontalHeaderLabels({"name", "length", "division", "loop", "count"});
 
+   FileSettings settings("RampNames");
+
    for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
    {
       Data::Identifier identifier(rampIndex);
@@ -25,9 +29,12 @@ void Ramp::Model::rebuildModel(const Data::Identifier&)
          if (1 == name.length())
             name = QString("0") + name;
 
+         const QString key = QString::number(identifier.rampIndex);
+         name = settings.string(key, name);
+
          nameItem->setText(name);
          nameItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
-         nameItem->setEditable(false);
+         nameItem->setData(QVariant::fromValue(Data::Target::PolyRampName), Data::Role::Target);
       }
 
       QStandardItem* lengthItem = new QStandardItem();
@@ -35,7 +42,7 @@ void Ramp::Model::rebuildModel(const Data::Identifier&)
          const QString length = QString::number(polyRamp->getLength());
          lengthItem->setText(length);
          lengthItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
-         lengthItem->setData(QVariant::fromValue(Data::Target::GraphLength), Data::Role::Target);
+         lengthItem->setData(QVariant::fromValue(Data::Target::PolyRampLength), Data::Role::Target);
       }
 
       QStandardItem* stepSizeItem = new QStandardItem();
@@ -44,7 +51,7 @@ void Ramp::Model::rebuildModel(const Data::Identifier&)
          stepSizeItem->setText(QString::fromStdString(stepSize));
          stepSizeItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
          stepSizeItem->setData(QVariant::fromValue(polyRamp->getStepSize()), Data::Role::Data);
-         stepSizeItem->setData(QVariant::fromValue(Data::Target::GraphStepSize), Data::Role::Target);
+         stepSizeItem->setData(QVariant::fromValue(Data::Target::PolyRampStepSize), Data::Role::Target);
       }
 
       QStandardItem* loopItem = new QStandardItem();
@@ -52,7 +59,7 @@ void Ramp::Model::rebuildModel(const Data::Identifier&)
          loopItem->setCheckable(true);
          loopItem->setCheckState(polyRamp->isLooping() ? Qt::Checked : Qt::Unchecked);
          loopItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
-         loopItem->setData(QVariant::fromValue(Data::Target::GraphLoop), Data::Role::Target);
+         loopItem->setData(QVariant::fromValue(Data::Target::PolyRampLoop), Data::Role::Target);
       }
 
       QStandardItem* countItem = new QStandardItem();
@@ -90,6 +97,21 @@ void Ramp::Model::modelHasChanged(const Data::Identifier& identifier)
    }
 }
 
+void Ramp::Model::saveSettings(const Data::Identifier&)
+{
+   FileSettings settings("RampNames");
+   for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
+   {
+      QStandardItem* nameItem = invisibleRootItem()->child(row, 0);
+      const QString name = nameItem->text();
+
+      const Data::Identifier itemIndentifier = nameItem->data(Data::Role::Identifier).value<Data::Identifier>();
+      const QString key = QString::number(itemIndentifier.rampIndex);
+
+      settings.write(key, name);
+   }
+}
+
 bool Ramp::Model::setData(const QModelIndex& index, const QVariant& value, int role)
 {
    bool result = QStandardItemModel::setData(index, value, role);
@@ -105,12 +127,16 @@ bool Ramp::Model::setData(const QModelIndex& index, const QVariant& value, int r
 
    const Data::Target::Value target = targetData.value<Data::Target::Value>();
 
-   if (Data::Target::GraphLength == target)
+   if (Data::Target::PolyRampName == target)
+   {
+      setModified();
+   }
+   else if (Data::Target::PolyRampLength == target)
    {
       const uint8_t length = value.toInt();
       polyRamp->setLength(length);
    }
-   else if (Data::Target::GraphStepSize == target)
+   else if (Data::Target::PolyRampStepSize == target)
    {
       const Tempo::Division stepSize = value.value<Tempo::Division>();
       const std::string name = Tempo::getName(stepSize);
@@ -118,7 +144,7 @@ bool Ramp::Model::setData(const QModelIndex& index, const QVariant& value, int r
 
       polyRamp->setStepSize(stepSize);
    }
-   else if (Data::Target::GraphLoop == target)
+   else if (Data::Target::PolyRampLoop == target)
    {
       bool loopOn = value.toBool();
       polyRamp->setLooping(loopOn);
