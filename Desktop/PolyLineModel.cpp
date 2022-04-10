@@ -3,40 +3,6 @@
 #include "MainWidget.h"
 #include "PolyLineList.h"
 
-// items
-
-PolyLine::Model::Items::Items(Model* model, const Data::Identifier& identifier)
-{
-   typeItem = new QStandardItem();
-   {
-      typeItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
-      typeItem->setData(QVariant::fromValue(Data::Target::StageType), Data::Role::Target);
-      typeItem->setEditable(false);
-   }
-
-   posItem = new QStandardItem();
-   {
-      posItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
-      posItem->setData(QVariant::fromValue(Data::Target::StageStartPosition), Data::Role::Target);
-   }
-
-   endHeightItem = new QStandardItem();
-   {
-      endHeightItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
-      endHeightItem->setData(QVariant::fromValue(Data::Target::StageEndHeight), Data::Role::Target);
-   }
-
-   noteItem = new QStandardItem();
-   {
-      noteItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
-      noteItem->setEditable(false);
-   }
-
-   model->invisibleRootItem()->appendRow({typeItem, posItem, endHeightItem, noteItem});
-}
-
-// model
-
 PolyLine::Model::Model(QObject* parent)
    : QStandardItemModel(parent)
    , Data::Core()
@@ -44,7 +10,53 @@ PolyLine::Model::Model(QObject* parent)
    setHorizontalHeaderLabels({"type", "start position", "end height", "note"});
 }
 
-void PolyLine::Model::rebuildModel(const Data::Identifier& identifier)
+PolyLine::Model::Items PolyLine::Model::create(Model* model, const Data::Identifier& identifier)
+{
+   Items items;
+
+   items.typeItem = new QStandardItem();
+   {
+      items.typeItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
+      items.typeItem->setData(QVariant::fromValue(Data::Target::StageType), Data::Role::Target);
+      items.typeItem->setEditable(false);
+   }
+
+   items.posItem = new QStandardItem();
+   {
+      items.posItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
+      items.posItem->setData(QVariant::fromValue(Data::Target::StageStartPosition), Data::Role::Target);
+   }
+
+   items.endHeightItem = new QStandardItem();
+   {
+      items.endHeightItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
+      items.endHeightItem->setData(QVariant::fromValue(Data::Target::StageEndHeight), Data::Role::Target);
+   }
+
+   items.noteItem = new QStandardItem();
+   {
+      items.noteItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
+      items.noteItem->setEditable(false);
+   }
+
+   model->invisibleRootItem()->appendRow({items.typeItem, items.posItem, items.endHeightItem, items.noteItem});
+
+   return items;
+}
+
+PolyLine::Model::Items PolyLine::Model::find(Model* model, const int& row)
+{
+   Items items;
+
+   items.typeItem = model->invisibleRootItem()->child(row, 0);
+   items.posItem = model->invisibleRootItem()->child(row, 1);
+   items.endHeightItem = model->invisibleRootItem()->child(row, 2);
+   items.noteItem = model->invisibleRootItem()->child(row, 3);
+
+   return items;
+}
+
+void PolyLine::Model::rebuildModel(Data::Identifier identifier)
 {
    clear();
    setHorizontalHeaderLabels({"type", "start position", "end height", "note"});
@@ -64,7 +76,7 @@ void PolyLine::Model::rebuildModel(const Data::Identifier& identifier)
 
       Data::Identifier stageIdentifier(identifier.rampIndex, isAnchor ? identifier.stageIndex : index - 1);
 
-      Items items(this, stageIdentifier);
+      Items items = create(this, stageIdentifier);
 
       items.typeItem->setIcon(Data::Type::getIcon(stage->type));
       items.typeItem->setText(Data::Type::getName(stage->type));
@@ -82,6 +94,12 @@ void PolyLine::Model::rebuildModel(const Data::Identifier& identifier)
       const float voltage = static_cast<float>(stage->endHeight * 5.0) / 255.0;
       const Note note = Note::fromVoltage(voltage);
       items.noteItem->setText(QString::fromStdString(note.name));
+
+      if (Data::Type::Step == stage->type)
+      {
+         QStandardItem* test = new QStandardItem("test");
+         items.typeItem->appendRow(test);
+      }
    }
 }
 

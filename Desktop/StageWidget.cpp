@@ -114,7 +114,7 @@ void Stage::Widget::setSelection(const uint& stageIndex)
    selectedStageIndex = stageIndex;
 }
 
-void Stage::Widget::polyRampSelected(const Data::Identifier& newIdentifier)
+void Stage::Widget::polyRampSelected(Data::Identifier newIdentifier)
 {
    identifier = newIdentifier;
 

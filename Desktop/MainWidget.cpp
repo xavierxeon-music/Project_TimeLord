@@ -65,7 +65,8 @@ MainWidget::MainWidget()
 
 void MainWidget::forceRebuildModels()
 {
-   callOnAllInstances(Data::Identifier(), &Core::rebuildModel);
+   Data::Identifier dummy;
+   callOnAllInstances(&Core::rebuildModel, dummy);
 }
 
 void MainWidget::slotLoadFromFile()
@@ -164,7 +165,7 @@ void MainWidget::loadInternal(const QString& fileName)
 
 void MainWidget::saveInternal(const QString& fileName)
 {
-   callOnAllInstances(Data::Identifier(), &Core::saveSettings);
+   callOnAllInstances(&Core::saveSettings);
    unsetModified();
 
    RootStorage storage(raspiDevice);

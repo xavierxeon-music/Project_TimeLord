@@ -14,6 +14,7 @@ HEADERS += \
    AbstractEdit.h \
    AbstractWidget.h \
    DataCore.h \
+   DataCore.hpp \
    DelegateComboBox.h \
    DelegateSpinBox.h \
    EditDivision.h \

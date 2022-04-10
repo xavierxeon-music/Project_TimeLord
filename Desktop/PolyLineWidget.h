@@ -22,8 +22,8 @@ namespace PolyLine
 
    private:
       void setSelection(const uint& stageIndex);
-      void polyRampSelected(const Data::Identifier& newIdentifier) override;
-      void modelHasChanged(const Data::Identifier& identifier) override;
+      void polyRampSelected(Data::Identifier newIdentifier) override;
+      void modelHasChanged(Data::Identifier identifier) override;
 
    private:
       Model* polyLineModel;

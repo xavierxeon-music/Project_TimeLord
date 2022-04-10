@@ -13,7 +13,7 @@ Ramp::Model::Model(QObject* parent)
    setHorizontalHeaderLabels({"name", "length", "division", "loop", "count"});
 }
 
-void Ramp::Model::rebuildModel(const Data::Identifier&)
+void Ramp::Model::rebuildModel(Data::Identifier)
 {
    clear();
    setHorizontalHeaderLabels({"name", "length", "division", "loop", "count"});
@@ -76,7 +76,7 @@ void Ramp::Model::rebuildModel(const Data::Identifier&)
    }
 }
 
-void Ramp::Model::modelHasChanged(const Data::Identifier& identifier)
+void Ramp::Model::modelHasChanged(Data::Identifier identifier)
 {
    for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
    {
@@ -99,7 +99,7 @@ void Ramp::Model::modelHasChanged(const Data::Identifier& identifier)
    }
 }
 
-void Ramp::Model::saveSettings(const Data::Identifier&)
+void Ramp::Model::saveSettings()
 {
    FileSettings settings("RampNames");
    for (int row = 0; row < invisibleRootItem()->rowCount(); row++)

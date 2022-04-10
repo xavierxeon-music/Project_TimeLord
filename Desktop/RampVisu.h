@@ -28,7 +28,7 @@ namespace Ramp
       void slotZoomOut();
 
    private:
-      void polyRampSelected(const Data::Identifier& newIdentifier) override;
+      void polyRampSelected(Data::Identifier newIdentifier) override;
 
    private:
       QGraphicsView* graphicsView;

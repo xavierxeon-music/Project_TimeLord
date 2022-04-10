@@ -19,14 +19,14 @@ namespace PolyLine
          QStandardItem* posItem;
          QStandardItem* endHeightItem;
          QStandardItem* noteItem;
-
-         Items(Model* model, const Data::Identifier& identifier);
       };
 
       friend class Widget;
 
    private:
-      void rebuildModel(const Data::Identifier& identifier) override;
+      Items create(Model* model, const Data::Identifier& identifier);
+      Items find(Model* model, const int& row);
+      void rebuildModel(Data::Identifier identifier) override;
       bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
    };
 } // namespace PolyLine

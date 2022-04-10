@@ -19,14 +19,13 @@ namespace Stage
          QStandardItem* startPosItem;
          QStandardItem* lengthItem;
          QStandardItem* startHeigthItem;
-
-         Items(Model* model, const Data::Identifier& identifier);
-         Items(Model* model, const int& row);
       };
       friend class Widget;
 
    private:
-      void rebuildModel(const Data::Identifier& identifier) override;
+      Items create(Model* model, const Data::Identifier& identifier);
+      Items find(Model* model, const int& row);
+      void rebuildModel(Data::Identifier identifier) override;
       void update(PolyRamp* polyRamp, const uint8_t& stageIndex);
       bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
    };

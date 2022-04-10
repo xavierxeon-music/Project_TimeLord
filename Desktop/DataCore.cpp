@@ -65,27 +65,26 @@ Data::Core::Core()
    instanceList.append(this);
 }
 
-void Data::Core::modelHasChanged(const Identifier& identifier)
+void Data::Core::modelHasChanged(Identifier identifier)
 {
    Q_UNUSED(identifier)
    // do nothing
 }
 
-void Data::Core::polyRampSelected(const Identifier& identifier)
+void Data::Core::polyRampSelected(Identifier identifier)
 {
    Q_UNUSED(identifier)
    // do nothing
 }
 
-void Data::Core::rebuildModel(const Identifier& identifier)
+void Data::Core::rebuildModel(Identifier identifier)
 {
    Q_UNUSED(identifier)
    // do nothing
 }
 
-void Data::Core::saveSettings(const Identifier& identifier)
+void Data::Core::saveSettings()
 {
-   Q_UNUSED(identifier)
    // do nothing
 }
 
@@ -95,16 +94,6 @@ PolyRamp* Data::Core::getPolyRamp(const Identifier& identifier)
       return nullptr;
 
    return &(raspiDevice->polyRamps[identifier.rampIndex]);
-}
-
-void Data::Core::callOnAllInstances(const Identifier& identifier, InstanceFunctionPointer instanceFunctionPointer)
-{
-   for (Core* instance : instanceList)
-   {
-      if (this == instance)
-         continue;
-      std::invoke(instanceFunctionPointer, instance, identifier);
-   }
 }
 
 void Data::Core::setLockGraphSize(bool locked)

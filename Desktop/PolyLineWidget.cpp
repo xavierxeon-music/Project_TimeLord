@@ -24,7 +24,7 @@ PolyLine::Widget::Widget(MainWidget* mainWidget)
    polyLineTreeView->setModel(polyLineModel);
    polyLineTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
    polyLineTreeView->setItemDelegateForColumn(2, new Delegate::SpinBox(this));
-   polyLineTreeView->setRootIsDecorated(false);
+   polyLineTreeView->setRootIsDecorated(true);
    connect(polyLineTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &Widget::slotCurrentSelectionChanged);
 
    addPayload(polyLineTreeView);
@@ -69,7 +69,7 @@ void PolyLine::Widget::setSelection(const uint& stageIndex)
    selectedStageIndex = stageIndex;
 }
 
-void PolyLine::Widget::polyRampSelected(const Data::Identifier& newIdentifier)
+void PolyLine::Widget::polyRampSelected(Data::Identifier newIdentifier)
 {
    identifier = newIdentifier;
 
@@ -77,7 +77,7 @@ void PolyLine::Widget::polyRampSelected(const Data::Identifier& newIdentifier)
    selectedStageIndex = 0;
 }
 
-void PolyLine::Widget::modelHasChanged(const Data::Identifier& identifier)
+void PolyLine::Widget::modelHasChanged(Data::Identifier identifier)
 {
    // TODO get and restore selection
    polyLineModel->rebuildModel(identifier);

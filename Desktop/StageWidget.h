@@ -25,7 +25,7 @@ namespace Stage
 
    private:
       void setSelection(const uint& stageIndex);
-      void polyRampSelected(const Data::Identifier& newIdentifier) override;
+      void polyRampSelected(Data::Identifier newIdentifier) override;
 
    private:
       Model* stageModel;

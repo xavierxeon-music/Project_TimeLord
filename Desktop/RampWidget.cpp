@@ -98,5 +98,5 @@ void Ramp::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const
    QStandardItem* item = polyRampModel->itemFromIndex(current);
    identifier = item->data(Data::Role::Identifier).value<Data::Identifier>();
 
-   callOnAllInstances(identifier, &Core::polyRampSelected);
+   callOnAllInstances(&Core::polyRampSelected, identifier);
 }

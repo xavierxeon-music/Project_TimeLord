@@ -129,7 +129,7 @@ void Ramp::Visu::slotZoomOut()
    slotUpdate();
 }
 
-void Ramp::Visu::polyRampSelected(const Data::Identifier& newIdentifier)
+void Ramp::Visu::polyRampSelected(Data::Identifier newIdentifier)
 {
    identifier = newIdentifier;
 

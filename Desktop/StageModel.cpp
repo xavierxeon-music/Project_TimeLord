@@ -2,52 +2,6 @@
 
 #include "MainWidget.h"
 
-// items
-
-Stage::Model::Items::Items(Model* model, const Data::Identifier& identifier)
-{
-   indexItem = new QStandardItem();
-   {
-      QString name = QString::number(identifier.stageIndex + 1);
-      while (3 != name.length())
-         name = QString("0") + name;
-
-      indexItem->setText(name);
-      indexItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
-      indexItem->setEditable(false);
-   }
-
-   startPosItem = new QStandardItem();
-   {
-      startPosItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
-      startPosItem->setEditable(false);
-   }
-
-   lengthItem = new QStandardItem();
-   {
-      lengthItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
-      lengthItem->setData(QVariant::fromValue(Data::Target::StageLength), Data::Role::Target);
-   }
-
-   startHeigthItem = new QStandardItem();
-   {
-      startHeigthItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
-      startHeigthItem->setData(QVariant::fromValue(Data::Target::StageStartHeight), Data::Role::Target);
-   }
-
-   model->invisibleRootItem()->appendRow({indexItem, startPosItem, lengthItem, startHeigthItem});
-}
-
-Stage::Model::Items::Items(Model* model, const int& row)
-{
-   indexItem = model->invisibleRootItem()->child(row, 0);
-   startPosItem = model->invisibleRootItem()->child(row, 1);
-   lengthItem = model->invisibleRootItem()->child(row, 2);
-   startHeigthItem = model->invisibleRootItem()->child(row, 3);
-}
-
-// model
-
 Stage::Model::Model(QObject* parent)
    : QStandardItemModel(parent)
    , Data::Core()
@@ -56,7 +10,56 @@ Stage::Model::Model(QObject* parent)
    setHorizontalHeaderLabels({"index", "start position", "length", "start height"});
 }
 
-void Stage::Model::rebuildModel(const Data::Identifier& identifier)
+Stage::Model::Items Stage::Model::create(Model* model, const Data::Identifier& identifier)
+{
+   Items items;
+   items.indexItem = new QStandardItem();
+   {
+      QString name = QString::number(identifier.stageIndex + 1);
+      while (3 != name.length())
+         name = QString("0") + name;
+
+      items.indexItem->setText(name);
+      items.indexItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
+      items.indexItem->setEditable(false);
+   }
+
+   items.startPosItem = new QStandardItem();
+   {
+      items.startPosItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
+      items.startPosItem->setEditable(false);
+   }
+
+   items.lengthItem = new QStandardItem();
+   {
+      items.lengthItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
+      items.lengthItem->setData(QVariant::fromValue(Data::Target::StageLength), Data::Role::Target);
+   }
+
+   items.startHeigthItem = new QStandardItem();
+   {
+      items.startHeigthItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
+      items.startHeigthItem->setData(QVariant::fromValue(Data::Target::StageStartHeight), Data::Role::Target);
+   }
+
+   model->invisibleRootItem()->appendRow({items.indexItem, items.startPosItem, items.lengthItem, items.startHeigthItem});
+
+   return items;
+}
+
+Stage::Model::Items Stage::Model::find(Model* model, const int& row)
+{
+   Items items;
+
+   items.indexItem = model->invisibleRootItem()->child(row, 0);
+   items.startPosItem = model->invisibleRootItem()->child(row, 1);
+   items.lengthItem = model->invisibleRootItem()->child(row, 2);
+   items.startHeigthItem = model->invisibleRootItem()->child(row, 3);
+
+   return items;
+}
+
+void Stage::Model::rebuildModel(Data::Identifier identifier)
 {
    clear();
    setHorizontalHeaderLabels({"index", "start position", "length", "start height"});
@@ -70,7 +73,7 @@ void Stage::Model::rebuildModel(const Data::Identifier& identifier)
    for (uint8_t stageIndex = 0; stageIndex < polyRamp->stageCount(); stageIndex++)
    {
       stageIdentifier.stageIndex = stageIndex;
-      Items items(this, stageIdentifier);
+      Items items = create(this, stageIdentifier);
 
       QString name = QString::number(stageIndex + 1);
       while (3 != name.length())
@@ -81,7 +84,7 @@ void Stage::Model::rebuildModel(const Data::Identifier& identifier)
       update(polyRamp, stageIndex);
    }
 
-   callOnAllInstances(identifier, &Core::modelHasChanged);
+   callOnAllInstances(&Core::modelHasChanged, identifier);
 }
 
 void Stage::Model::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
@@ -89,7 +92,7 @@ void Stage::Model::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
    uint32_t startPos = 0;
    for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
    {
-      Items items(this, row);
+      Items items = find(this, row);
 
       const Data::Identifier identifier = items.indexItem->data(Data::Role::Identifier).value<Data::Identifier>();
 
@@ -144,7 +147,7 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
    {
       const uint8_t height = value.toInt();
       polyRamp->setStageStartHeight(identifier.stageIndex, height);
-      callOnAllInstances(identifier, &Core::modelHasChanged);
+      callOnAllInstances(&Core::modelHasChanged, identifier);
    }
    else if (Data::Target::StageLength == target)
    {
@@ -158,7 +161,7 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
          if (identifier.stageIndex + 1 == polyRamp->stageCount())
             length += "*";
          targeValue = length;
-         callOnAllInstances(identifier, &Core::modelHasChanged);
+         callOnAllInstances(&Core::modelHasChanged, identifier);
       }
    }
 

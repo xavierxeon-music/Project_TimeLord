@@ -73,18 +73,16 @@ namespace Data
       Core();
 
    public:
-      virtual void modelHasChanged(const Identifier& identifier);
-      virtual void polyRampSelected(const Identifier& identifier);
-      virtual void rebuildModel(const Identifier& identifier);
-      virtual void saveSettings(const Identifier& identifier);
-
-   protected:
-      using InstanceFunctionPointer = void (Core::*)(const Identifier&);
+      virtual void modelHasChanged(Identifier identifier);
+      virtual void polyRampSelected(Identifier identifier);
+      virtual void rebuildModel(Identifier identifier);
+      virtual void saveSettings();
 
    protected:
       PolyRamp* getPolyRamp(const Identifier& identifier); // ignores stage index
 
-      void callOnAllInstances(const Identifier& identifier, InstanceFunctionPointer instanceFunctionPointer);
+      template <typename... Args>
+      void callOnAllInstances(void (Core::*function)(Args...), Args... args);
 
       void setLockGraphSize(bool locked);
       void toggleLockGraphSize();
@@ -108,4 +106,8 @@ namespace Data
 
 } // namespace Data
 
-#endif // DataCoreH
+#ifndef DataCoreHPP
+#include "DataCore.hpp"
+#endif // NOT DataCoreHPP
+
+#endif // NOT DataCoreH
