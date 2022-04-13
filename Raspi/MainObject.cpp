@@ -10,7 +10,7 @@
 #include <Midi/MidiToolTempo.h>
 
 const QString MainObject::storageFileName = "timelord.bin";
-const uint16_t MainObject::callbackRate = 100;
+const uint16_t MainObject::callbackRate = 2;
 
 MainObject::MainObject()
    : QObject(nullptr)
@@ -36,8 +36,10 @@ MainObject::MainObject()
 {
    qInfo() << "start";
 
+#ifdef WAIT_FOR_FLAME_DEVICE
    for (Midi::Channel channel = 0; channel < 4; channel++)
-      quadStrips[channel] = doepferQuad.create(channel);
+      quadStrips[channel] = doepferQuad.create(channel + 1);
+#endif
 
    inputDevice.open();
    //inputDevice.addPassThroughInterface(&outputDevice);
@@ -59,7 +61,7 @@ MainObject::MainObject()
       qInfo() << "restored settings";
 
    bridge.onPulledFromRemote(this, &MainObject::receviedSettings);
-
+   reset();
 }
 
 MainObject::~MainObject()
@@ -78,7 +80,7 @@ void MainObject::loop()
    else if (tempo.isTick())
    {
       for (uint8_t index = 0; index < polyRamps.getSize(); index++)
-         polyRamps[index].clockReset();
+         polyRamps[index].clockTick();
    }
    tempo.advance(callbackRate);
 #else  // NOT DO_NOT_USE_MIDI_CLOCK
@@ -114,7 +116,9 @@ void MainObject::loop()
       {
          const Tempo::Division division = polyRamps[index].getStepSize();
          const uint8_t value = polyRamps[index].getCurrentValue(tempo.getPercentage(division));
+         //const uint8_t value = polyRamps[index].getCurrentValue(0);
          voltage = value * 5.0 / 255.0;
+         //if(0 == index) qDebug() << voltage;
       }
 #ifdef WAIT_FOR_FLAME_DEVICE
       if (index < 8)
@@ -135,7 +139,7 @@ void MainObject::loop()
       }
 #endif
 
-      flameCC.setCV(index, voltage);
+      //flameCC.setCV(index, voltage);
    }
 }
 
