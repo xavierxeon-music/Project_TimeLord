@@ -60,7 +60,6 @@ MainObject::MainObject()
 
    bridge.onPulledFromRemote(this, &MainObject::receviedSettings);
 
-   qDebug() << Midi::Physical::Input::getAvailable();
 }
 
 MainObject::~MainObject()
@@ -177,6 +176,9 @@ void MainObject::receviedSettings()
 
 int main(int argc, char** argv)
 {
+   qDebug() << Midi::Physical::Input::getAvailable();
+   return 0;
+
    QCoreApplication app(argc, argv);
    ConsoleApplication::catchSignals();
 
