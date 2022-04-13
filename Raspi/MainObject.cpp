@@ -17,7 +17,7 @@ MainObject::MainObject()
    , Remember::Root()
    , polyRamps(this)
    , server(this)
-   , inputDevice(this, "system:midi_capture_2")
+   , inputDevice(this, "system:midi_capture_1")
    , outputDevice(this, "system:midi_playback_2")
    , bridge(this, &server, &server, Midi::Device::Raspi, Midi::Device::MacBook)
 #ifdef WAIT_FOR_FLAME_DEVICE
@@ -40,7 +40,7 @@ MainObject::MainObject()
       quadStrips[channel] = doepferQuad.create(channel);
 
    inputDevice.open();
-   inputDevice.addPassThroughInterface(&outputDevice);
+   //inputDevice.addPassThroughInterface(&outputDevice);
 
    outputDevice.open();
    flameCC.init();
@@ -54,13 +54,13 @@ MainObject::MainObject()
    loopTimer->setInterval(callbackRate);
    loopTimer->start();
 
-   FileStorage fileStorage(this);
+   RootStorage fileStorage(this);
    if (fileStorage.loadFromFile(storageFileName))
       qInfo() << "restored settings";
 
    bridge.onPulledFromRemote(this, &MainObject::receviedSettings);
 
-   new Midi::Tool::Tempo(&server);
+   qDebug() << Midi::Physical::Input::getAvailable();
 }
 
 MainObject::~MainObject()
@@ -168,7 +168,7 @@ void MainObject::receviedSettings()
 {
    reset();
 
-   FileStorage fileStorage(this);
+   RootStorage fileStorage(this);
    if (fileStorage.saveToFile(storageFileName))
       qInfo() << "saved settings";
 }
