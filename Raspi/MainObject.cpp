@@ -17,8 +17,8 @@ MainObject::MainObject()
    , Remember::Root()
    , polyRamps(this)
    , server(this)
-   , inputDevice(this, "system:midi_capture_1")
-   , outputDevice(this, "system:midi_playback_2")
+   , inputDevice(this, "Metropolix_playback_1")
+   , outputDevice(this, "MIDISPORT-2x2-Anniv_capture_2")
    , bridge(this, &server, &server, Midi::Device::Raspi, Midi::Device::MacBook)
 #ifdef WAIT_FOR_FLAME_DEVICE
    , doepferQuad(&outputDevice)
@@ -176,8 +176,8 @@ void MainObject::receviedSettings()
 
 int main(int argc, char** argv)
 {
-   qDebug() << Midi::Physical::Input::getAvailable();
-   return 0;
+   qDebug() << "INPUTS:" << Midi::Physical::Input::getAvailable();
+   qDebug() << "OUTPUTS" << Midi::Physical::Output::getAvailable();
 
    QCoreApplication app(argc, argv);
    ConsoleApplication::catchSignals();
