@@ -31,7 +31,6 @@ HEADERS += \
    RampWidget.h \
    StageModel.h \
    StageWidget.h \
-   TempoWidget.h \
 
 SOURCES += \
    AbstractEdit.cpp \
@@ -53,7 +52,6 @@ SOURCES += \
    RampWidget.cpp \
    StageModel.cpp \
    StageWidget.cpp \
-   TempoWidget.cpp \
 
 FORMS +=
 

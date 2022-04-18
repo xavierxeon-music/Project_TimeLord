@@ -7,7 +7,6 @@ class MainWidget;
 
 namespace RampDevice
 {
-   class Raspi;
    class VCV;
 };
 
@@ -79,8 +78,12 @@ namespace Data
       virtual void rebuildModel(Identifier identifier);
       virtual void saveSettings();
 
+   public:
+      static const QString keys;
+
    protected:
       PolyRamp* getPolyRamp(const Identifier& identifier); // ignores stage index
+      const PolyRamp* getPolyRamp(const Identifier& identifier) const; // ignores stage index
 
       template <typename... Args>
       void callOnAllInstances(void (Core::*function)(Args...), Args... args);
@@ -91,8 +94,6 @@ namespace Data
 
       void setModified();
 
-   protected:
-      static const QString keys;
 
    private:
       friend class ::MainWidget;
@@ -104,7 +105,7 @@ namespace Data
    private:
       static bool isModified;
       static bool lockGraphSize;
-      static RampDevice::Raspi* raspiDevice;
+      static RampDevice::VCV* device;
       static QList<Core*> instanceList;
    };
 

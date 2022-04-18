@@ -12,8 +12,6 @@
 #include <FileSettings.h>
 
 #include "RampDeviceVCV.h"
-#include "RampModel.h"
-#include "TempoWidget.h"
 
 MainWidget::MainWidget()
    : QWidget(nullptr)
@@ -28,15 +26,10 @@ MainWidget::MainWidget()
    setWindowTitle("Time Lord UI[*]");
    setMinimumSize(1400, 900);
 
-   RampDevice::VCV* device = new RampDevice::VCV(this);
-
    createRampDevice(this);
 
    statusBar = new QStatusBar(this);
    statusBar->setSizeGripEnabled(true);
-
-   TempoWidget* tempoWidget = new TempoWidget(this, raspiDevice->getTempo());
-   statusBar->addPermanentWidget(tempoWidget);
 
    loadLastFile();
 
@@ -51,7 +44,6 @@ MainWidget::MainWidget()
    splitter->addWidget(polyRampWidget);
    splitter->addWidget(stageWidget);
    splitter->addWidget(polyLineWidget);
-
 
    QVBoxLayout* masterLayout = new QVBoxLayout(this);
    masterLayout->setContentsMargins(0, 0, 0, 0);
@@ -122,17 +114,17 @@ void MainWidget::slotSaveNewFile()
 
 void MainWidget::slotSaveToRaspi()
 {
-   raspiDevice->pushToServer();
+   device->pushToServer();
 }
 
 void MainWidget::slotEnableMidiOutput(bool enabled)
 {
-   raspiDevice->enableMidiPort(enabled);
+   // TODO connect to server
 }
 
 void MainWidget::slotCheckDataModified()
 {
-   if (raspiDevice->isUnsynced() || isModified)
+   if (device->isUnsynced() || isModified)
       setWindowModified(true);
    else
       setWindowModified(false);
@@ -160,7 +152,7 @@ void MainWidget::loadInternal(const QString& fileName)
    FileSettings settings;
    const QByteArray content = settings.bytes("binary");
 
-   RootStorage storage(raspiDevice);
+   RootStorage storage(device);
    storage.loadFromData(content);
 
    updateWindowTitle(fileName);
@@ -174,32 +166,11 @@ void MainWidget::saveInternal(const QString& fileName)
    callOnAllInstances(&Core::saveSettings);
    unsetModified();
 
-   RootStorage storage(raspiDevice);
+   RootStorage storage(device);
    const QByteArray content = storage.saveToData();
-   raspiDevice->setSynced();
+   device->setSynced();
 
-   QJsonObject ramps;
-   for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
-   {
-      Data::Identifier identifier(rampIndex);
-      PolyRamp* polyRamp = getPolyRamp(identifier);
-
-      QJsonArray stageArray;
-      for (uint8_t stageIndex = 0; stageIndex < polyRamp->stageCount(); stageIndex++)
-      {
-         QJsonObject stageObject;
-         stageObject["length"] = polyRamp->getStageLength(stageIndex);
-         stageObject["startHeight"] = polyRamp->getStageStartHeight(stageIndex);
-         stageArray.append(stageObject);
-      }
-
-      QJsonObject rampObject;
-      rampObject["stages"] = stageArray;
-      rampObject["stepSize"] = polyRamp->getStepSize();
-      rampObject["length"] = static_cast<int64_t>(polyRamp->getLength());
-      rampObject["lopp"] = polyRamp->isLooping();
-      ramps[keys.at(rampIndex)] = rampObject;
-   }
+   const QJsonObject ramps = device->compileRamps();
 
    FileSettings settings;
    settings.write("binary", content);

@@ -1,6 +1,7 @@
 #include "DataCore.h"
 
 #include "MainWidget.h"
+#include "RampDeviceVCV.h"
 
 // identifier
 
@@ -58,7 +59,7 @@ QIcon Data::Type::getIcon(const Value& type)
 const QString Data::Core::keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 bool Data::Core::isModified = false;
 bool Data::Core::lockGraphSize = true;
-RampDevice::Raspi* Data::Core::raspiDevice = nullptr;
+RampDevice::VCV* Data::Core::device = nullptr;
 QList<Data::Core*> Data::Core::instanceList = QList<Data::Core*>();
 
 Data::Core::Core()
@@ -91,10 +92,18 @@ void Data::Core::saveSettings()
 
 PolyRamp* Data::Core::getPolyRamp(const Identifier& identifier)
 {
-   if (!raspiDevice)
+   if (!device)
       return nullptr;
 
-   return &(raspiDevice->polyRamps[identifier.rampIndex]);
+   return &(device->polyRamps[identifier.rampIndex]);
+}
+
+const PolyRamp* Data::Core::getPolyRamp(const Identifier& identifier) const
+{
+   if (!device)
+      return nullptr;
+
+   return &(device->polyRamps[identifier.rampIndex]);
 }
 
 void Data::Core::setLockGraphSize(bool locked)
@@ -119,10 +128,10 @@ void Data::Core::setModified()
 
 void Data::Core::createRampDevice(QObject* parent)
 {
-   if (Core::raspiDevice)
+   if (device)
       return;
 
-   Core::raspiDevice = new RampDevice::Raspi(parent);
+   device = new RampDevice::VCV(parent);
 }
 
 void Data::Core::unsetModified()

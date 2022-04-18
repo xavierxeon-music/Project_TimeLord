@@ -11,7 +11,6 @@
 #include <RootStorage.h>
 
 #include "PolyLineWidget.h"
-#include "RampDeviceRaspi.h"
 #include "RampVisu.h"
 #include "RampWidget.h"
 #include "StageWidget.h"

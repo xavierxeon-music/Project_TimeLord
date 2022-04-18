@@ -1,5 +1,7 @@
 #include "PolyLineModel.h"
 
+#include <Music/Note.h>
+
 #include "MainWidget.h"
 #include "PolyLineList.h"
 
