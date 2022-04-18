@@ -11,8 +11,6 @@
 #include <AppSettings.h>
 #include <FileSettings.h>
 
-#include <Midi/MidiPhysicalInput.h>
-
 #include "RampDeviceVCV.h"
 
 MainWidget::MainWidget()
@@ -29,8 +27,6 @@ MainWidget::MainWidget()
    setMinimumSize(1400, 900);
 
    createRampDevice(this);
-
-   qDebug() << Midi::Physical::Input::getAvailable();
 
    statusBar = new QStatusBar(this);
    statusBar->setSizeGripEnabled(true);
