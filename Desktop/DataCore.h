@@ -8,6 +8,7 @@ class MainWidget;
 namespace RampDevice
 {
    class Raspi;
+   class VCV;
 };
 
 namespace Data

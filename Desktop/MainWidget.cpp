@@ -11,6 +11,7 @@
 #include <AppSettings.h>
 #include <FileSettings.h>
 
+#include "RampDeviceVCV.h"
 #include "RampModel.h"
 #include "TempoWidget.h"
 
@@ -26,6 +27,9 @@ MainWidget::MainWidget()
 {
    setWindowTitle("Time Lord UI[*]");
    setMinimumSize(1400, 900);
+
+   RampDevice::VCV* device = new RampDevice::VCV(this);
+
    createRampDevice(this);
 
    statusBar = new QStatusBar(this);
@@ -185,7 +189,7 @@ void MainWidget::saveInternal(const QString& fileName)
       {
          QJsonObject stageObject;
          stageObject["length"] = polyRamp->getStageLength(stageIndex);
-         stageObject["startHeigth"] = polyRamp->getStageStartHeight(stageIndex);
+         stageObject["startHeight"] = polyRamp->getStageStartHeight(stageIndex);
          stageArray.append(stageObject);
       }
 

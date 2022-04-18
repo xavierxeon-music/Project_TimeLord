@@ -25,7 +25,7 @@ HEADERS += \
    PolyLineList.h \
    PolyLineModel.h \
    PolyLineWidget.h \
-   RampDeviceRaspi.h \
+   RampDeviceVCV.h \
    RampModel.h \
    RampVisu.h \
    RampWidget.h \
@@ -47,7 +47,7 @@ SOURCES += \
    PolyLineList.cpp \
    PolyLineModel.cpp \
    PolyLineWidget.cpp \
-   RampDeviceRaspi.cpp \
+   RampDeviceVCV.cpp \
    RampModel.cpp \
    RampVisu.cpp \
    RampWidget.cpp \
