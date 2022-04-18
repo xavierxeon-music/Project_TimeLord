@@ -55,6 +55,7 @@ QIcon Data::Type::getIcon(const Value& type)
 
 // core
 
+const QString Data::Core::keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 bool Data::Core::isModified = false;
 bool Data::Core::lockGraphSize = true;
 RampDevice::Raspi* Data::Core::raspiDevice = nullptr;

@@ -90,6 +90,9 @@ namespace Data
 
       void setModified();
 
+   protected:
+      static const QString keys;
+
    private:
       friend class ::MainWidget;
 

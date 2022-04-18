@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QCloseEvent>
 #include <QFileDialog>
+#include <QJsonArray>
 #include <QStackedWidget>
 #include <QTimer>
 #include <QVBoxLayout>
@@ -10,6 +11,7 @@
 #include <AppSettings.h>
 #include <FileSettings.h>
 
+#include "RampModel.h"
 #include "TempoWidget.h"
 
 MainWidget::MainWidget()
@@ -152,7 +154,7 @@ void MainWidget::loadLastFile()
 void MainWidget::loadInternal(const QString& fileName)
 {
    FileSettings settings;
-   const QByteArray content = settings.bytes("RampData");
+   const QByteArray content = settings.bytes("binary");
 
    RootStorage storage(raspiDevice);
    storage.loadFromData(content);
@@ -172,8 +174,32 @@ void MainWidget::saveInternal(const QString& fileName)
    const QByteArray content = storage.saveToData();
    raspiDevice->setSynced();
 
+   QJsonObject ramps;
+   for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
+   {
+      Data::Identifier identifier(rampIndex);
+      PolyRamp* polyRamp = getPolyRamp(identifier);
+
+      QJsonArray stageArray;
+      for (uint8_t stageIndex = 0; stageIndex < polyRamp->stageCount(); stageIndex++)
+      {
+         QJsonObject stageObject;
+         stageObject["length"] = polyRamp->getStageLength(stageIndex);
+         stageObject["startHeigth"] = polyRamp->getStageStartHeight(stageIndex);
+         stageArray.append(stageObject);
+      }
+
+      QJsonObject rampObject;
+      rampObject["stages"] = stageArray;
+      rampObject["stepSize"] = polyRamp->getStepSize();
+      rampObject["length"] = static_cast<int64_t>(polyRamp->getLength());
+      rampObject["lopp"] = polyRamp->isLooping();
+      ramps[keys.at(rampIndex)] = rampObject;
+   }
+
    FileSettings settings;
-   settings.write("RampData", content);
+   settings.write("binary", content);
+   settings.write("ramps", ramps);
 
    updateWindowTitle(fileName);
 
