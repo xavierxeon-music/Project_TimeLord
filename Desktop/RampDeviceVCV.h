@@ -25,12 +25,12 @@ namespace RampDevice
    public:
       QJsonObject compileRamps() const;
 
-      void pushToServer();
+      void pushToServer(const uint8_t& bankIndex);
       void connectToServer();
 
    private:
       friend class Data::Core;
-      using PolyRampArray_ = Remember::RefArray<PolyRamp, 16>;
+      using PolyRampArray_ = Remember::RefArray<PolyRamp, 8>;
 
    private:
       PolyRampArray_ polyRamps;

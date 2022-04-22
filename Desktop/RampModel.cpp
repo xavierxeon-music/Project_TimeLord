@@ -41,7 +41,7 @@ void Ramp::Model::rebuildModel(Data::Identifier)
 
    FileSettings settings("names");
 
-   for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
+   for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
    {
       Data::Identifier identifier(rampIndex);
       PolyRamp* polyRamp = getPolyRamp(identifier);

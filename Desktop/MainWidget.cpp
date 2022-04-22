@@ -22,6 +22,7 @@ MainWidget::MainWidget()
    , polyRampWidget(nullptr)
    , stageWidget(nullptr)
    , polyLineWidget(nullptr)
+   , bankIndex(0)
 {
    setWindowTitle("Time Lord UI[*]");
    setMinimumSize(1400, 900);
@@ -65,6 +66,17 @@ void MainWidget::forceRebuildModels()
 {
    Data::Identifier dummy;
    callOnAllInstances(&Core::rebuildModel, dummy);
+}
+
+const uint8_t& MainWidget::getBankIndex() const
+{
+   return bankIndex;
+}
+
+void MainWidget::setBankIndex(const uint8_t& newBankIndex)
+{
+   bankIndex = newBankIndex;
+   isModified = true;
 }
 
 void MainWidget::slotLoadFromFile()
@@ -112,14 +124,9 @@ void MainWidget::slotSaveNewFile()
    saveInternal(fileName);
 }
 
-void MainWidget::slotSaveToRaspi()
+void MainWidget::slotPushToServer()
 {
-   device->pushToServer();
-}
-
-void MainWidget::slotEnableMidiOutput(bool enabled)
-{
-   // TODO connect to server
+   device->pushToServer(bankIndex);
 }
 
 void MainWidget::slotCheckDataModified()
@@ -151,6 +158,7 @@ void MainWidget::loadInternal(const QString& fileName)
 {
    FileSettings settings;
    const QByteArray content = settings.bytes("binary");
+   bankIndex = settings.integer("bankIndex");
 
    RootStorage storage(device);
    storage.loadFromData(content);
@@ -175,6 +183,7 @@ void MainWidget::saveInternal(const QString& fileName)
    FileSettings settings;
    settings.write("binary", content);
    settings.write("ramps", ramps);
+   settings.write("bankIndex", bankIndex);
 
    updateWindowTitle(fileName);
 

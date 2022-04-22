@@ -8,13 +8,13 @@
 
 #include "DataCore.h"
 
-static constexpr uint8_t remoteChannel = 11;
+static constexpr uint8_t remoteChannel = Midi::Device::VCVRack;
 
 RampDevice::VCV::VCV(QObject* parent)
    : QObject(parent)
    , Remember::Root()
    , polyRamps(this)
-   , output(this, "TimeLordServer")
+   , output(this, "TimeLord")
 {
    connectToServer();
 }
@@ -22,7 +22,7 @@ RampDevice::VCV::VCV(QObject* parent)
 QJsonObject RampDevice::VCV::compileRamps() const
 {
    QJsonObject ramps;
-   for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
+   for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
    {
       const PolyRamp* polyRamp = &polyRamps[rampIndex];
 
@@ -47,9 +47,10 @@ QJsonObject RampDevice::VCV::compileRamps() const
    return ramps;
 }
 
-void RampDevice::VCV::pushToServer()
+void RampDevice::VCV::pushToServer(const uint8_t& bankIndex)
 {
    const QJsonObject ramps = compileRamps();
+   qDebug() << ramps;
 
    const QJsonDocument document(ramps);
    const QByteArray content = document.toJson(QJsonDocument::Compact);
@@ -59,10 +60,12 @@ void RampDevice::VCV::pushToServer()
 
    Bytes dataBase64 = SevenBit::encode(data);
 
+   qDebug() << content.size() << data.size() << dataBase64.size();
+
    for (const uint8_t byte : dataBase64)
       output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberBlock, byte);
 
-   output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberApply, 0);
+   output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberApply, bankIndex);
 }
 
 void RampDevice::VCV::connectToServer()

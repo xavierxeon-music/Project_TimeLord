@@ -3,6 +3,7 @@
 #include <QAction>
 #include <QGraphicsLineItem>
 #include <QGraphicsScene>
+#include <QSpinBox>
 #include <QTimer>
 
 #include "MainWidget.h"
@@ -22,9 +23,13 @@ Ramp::Visu::Visu(MainWidget* mainWidget)
    toolBar->addAction(QIcon(":/SaveNewFile.svg"), "Save To New File", mainWidget, &MainWidget::slotSaveNewFile);
 
    toolBar->addSeparator();
-   toolBar->addAction(QIcon(":/SaveToDaisy.svg"), "Save To RasPi", mainWidget, &MainWidget::slotSaveToRaspi);
-   QAction* portAction = toolBar->addAction(QIcon(":/Port.svg"), "Enable Midi Output", mainWidget, &MainWidget::slotEnableMidiOutput);
-   portAction->setCheckable(true);
+   toolBar->addAction(QIcon(":/SaveToDaisy.svg"), "Push To Server", mainWidget, &MainWidget::slotPushToServer);
+
+   QSpinBox* bankSpin = new QSpinBox(this);
+   bankSpin->setRange(0, 9);
+   bankSpin->setValue(mainWidget->getBankIndex());
+   connect(bankSpin, &QSpinBox::valueChanged, mainWidget, &MainWidget::setBankIndex);
+   toolBar->addWidget(bankSpin);
 
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/ZoomIn.svg"), "Zoom In", this, &Visu::slotZoomIn);
@@ -94,7 +99,7 @@ void Ramp::Visu::slotUpdate()
       }
    };
 
-   for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
+   for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
    {
       Data::Identifier drawIdentifier(rampIndex);
       PolyRamp* polyRamp = getPolyRamp(drawIdentifier);

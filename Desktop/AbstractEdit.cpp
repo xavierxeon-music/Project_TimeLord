@@ -32,7 +32,7 @@ void Abstract::Edit::slotCancel()
 
 void Abstract::Edit::slotExecute()
 {
-   for (uint8_t rampIndex = 0; rampIndex < 16; rampIndex++)
+   for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
    {
       Data::Identifier identifier(rampIndex);
 
@@ -41,5 +41,5 @@ void Abstract::Edit::slotExecute()
    }
 
    polyRampWidget->hideEditStack();
-   //? mainWidget->forceRebuildModels();
+   callOnAllInstances(&Core::rebuildModel, Data::Identifier());
 }
