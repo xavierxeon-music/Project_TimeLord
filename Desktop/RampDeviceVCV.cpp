@@ -22,14 +22,14 @@ RampDevice::VCV::VCV(QObject* parent)
    for (uint8_t index = 0; index < 10; index++)
       iconBuffer[index] = QIcon(":/Bank" + QString::number(index) + ".svg");
 
-   actions.connectToServer = new QAction(QIcon(":/SaveToDaisy.svg"), "Push To Server", this);
-   connect(actions.connectToServer, &QAction::triggered, this, &RampDevice::VCV::slotPushToServer);
-   actions.connectToServer->setCheckable(true);
+   actions.connectToServer = new QAction(QIcon(":/Port.svg"), "Connect To Server", this);
 
    actions.bankUp = new QAction(iconBuffer[0], "Bank Up", this);
    connect(actions.bankUp, &QAction::triggered, this, &RampDevice::VCV::slotBankUp);
 
-   actions.pushToServer = new QAction(QIcon(":/Port.svg"), "Connect To Server", this);
+   actions.pushToServer = new QAction(QIcon(":/SaveToDaisy.svg"), "Push To Server", this);
+   connect(actions.connectToServer, &QAction::triggered, this, &RampDevice::VCV::slotPushToServer);
+   actions.connectToServer->setCheckable(true);
 
    slotConnectToServer(true);
 }
