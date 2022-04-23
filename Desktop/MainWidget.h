@@ -15,25 +15,31 @@
 #include "RampWidget.h"
 #include "StageWidget.h"
 
+#include "RampDeviceVCV.h"
+
 class MainWidget : public QWidget, public Data::Core
 {
    Q_OBJECT
 
 public:
+   struct FileActions
+   {
+      QAction* loadFromFile;
+      QAction* saveToFile;
+      QAction* saveNewFile;
+   };
+
+public:
    MainWidget();
 
 public:
-   void forceRebuildModels();
-   const uint8_t& getBankIndex() const;
-   void setBankIndex(const uint8_t& newBankIndex);
+   const FileActions& getFileActions() const;
+   const RampDevice::VCV::ServerActions& getServerActions() const;
 
-public slots:
+private slots:
    void slotLoadFromFile();
    void slotSaveToFile();
    void slotSaveNewFile();
-   void slotPushToServer();
-
-private slots:
    void slotCheckDataModified();
 
 private:
@@ -47,12 +53,12 @@ private:
    QSplitter* splitter;
    QStatusBar* statusBar;
 
+   FileActions actions;
+
    Ramp::Visu* polyRampVisu;
    Ramp::Widget* polyRampWidget;
    Stage::Widget* stageWidget;
    PolyLine::Widget* polyLineWidget;
-
-   uint8_t bankIndex;
 };
 
 #endif // MainWidgetH

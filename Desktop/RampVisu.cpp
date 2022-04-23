@@ -7,6 +7,7 @@
 #include <QTimer>
 
 #include "MainWidget.h"
+#include "RampDeviceVCV.h"
 
 Ramp::Visu::Visu(MainWidget* mainWidget)
    : Abstract::Widget(mainWidget)
@@ -17,19 +18,18 @@ Ramp::Visu::Visu(MainWidget* mainWidget)
 {
    setFixedHeight(200);
 
-   toolBar->addAction(QIcon(":/LoadFromFile.svg"), "Load From File", mainWidget, &MainWidget::slotLoadFromFile);
-   QAction* saveFileAction = toolBar->addAction(QIcon(":/SaveToFile.svg"), "Save To File", mainWidget, &MainWidget::slotSaveToFile);
-   saveFileAction->setShortcut(QKeySequence(QKeySequence::Save));
-   toolBar->addAction(QIcon(":/SaveNewFile.svg"), "Save To New File", mainWidget, &MainWidget::slotSaveNewFile);
+   const MainWidget::FileActions& fileActions = mainWidget->getFileActions();
+
+   toolBar->addAction(fileActions.loadFromFile);
+   toolBar->addAction(fileActions.saveToFile);
+   toolBar->addAction(fileActions.saveNewFile);
 
    toolBar->addSeparator();
-   toolBar->addAction(QIcon(":/SaveToDaisy.svg"), "Push To Server", mainWidget, &MainWidget::slotPushToServer);
 
-   QSpinBox* bankSpin = new QSpinBox(this);
-   bankSpin->setRange(0, 9);
-   bankSpin->setValue(mainWidget->getBankIndex());
-   connect(bankSpin, &QSpinBox::valueChanged, mainWidget, &MainWidget::setBankIndex);
-   toolBar->addWidget(bankSpin);
+   const RampDevice::VCV::ServerActions& serverActions = mainWidget->getServerActions();
+   toolBar->addAction(serverActions.connectToServer);
+   toolBar->addAction(serverActions.bankUp);
+   toolBar->addAction(serverActions.pushToServer);
 
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/ZoomIn.svg"), "Zoom In", this, &Visu::slotZoomIn);

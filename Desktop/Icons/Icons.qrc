@@ -1,6 +1,16 @@
 <RCC>
  <qresource prefix="/">
   <file>Add.svg</file>
+  <file>Bank0.svg</file>
+  <file>Bank1.svg</file>
+  <file>Bank2.svg</file>
+  <file>Bank3.svg</file>
+  <file>Bank4.svg</file>
+  <file>Bank5.svg</file>
+  <file>Bank6.svg</file>
+  <file>Bank7.svg</file>
+  <file>Bank8.svg</file>
+  <file>Bank9.svg</file>
   <file>Cancel.svg</file>
   <file>Division.svg</file>
   <file>Execute.svg</file>

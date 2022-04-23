@@ -15,8 +15,77 @@ RampDevice::VCV::VCV(QObject* parent)
    , Remember::Root()
    , polyRamps(this)
    , output(this, "TimeLord")
+   , bankIndex(this, 0)
+   , actions{nullptr, nullptr, nullptr}
+   , iconBuffer()
 {
-   connectToServer();
+   for (uint8_t index = 0; index < 10; index++)
+      iconBuffer[index] = QIcon(":/Bank" + QString::number(index) + ".svg");
+
+   actions.connectToServer = new QAction(QIcon(":/SaveToDaisy.svg"), "Push To Server", this);
+   connect(actions.connectToServer, &QAction::triggered, this, &RampDevice::VCV::slotPushToServer);
+   actions.connectToServer->setCheckable(true);
+
+   actions.bankUp = new QAction(iconBuffer[0], "Bank Up", this);
+   connect(actions.bankUp, &QAction::triggered, this, &RampDevice::VCV::slotBankUp);
+
+   actions.pushToServer = new QAction(QIcon(":/Port.svg"), "Connect To Server", this);
+
+   slotConnectToServer(true);
+}
+
+const RampDevice::VCV::ServerActions& RampDevice::VCV::getServerActions() const
+{
+   return actions;
+}
+
+void RampDevice::VCV::updateBankIcon()
+{
+   actions.bankUp->setIcon(iconBuffer[bankIndex]);
+}
+
+void RampDevice::VCV::slotConnectToServer(bool connect)
+{
+   if (connect)
+      output.open();
+   else
+      output.close();
+
+   actions.connectToServer->setChecked(output.isOpen());
+}
+
+void RampDevice::VCV::slotBankUp()
+{
+   bankIndex = bankIndex + 1;
+   if (10 <= bankIndex)
+      bankIndex = 0;
+
+   setUnsynced();
+   updateBankIcon();
+}
+
+void RampDevice::VCV::slotPushToServer()
+{
+   if (!output.isOpen())
+      return;
+
+   const QJsonObject ramps = compileRamps();
+   qDebug() << ramps;
+
+   const QJsonDocument document(ramps);
+   const QByteArray content = document.toJson(QJsonDocument::Compact);
+
+   Bytes data(content.size());
+   std::memcpy(&data[0], content.constData(), content.size());
+
+   Bytes dataBase64 = SevenBit::encode(data);
+
+   qDebug() << content.size() << data.size() << dataBase64.size();
+
+   for (const uint8_t byte : dataBase64)
+      output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberBlock, byte);
+
+   output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberApply, bankIndex);
 }
 
 QJsonObject RampDevice::VCV::compileRamps() const
@@ -45,30 +114,4 @@ QJsonObject RampDevice::VCV::compileRamps() const
       ramps[key] = rampObject;
    }
    return ramps;
-}
-
-void RampDevice::VCV::pushToServer(const uint8_t& bankIndex)
-{
-   const QJsonObject ramps = compileRamps();
-   qDebug() << ramps;
-
-   const QJsonDocument document(ramps);
-   const QByteArray content = document.toJson(QJsonDocument::Compact);
-
-   Bytes data(content.size());
-   std::memcpy(&data[0], content.constData(), content.size());
-
-   Bytes dataBase64 = SevenBit::encode(data);
-
-   qDebug() << content.size() << data.size() << dataBase64.size();
-
-   for (const uint8_t byte : dataBase64)
-      output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberBlock, byte);
-
-   output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberApply, bankIndex);
-}
-
-void RampDevice::VCV::connectToServer()
-{
-   output.open();
 }
