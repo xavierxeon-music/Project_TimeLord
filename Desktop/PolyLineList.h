@@ -25,7 +25,7 @@ namespace PolyLine
       void apply(PolyRamp* polyRamp);
 
       void clear();
-      uint8_t stageCount() const;
+      uint8_t getStageCount() const;
       Stage* getStage(const uint8_t index);
       Stage* insertStage(const uint8_t afterIndex, const Stage& stage);
 

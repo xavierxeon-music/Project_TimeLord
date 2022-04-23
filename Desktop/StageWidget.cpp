@@ -84,7 +84,7 @@ void Stage::Widget::slotMoveForward()
    if (!polyRamp)
       return;
 
-   if (selectedStageIndex + 1 > polyRamp->stageCount())
+   if (selectedStageIndex + 1 > polyRamp->getStageCount())
       return;
 
    polyRamp->moveStage(selectedStageIndex, selectedStageIndex + 1);

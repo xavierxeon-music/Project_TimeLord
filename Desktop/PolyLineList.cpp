@@ -13,7 +13,7 @@ PolyLine::List::~List()
 void PolyLine::List::compile(PolyRamp* polyRamp)
 {
    clear();
-   if (0 == polyRamp->stageCount())
+   if (0 == polyRamp->getStageCount())
       return;
 
    auto addAnchorStage = [&](bool first)
@@ -29,9 +29,9 @@ void PolyLine::List::compile(PolyRamp* polyRamp)
    addAnchorStage(true);
 
    uint32_t startPos = 0;
-   for (uint8_t stageIndex = 0; stageIndex < polyRamp->stageCount(); stageIndex++)
+   for (uint8_t stageIndex = 0; stageIndex < polyRamp->getStageCount(); stageIndex++)
    {
-      const uint8_t nextIndex = (stageIndex + 1 < polyRamp->stageCount()) ? stageIndex + 1 : 0;
+      const uint8_t nextIndex = (stageIndex + 1 < polyRamp->getStageCount()) ? stageIndex + 1 : 0;
       const uint8_t startHeight = polyRamp->getStageStartHeight(stageIndex);
       const uint8_t endHeight = polyRamp->getStageStartHeight(nextIndex);
       const uint8_t length = polyRamp->getStageLength(stageIndex);
@@ -52,7 +52,7 @@ void PolyLine::List::compile(PolyRamp* polyRamp)
       stageList.append(stage);
 
       startPos += polyRamp->getStageLength(stageIndex);
-      if (stageIndex + 1 == polyRamp->stageCount())
+      if (stageIndex + 1 == polyRamp->getStageCount())
          addAnchorStage(false);
    }
 }
@@ -69,7 +69,7 @@ void PolyLine::List::clear()
    stageList.clear();
 }
 
-uint8_t PolyLine::List::stageCount() const
+uint8_t PolyLine::List::getStageCount() const
 {
    return stageList.count();
 }

@@ -27,7 +27,7 @@ void Ramp::Model::modelHasChanged(Data::Identifier identifier)
       lengthItem->setText(length);
 
       QStandardItem* countItem = invisibleRootItem()->child(row, 4);
-      const QString count = QString::number(polyRamp->stageCount());
+      const QString count = QString::number(polyRamp->getStageCount());
       countItem->setText(count);
 
       break;
@@ -87,7 +87,7 @@ void Ramp::Model::rebuildModel(Data::Identifier)
 
       QStandardItem* countItem = new QStandardItem();
       {
-         const QString count = QString::number(polyRamp->stageCount());
+         const QString count = QString::number(polyRamp->getStageCount());
          countItem->setText(count);
          countItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
          countItem->setEditable(false);

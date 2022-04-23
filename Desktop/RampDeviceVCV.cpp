@@ -97,7 +97,7 @@ QJsonObject RampDevice::VCV::compileRamps() const
       const PolyRamp* polyRamp = &polyRamps[rampIndex];
 
       QJsonArray stageArray;
-      for (uint8_t stageIndex = 0; stageIndex < polyRamp->stageCount(); stageIndex++)
+      for (uint8_t stageIndex = 0; stageIndex < polyRamp->getStageCount(); stageIndex++)
       {
          QJsonObject stageObject;
          stageObject["length"] = polyRamp->getStageLength(stageIndex);

@@ -70,7 +70,7 @@ void Stage::Model::rebuildModel(Data::Identifier identifier)
 
    Data::Identifier stageIdentifier = identifier;
 
-   for (uint8_t stageIndex = 0; stageIndex < polyRamp->stageCount(); stageIndex++)
+   for (uint8_t stageIndex = 0; stageIndex < polyRamp->getStageCount(); stageIndex++)
    {
       stageIdentifier.stageIndex = stageIndex;
       Items items = create(stageIdentifier);
@@ -96,7 +96,7 @@ void Stage::Model::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
 
       const Data::Identifier identifier = items.indexItem->data(Data::Role::Identifier).value<Data::Identifier>();
 
-      const uint8_t nextIndex = (identifier.stageIndex + 1 < polyRamp->stageCount()) ? identifier.stageIndex + 1 : 0;
+      const uint8_t nextIndex = (identifier.stageIndex + 1 < polyRamp->getStageCount()) ? identifier.stageIndex + 1 : 0;
       const uint8_t startHeight = polyRamp->getStageStartHeight(identifier.stageIndex);
       const uint8_t endHeight = polyRamp->getStageStartHeight(nextIndex);
       const uint8_t length = polyRamp->getStageLength(identifier.stageIndex);
@@ -116,7 +116,7 @@ void Stage::Model::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
       if (identifier.stageIndex == itemStageIndex)
       {
          QString lengthText = QString::number(length);
-         if (identifier.stageIndex + 1 == polyRamp->stageCount())
+         if (identifier.stageIndex + 1 == polyRamp->getStageCount())
             lengthText += "*";
          items.lengthItem->setText(lengthText);
 
@@ -158,7 +158,7 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
       }
       else
       {
-         if (identifier.stageIndex + 1 == polyRamp->stageCount())
+         if (identifier.stageIndex + 1 == polyRamp->getStageCount())
             length += "*";
          targeValue = length;
          callOnAllInstances(&Core::modelHasChanged, identifier);

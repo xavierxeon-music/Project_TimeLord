@@ -57,11 +57,11 @@ void Ramp::Visu::slotUpdate()
 
    auto drawGraph = [&](PolyRamp* polyRamp)
    {
-      if (!polyRamp || 0 == polyRamp->stageCount())
+      if (!polyRamp || 0 == polyRamp->getStageCount())
          return;
 
       Stage::List& stageList = stageMap[polyRamp];
-      while (stageList.size() < polyRamp->stageCount()) // add lines
+      while (stageList.size() < polyRamp->getStageCount()) // add lines
       {
          Stage stage;
          stage.lineItem = new QGraphicsLineItem();
@@ -70,7 +70,7 @@ void Ramp::Visu::slotUpdate()
          stageList.append(stage);
       }
 
-      while (stageList.size() > polyRamp->stageCount()) // remove lines
+      while (stageList.size() > polyRamp->getStageCount()) // remove lines
       {
          Stage stage = stageList.takeLast();
          delete stage.lineItem;
@@ -80,10 +80,10 @@ void Ramp::Visu::slotUpdate()
       const uint32_t offsetX = 5;
 
       uint32_t startX = offsetX;
-      for (uint8_t startIndex = 0; startIndex < polyRamp->stageCount(); startIndex++)
+      for (uint8_t startIndex = 0; startIndex < polyRamp->getStageCount(); startIndex++)
       {
          uint32_t stageLength = polyRamp->getStageLength(startIndex);
-         uint8_t endIndex = (startIndex + 1 < polyRamp->stageCount()) ? startIndex + 1 : 0;
+         uint8_t endIndex = (startIndex + 1 < polyRamp->getStageCount()) ? startIndex + 1 : 0;
 
          uint32_t startY = 128 - (0.5 * polyRamp->getStageStartHeight(startIndex));
          uint32_t endY = 128 - (0.5 * polyRamp->getStageStartHeight(endIndex));

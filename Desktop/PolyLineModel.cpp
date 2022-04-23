@@ -68,7 +68,7 @@ void PolyLine::Model::rebuildModel(Data::Identifier identifier)
    List list;
    list.compile(polyRamp);
 
-   for (uint8_t index = 0; index < list.stageCount(); index++)
+   for (uint8_t index = 0; index < list.getStageCount(); index++)
    {
       Stage* stage = list.getStage(index);
 
