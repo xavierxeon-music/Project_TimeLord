@@ -109,7 +109,7 @@ QJsonObject RampDevice::VCV::compileRamps() const
       rampObject["stages"] = stageArray;
       rampObject["stepSize"] = polyRamp->getStepSize();
       rampObject["length"] = static_cast<int64_t>(polyRamp->getLength());
-      rampObject["lopp"] = polyRamp->isLooping();
+      rampObject["loop"] = polyRamp->isLooping();
 
       const QString key = Data::Core::keys.at(rampIndex);
       ramps[key] = rampObject;
