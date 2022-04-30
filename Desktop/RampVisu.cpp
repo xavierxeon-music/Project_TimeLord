@@ -80,17 +80,16 @@ void Ramp::Visu::slotUpdate()
       const uint32_t offsetX = 5;
 
       uint32_t startX = offsetX;
-      for (uint8_t startIndex = 0; startIndex < polyRamp->getStageCount(); startIndex++)
+      for (uint8_t index = 0; index < polyRamp->getStageCount(); index++)
       {
-         uint32_t stageLength = polyRamp->getStageLength(startIndex);
-         uint8_t endIndex = (startIndex + 1 < polyRamp->getStageCount()) ? startIndex + 1 : 0;
+         uint32_t stageLength = polyRamp->getStageLength(index);
 
-         uint32_t startY = 128 - (0.5 * polyRamp->getStageStartHeight(startIndex));
-         uint32_t endY = 128 - (0.5 * polyRamp->getStageStartHeight(endIndex));
+         uint32_t startY = 128 - (0.5 * polyRamp->getStageStartHeight(index));
+         uint32_t endY = 128 - (0.5 * polyRamp->getStageEndHeight(index));
 
-         uint32_t endX = (endIndex == 0) ? offsetX + polyRamp->getLength() : startX + stageLength;
+         uint32_t endX = (index + 1 == polyRamp->getStageCount()) ? offsetX + polyRamp->getLength() : startX + stageLength;
 
-         QGraphicsLineItem* lineItem = stageList[startIndex].lineItem;
+         QGraphicsLineItem* lineItem = stageList[index].lineItem;
          lineItem->setLine(zoomLevel * startX, offsetY + startY, zoomLevel * endX, offsetY + endY);
          lineItem->setPen((polyRamp == selectedPolyRamp) ? blackPen : grayPen);
          lineItem->setZValue((polyRamp == selectedPolyRamp) ? 1.0 : 0.0);
