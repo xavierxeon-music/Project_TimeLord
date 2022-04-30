@@ -31,16 +31,16 @@ void PolyLine::List::compile(PolyRamp* polyRamp)
    uint32_t startPos = 0;
    for (uint8_t stageIndex = 0; stageIndex < polyRamp->getStageCount(); stageIndex++)
    {
-      const uint8_t nextIndex = (stageIndex + 1 < polyRamp->getStageCount()) ? stageIndex + 1 : 0;
       const uint8_t startHeight = polyRamp->getStageStartHeight(stageIndex);
-      const uint8_t endHeight = polyRamp->getStageStartHeight(nextIndex);
+      const uint8_t endHeight = polyRamp->getStageEndHeight(stageIndex);
       const uint8_t length = polyRamp->getStageLength(stageIndex);
 
       Stage* stage = new Stage;
       stage->startPosition = startPos;
-      stage->endHeight = polyRamp->getStageStartHeight(nextIndex);
+      stage->startHeight = startHeight;
+      stage->endHeight = endHeight;
 
-      if (0 == length && 0 != nextIndex)
+      if (0 == length)
          stage->type = Data::Type::Step;
       else if (startHeight < endHeight)
          stage->type = Data::Type::Rise;

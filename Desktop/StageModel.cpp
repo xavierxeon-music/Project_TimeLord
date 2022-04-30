@@ -7,7 +7,7 @@ Stage::Model::Model(QObject* parent)
    , Data::Core()
 
 {
-   setHorizontalHeaderLabels({"index", "start position", "length", "start height"});
+   setHorizontalHeaderLabels({"index", "start position", "length", "start height", "start height"});
 }
 
 Stage::Model::Items Stage::Model::create(const Data::Identifier& identifier)
@@ -42,7 +42,13 @@ Stage::Model::Items Stage::Model::create(const Data::Identifier& identifier)
       items.startHeigthItem->setData(QVariant::fromValue(Data::Target::StageStartHeight), Data::Role::Target);
    }
 
-   invisibleRootItem()->appendRow({items.indexItem, items.startPosItem, items.lengthItem, items.startHeigthItem});
+   items.endHeigthItem = new QStandardItem();
+   {
+      items.endHeigthItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
+      items.endHeigthItem->setData(QVariant::fromValue(Data::Target::StageEndHeight), Data::Role::Target);
+   }
+
+   invisibleRootItem()->appendRow({items.indexItem, items.startPosItem, items.lengthItem, items.startHeigthItem, items.endHeigthItem});
 
    return items;
 }
@@ -55,6 +61,7 @@ Stage::Model::Items Stage::Model::find(const int& row)
    items.startPosItem = invisibleRootItem()->child(row, 1);
    items.lengthItem = invisibleRootItem()->child(row, 2);
    items.startHeigthItem = invisibleRootItem()->child(row, 3);
+   items.endHeigthItem = invisibleRootItem()->child(row, 4);
 
    return items;
 }
@@ -62,7 +69,7 @@ Stage::Model::Items Stage::Model::find(const int& row)
 void Stage::Model::rebuildModel(Data::Identifier identifier)
 {
    clear();
-   setHorizontalHeaderLabels({"index", "start position", "length", "start height"});
+   setHorizontalHeaderLabels({"index", "start position", "length", "start height", "start height"});
 
    PolyRamp* polyRamp = getPolyRamp(identifier);
    if (!polyRamp)
@@ -96,15 +103,14 @@ void Stage::Model::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
 
       const Data::Identifier identifier = items.indexItem->data(Data::Role::Identifier).value<Data::Identifier>();
 
-      const uint8_t nextIndex = (identifier.stageIndex + 1 < polyRamp->getStageCount()) ? identifier.stageIndex + 1 : 0;
       const uint8_t startHeight = polyRamp->getStageStartHeight(identifier.stageIndex);
-      const uint8_t endHeight = polyRamp->getStageStartHeight(nextIndex);
+      const uint8_t endHeight = polyRamp->getStageEndHeight(identifier.stageIndex);
       const uint8_t length = polyRamp->getStageLength(identifier.stageIndex);
 
       QString posText = QString::number(startPos);
       items.startPosItem->setText(posText);
 
-      if (0 == length && 0 != nextIndex)
+      if (0 == length)
          items.startPosItem->setIcon(QIcon(":/TrendStep.svg"));
       else if (startHeight < endHeight)
          items.startPosItem->setIcon(QIcon(":/TrendRise.svg"));
@@ -122,6 +128,9 @@ void Stage::Model::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
 
          const QString startHeightText = QString::number(startHeight);
          items.startHeigthItem->setText(startHeightText);
+
+         const QString endHeightText = QString::number(endHeight);
+         items.endHeigthItem->setText(endHeightText);
       }
 
       startPos += polyRamp->getStageLength(identifier.stageIndex);
@@ -147,6 +156,12 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
    {
       const uint8_t height = value.toInt();
       polyRamp->setStageStartHeight(identifier.stageIndex, height);
+      callOnAllInstances(&Core::modelHasChanged, identifier);
+   }
+   else if (Data::Target::StageEndHeight == target)
+   {
+      const uint8_t height = value.toInt();
+      polyRamp->setStageEndHeight(identifier.stageIndex, height);
       callOnAllInstances(&Core::modelHasChanged, identifier);
    }
    else if (Data::Target::StageLength == target)

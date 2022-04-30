@@ -102,6 +102,7 @@ QJsonObject RampDevice::VCV::compileRamps() const
          QJsonObject stageObject;
          stageObject["length"] = polyRamp->getStageLength(stageIndex);
          stageObject["startHeight"] = polyRamp->getStageStartHeight(stageIndex);
+         stageObject["endHeight"] = polyRamp->getStageEndHeight(stageIndex);
          stageArray.append(stageObject);
       }
 

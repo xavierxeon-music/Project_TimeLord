@@ -24,6 +24,7 @@ PolyLine::Widget::Widget(MainWidget* mainWidget)
    polyLineTreeView->setModel(polyLineModel);
    polyLineTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
    polyLineTreeView->setItemDelegateForColumn(2, new Delegate::SpinBox(this));
+   polyLineTreeView->setItemDelegateForColumn(3, new Delegate::SpinBox(this));
    polyLineTreeView->setRootIsDecorated(true);
    connect(polyLineTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &Widget::slotCurrentSelectionChanged);
 

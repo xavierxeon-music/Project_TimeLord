@@ -19,6 +19,7 @@ namespace Stage
          QStandardItem* startPosItem;
          QStandardItem* lengthItem;
          QStandardItem* startHeigthItem;
+         QStandardItem* endHeigthItem;
       };
       friend class Widget;
 

@@ -32,6 +32,7 @@ Stage::Widget::Widget(MainWidget* mainWidget)
    staggeTreeView->setModel(stageModel);
    staggeTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
    staggeTreeView->setItemDelegateForColumn(2, new Delegate::SpinBox(this));
+   staggeTreeView->setItemDelegateForColumn(3, new Delegate::SpinBox(this));
    staggeTreeView->setRootIsDecorated(false);
 
    selectionModel = staggeTreeView->selectionModel();

@@ -9,7 +9,7 @@ PolyLine::Model::Model(QObject* parent)
    : QStandardItemModel(parent)
    , Data::Core()
 {
-   setHorizontalHeaderLabels({"type", "start position", "end height", "note"});
+   setHorizontalHeaderLabels({"type", "start position", "start height", "end height"});
 }
 
 PolyLine::Model::Items PolyLine::Model::create(const Data::Identifier& identifier)
@@ -29,19 +29,19 @@ PolyLine::Model::Items PolyLine::Model::create(const Data::Identifier& identifie
       items.posItem->setData(QVariant::fromValue(Data::Target::StageStartPosition), Data::Role::Target);
    }
 
+   items.startHeigthItem = new QStandardItem();
+   {
+      items.startHeigthItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
+      items.startHeigthItem->setData(QVariant::fromValue(Data::Target::StageStartHeight), Data::Role::Target);
+   }
+
    items.endHeightItem = new QStandardItem();
    {
       items.endHeightItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
       items.endHeightItem->setData(QVariant::fromValue(Data::Target::StageEndHeight), Data::Role::Target);
    }
 
-   items.noteItem = new QStandardItem();
-   {
-      items.noteItem->setData(QVariant::fromValue(identifier), Data::Role::Identifier);
-      items.noteItem->setEditable(false);
-   }
-
-   invisibleRootItem()->appendRow({items.typeItem, items.posItem, items.endHeightItem, items.noteItem});
+   invisibleRootItem()->appendRow({items.typeItem, items.posItem, items.startHeigthItem, items.endHeightItem});
 
    return items;
 }
@@ -52,8 +52,8 @@ PolyLine::Model::Items PolyLine::Model::find(const int& row)
 
    items.typeItem = invisibleRootItem()->child(row, 0);
    items.posItem = invisibleRootItem()->child(row, 1);
-   items.endHeightItem = invisibleRootItem()->child(row, 2);
-   items.noteItem = invisibleRootItem()->child(row, 3);
+   items.startHeigthItem = invisibleRootItem()->child(row, 2);
+   items.endHeightItem = invisibleRootItem()->child(row, 3);
 
    return items;
 }
@@ -61,7 +61,7 @@ PolyLine::Model::Items PolyLine::Model::find(const int& row)
 void PolyLine::Model::rebuildModel(Data::Identifier identifier)
 {
    clear();
-   setHorizontalHeaderLabels({"type", "start position", "end height", "note"});
+   setHorizontalHeaderLabels({"type", "start position", "start height", "end height"});
 
    PolyRamp* polyRamp = getPolyRamp(identifier);
 
@@ -90,12 +90,12 @@ void PolyLine::Model::rebuildModel(Data::Identifier identifier)
          items.posItem->setText(QString::number(stage->startPosition));
       items.posItem->setEditable(!isAnchor);
 
+      items.startHeigthItem->setText(QString::number(stage->startHeight));
+      items.startHeigthItem->setEditable(!isEndAnchor);
+
       items.endHeightItem->setText(QString::number(stage->endHeight));
       items.endHeightItem->setEditable(!isEndAnchor);
 
-      const float voltage = static_cast<float>(stage->endHeight * 5.0) / 255.0;
-      const Note note = Note::fromVoltage(voltage);
-      items.noteItem->setText(QString::fromStdString(note.name));
 
       if (0 == index)
          continue;

@@ -17,8 +17,8 @@ namespace PolyLine
       {
          QStandardItem* typeItem;
          QStandardItem* posItem;
+         QStandardItem* startHeigthItem;
          QStandardItem* endHeightItem;
-         QStandardItem* noteItem;
       };
 
       friend class Widget;

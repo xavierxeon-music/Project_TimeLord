@@ -10,6 +10,7 @@ namespace PolyLine
    struct Stage
    {
       uint8_t startPosition;
+      uint8_t startHeight;
       uint8_t endHeight;
       Data::Type::Value type;
    };
