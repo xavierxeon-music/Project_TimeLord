@@ -58,7 +58,7 @@ private:
    Ramp::Visu* polyRampVisu;
    Ramp::Widget* polyRampWidget;
    Stage::Widget* stageWidget;
-   PolyLine::Widget* polyLineWidget;
+   //PolyLine::Widget* polyLineWidget;
 };
 
 #endif // MainWidgetH

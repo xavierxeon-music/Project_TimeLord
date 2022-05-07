@@ -13,6 +13,7 @@ include(../../../Base/DesktopApp.pri)
 HEADERS += \
    AbstractEdit.h \
    AbstractWidget.h \
+   Calculator.h \
    DataCore.h \
    DataCore.hpp \
    DelegateComboBox.h \
@@ -35,6 +36,7 @@ HEADERS += \
 SOURCES += \
    AbstractEdit.cpp \
    AbstractWidget.cpp \
+   Calculator.cpp \
    DataCore.cpp \
    DelegateComboBox.cpp \
    DelegateSpinBox.cpp \
@@ -53,7 +55,8 @@ SOURCES += \
    StageModel.cpp \
    StageWidget.cpp \
 
-FORMS +=
+FORMS += \
+   Calculator.ui
 
 RESOURCES += \
    Icons/Icons.qrc

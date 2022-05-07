@@ -21,7 +21,7 @@ MainWidget::MainWidget()
    , polyRampVisu(nullptr)
    , polyRampWidget(nullptr)
    , stageWidget(nullptr)
-   , polyLineWidget(nullptr)
+//, polyLineWidget(nullptr)
 {
    setWindowTitle("Time Lord UI[*]");
    setMinimumSize(1400, 900);
@@ -46,14 +46,14 @@ MainWidget::MainWidget()
    polyRampVisu = new Ramp::Visu(this);
    polyRampWidget = new Ramp::Widget(this);
    stageWidget = new Stage::Widget(this);
-   polyLineWidget = new PolyLine::Widget(this);
+   //polyLineWidget = new PolyLine::Widget(this);
 
    splitter = new QSplitter(Qt::Horizontal, this);
    splitter->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
    splitter->setObjectName("ModelSplitter");
    splitter->addWidget(polyRampWidget);
    splitter->addWidget(stageWidget);
-   splitter->addWidget(polyLineWidget);
+   //splitter->addWidget(polyLineWidget);
 
    QVBoxLayout* masterLayout = new QVBoxLayout(this);
    masterLayout->setContentsMargins(0, 0, 0, 0);
