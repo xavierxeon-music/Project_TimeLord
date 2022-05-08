@@ -35,10 +35,11 @@ namespace Data
 
    struct Identifier
    {
+      uint8_t bankIndex;
       uint8_t rampIndex;
       uint8_t stageIndex;
 
-      Identifier(const uint8_t& rampIndex = 0, const uint8_t& stageIndex = 255);
+      Identifier(const uint8_t& bankIndex = 0, const uint8_t& rampIndex = 0, const uint8_t& stageIndex = 255);
       bool hasStage() const;
    };
 
@@ -105,7 +106,7 @@ namespace Data
    private:
       static bool isModified;
       static bool lockGraphSize;
-      static RampDevice::VCV* device;
+      static RampDevice::VCV** device;
       static QList<Core*> instanceList;
    };
 

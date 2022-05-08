@@ -5,8 +5,9 @@
 
 // identifier
 
-Data::Identifier::Identifier(const uint8_t& rampIndex, const uint8_t& stageIndex)
-   : rampIndex(rampIndex)
+Data::Identifier::Identifier(const uint8_t& bankIndex, const uint8_t& rampIndex, const uint8_t& stageIndex)
+   : bankIndex(bankIndex)
+   , rampIndex(rampIndex)
    , stageIndex(stageIndex)
 {
 }
@@ -95,7 +96,7 @@ PolyRamp* Data::Core::getPolyRamp(const Identifier& identifier)
    if (!device)
       return nullptr;
 
-   return &(device->polyRamps[identifier.rampIndex]);
+   return &(device[identifier.bankIndex]->polyRamps[identifier.rampIndex]);
 }
 
 const PolyRamp* Data::Core::getPolyRamp(const Identifier& identifier) const
@@ -103,7 +104,7 @@ const PolyRamp* Data::Core::getPolyRamp(const Identifier& identifier) const
    if (!device)
       return nullptr;
 
-   return &(device->polyRamps[identifier.rampIndex]);
+   return &(device[identifier.bankIndex]->polyRamps[identifier.rampIndex]);
 }
 
 void Data::Core::setLockGraphSize(bool locked)
@@ -131,7 +132,9 @@ void Data::Core::createRampDevice(QObject* parent)
    if (device)
       return;
 
-   device = new RampDevice::VCV(parent);
+   device = new RampDevice::VCV*[16];
+   for (uint8_t bankIndex = 0; bankIndex < 16; bankIndex++)
+      device[bankIndex] = new RampDevice::VCV(parent);
 }
 
 void Data::Core::unsetModified()
