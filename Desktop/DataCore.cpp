@@ -60,7 +60,7 @@ QIcon Data::Type::getIcon(const Value& type)
 const QString Data::Core::keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 bool Data::Core::isModified = false;
 bool Data::Core::lockGraphSize = true;
-RampDevice::VCV* Data::Core::device = nullptr;
+RampDevice::VCV** Data::Core::device = nullptr;
 QList<Data::Core*> Data::Core::instanceList = QList<Data::Core*>();
 
 Data::Core::Core()
