@@ -3,6 +3,8 @@
 
 #include <QStandardItemModel>
 
+#include <Music/Tempo.h>
+
 namespace Model
 {
    class Division : public QStandardItemModel
@@ -13,5 +15,7 @@ namespace Model
    };
 
 } // namespace Model
+
+Q_DECLARE_METATYPE(Tempo::Division);
 
 #endif // NOT ModelDivisionH

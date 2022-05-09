@@ -5,7 +5,6 @@
 #include <QTreeView>
 #include <QVBoxLayout>
 
-#include "Calculator.h"
 #include "DelegateComboBox.h"
 #include "DelegateSpinBox.h"
 #include "MainWidget.h"
@@ -22,9 +21,6 @@ Ramp::Widget::Widget(MainWidget* mainWidget)
    , identifier()
 {
    setMinimumWidth(150);
-
-   toolBar->addAction(QIcon(":/Calculator.svg"), "Open Caclulator", this, &Widget::slotOpenCalcluator);
-   toolBar->addSeparator();
 
    toolBar->addAction(QIcon(":/Trim.svg"), "Trim Selected Graph", this, &Widget::slotTrimCurrentGraph);
    toolBar->addSeparator();
@@ -48,7 +44,7 @@ Ramp::Widget::Widget(MainWidget* mainWidget)
 
    addPayload(editStack);
 
-   polyRampModel = new Ramp::Model(this);
+   polyRampModel = new Model(this);
    polyRampModel->rebuildModel();
 
    QTreeView* polyRampTreeView = new QTreeView(this);
@@ -64,12 +60,6 @@ Ramp::Widget::Widget(MainWidget* mainWidget)
 void Ramp::Widget::hideEditStack()
 {
    editStack->hide();
-}
-
-void Ramp::Widget::slotOpenCalcluator()
-{
-   Calculator calculator(this);
-   calculator.exec();
 }
 
 void Ramp::Widget::slotTrimCurrentGraph()

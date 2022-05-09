@@ -7,7 +7,7 @@
 
 #include <Midi/MidiPhysicalOutput.h>
 
-#include "Bank.h"
+#include "BankData.h"
 
 namespace Data
 {
@@ -42,7 +42,7 @@ private slots:
    void slotRemoveBank();
 
 private:
-   QList<Bank> banks;
+   std::vector<Bank::Data> banks;
    Midi::Physical::Output output;
 
    ServerActions actions;

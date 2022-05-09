@@ -5,10 +5,7 @@
 
 class MainWidget;
 
-namespace RampDevice
-{
-   class VCV;
-};
+class Target;
 
 namespace Data
 {
@@ -106,11 +103,14 @@ namespace Data
    private:
       static bool isModified;
       static bool lockGraphSize;
-      static RampDevice::VCV** device;
+      static ::Target* target;
       static QList<Core*> instanceList;
    };
 
 } // namespace Data
+
+Q_DECLARE_METATYPE(Data::Identifier);
+Q_DECLARE_METATYPE(Data::Target::Value);
 
 #ifndef DataCoreHPP
 #include "DataCore.hpp"

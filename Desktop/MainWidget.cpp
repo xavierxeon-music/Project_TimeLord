@@ -43,7 +43,7 @@ MainWidget::MainWidget()
    actions.saveNewFile = new QAction(QIcon(":/SaveNewFile.svg"), "Save To New File", this);
    connect(actions.saveNewFile, &QAction::triggered, this, &MainWidget::slotSaveNewFile);
 
-   polyRampVisu = new Ramp::Visu(this);
+   polyRampVisu = new Visu::Widget(this);
    polyRampWidget = new Ramp::Widget(this);
    stageWidget = new Stage::Widget(this);
    //polyLineWidget = new PolyLine::Widget(this);
@@ -76,9 +76,9 @@ const MainWidget::FileActions& MainWidget::getFileActions() const
    return actions;
 }
 
-const RampDevice::VCV::ServerActions& MainWidget::getServerActions() const
+const Target::ServerActions& MainWidget::getServerActions() const
 {
-   return device->getServerActions();
+   return target->getServerActions();
 }
 
 void MainWidget::slotLoadFromFile()
@@ -128,7 +128,7 @@ void MainWidget::slotSaveNewFile()
 
 void MainWidget::slotCheckDataModified()
 {
-   if (device->isUnsynced() || isModified)
+   if (isModified)
       setWindowModified(true);
    else
       setWindowModified(false);
@@ -154,13 +154,11 @@ void MainWidget::loadLastFile()
 void MainWidget::loadInternal(const QString& fileName)
 {
    FileSettings settings;
-   const QByteArray content = settings.bytes("binary");
 
-   RootStorage storage(device);
-   storage.loadFromData(content);
-   device->updateBankIcon();
+   //TODO
 
    updateWindowTitle(fileName);
+   unsetModified();
 
    Data::Identifier dummy;
    callOnAllInstances(&Core::rebuildModel, dummy);
@@ -171,16 +169,11 @@ void MainWidget::loadInternal(const QString& fileName)
 void MainWidget::saveInternal(const QString& fileName)
 {
    callOnAllInstances(&Core::saveSettings);
-   unsetModified();
 
-   RootStorage storage(device);
-   const QByteArray content = storage.saveToData();
-   device->setSynced();
-
-   FileSettings settings;
-   settings.write("binary", content);
+   // TODO
 
    updateWindowTitle(fileName);
+   unsetModified();
 
    statusBar->showMessage("file saved", 2000);
 }

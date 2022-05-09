@@ -13,7 +13,7 @@ include(../../../Base/DesktopApp.pri)
 HEADERS += \
    AbstractEdit.h \
    AbstractWidget.h \
-   Bank.h \
+   BankData.h \
    BankModel.h \
    BankWidget.h \
    DataCore.h \
@@ -35,7 +35,7 @@ HEADERS += \
 SOURCES += \
    AbstractEdit.cpp \
    AbstractWidget.cpp \
-   Bank.cpp \
+   BankData.cpp \
    BankModel.cpp \
    BankWidget.cpp \
    DataCore.cpp \

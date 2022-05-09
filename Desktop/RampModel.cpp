@@ -3,6 +3,7 @@
 #include <FileSettings.h>
 
 #include "MainWidget.h"
+#include "ModelDivision.h"
 
 Ramp::Model::Model(QObject* parent)
    : QStandardItemModel(parent)
@@ -45,6 +46,8 @@ void Ramp::Model::rebuildModel(Data::Identifier)
    {
       Data::Identifier identifier(rampIndex);
       PolyRamp* polyRamp = getPolyRamp(identifier);
+      if (!polyRamp)
+         continue;
 
       QStandardItem* nameItem = new QStandardItem();
       {

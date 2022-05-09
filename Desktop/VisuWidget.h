@@ -1,17 +1,17 @@
-#ifndef RampVisuH
-#define RampVisuH
+#ifndef VisuWidgetH
+#define VisuWidgetH
 
 #include "AbstractWidget.h"
 
 #include <QGraphicsView>
 
-namespace Ramp
+namespace Visu
 {
-   class Visu : public Abstract::Widget
+   class Widget : public Abstract::Widget
    {
       Q_OBJECT
    public:
-      Visu(MainWidget* mainWidget);
+      Widget(MainWidget* mainWidget);
 
    private:
       struct Stage
@@ -37,6 +37,6 @@ namespace Ramp
       Data::Identifier identifier;
       uint8_t zoomLevel;
    };
-} // namespace Ramp
+} // namespace Visu
 
-#endif // PolyRampVisuH
+#endif // VisuWidgetH

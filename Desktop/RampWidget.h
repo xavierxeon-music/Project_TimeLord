@@ -23,7 +23,6 @@ namespace Ramp
       void hideEditStack();
 
    private slots:
-      void slotOpenCalcluator();
       void slotTrimCurrentGraph();
       void slotSetLengthAllGraphs();
       void slotSetDivisionAllGraphs();

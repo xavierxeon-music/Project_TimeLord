@@ -1,4 +1,4 @@
-#include "RampDeviceVCV.h"
+#include "Target.h"
 
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -10,42 +10,29 @@
 
 static constexpr uint8_t remoteChannel = Midi::Device::VCVRack;
 
-RampDevice::VCV::VCV(QObject* parent)
+Target::Target(QObject* parent)
    : QObject(parent)
-   , Remember::Root()
-   , polyRamps(this)
+   , banks{}
    , output(this, "TimeLord")
-   , bankIndex(this, 0)
-   , actions{nullptr, nullptr, nullptr}
-   , iconBuffer()
+   , actions{nullptr, nullptr, nullptr, nullptr}
 {
-   for (uint8_t index = 0; index < 10; index++)
-      iconBuffer[index] = QIcon(":/Bank" + QString::number(index) + ".svg");
 
    actions.connectToServer = new QAction(QIcon(":/Port.svg"), "Connect To Server", this);
-   connect(actions.connectToServer, &QAction::triggered, this, &RampDevice::VCV::slotConnectToServer);
+   connect(actions.connectToServer, &QAction::triggered, this, &Target::slotConnectToServer);
    actions.connectToServer->setCheckable(true);
 
-   actions.bankUp = new QAction(iconBuffer[0], "Bank Up", this);
-   connect(actions.bankUp, &QAction::triggered, this, &RampDevice::VCV::slotBankUp);
-
    actions.pushToServer = new QAction(QIcon(":/SaveToDaisy.svg"), "Push To Server", this);
-   connect(actions.pushToServer, &QAction::triggered, this, &RampDevice::VCV::slotPushToServer);
+   connect(actions.pushToServer, &QAction::triggered, this, &Target::slotPushToServer);
 
    slotConnectToServer(true);
 }
 
-const RampDevice::VCV::ServerActions& RampDevice::VCV::getServerActions() const
+const Target::ServerActions& Target::getServerActions() const
 {
    return actions;
 }
 
-void RampDevice::VCV::updateBankIcon()
-{
-   actions.bankUp->setIcon(iconBuffer[bankIndex]);
-}
-
-void RampDevice::VCV::slotConnectToServer(bool connect)
+void Target::slotConnectToServer(bool connect)
 {
    if (connect)
       output.open();
@@ -55,21 +42,12 @@ void RampDevice::VCV::slotConnectToServer(bool connect)
    actions.connectToServer->setChecked(output.isOpen());
 }
 
-void RampDevice::VCV::slotBankUp()
-{
-   bankIndex = bankIndex + 1;
-   if (10 <= bankIndex)
-      bankIndex = 0;
-
-   setUnsynced();
-   updateBankIcon();
-}
-
-void RampDevice::VCV::slotPushToServer()
+void Target::slotPushToServer()
 {
    if (!output.isOpen())
       return;
 
+   /*
    const QJsonObject ramps = compileRamps();
    qDebug() << ramps;
 
@@ -87,33 +65,13 @@ void RampDevice::VCV::slotPushToServer()
       output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberBlock, byte);
 
    output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberApply, bankIndex);
+   */
 }
 
-QJsonObject RampDevice::VCV::compileRamps() const
+void Target::slotAddBank()
 {
-   QJsonObject ramps;
-   for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
-   {
-      const PolyRamp* polyRamp = &polyRamps[rampIndex];
+}
 
-      QJsonArray stageArray;
-      for (uint8_t stageIndex = 0; stageIndex < polyRamp->getStageCount(); stageIndex++)
-      {
-         QJsonObject stageObject;
-         stageObject["length"] = polyRamp->getStageLength(stageIndex);
-         stageObject["startHeight"] = polyRamp->getStageStartHeight(stageIndex);
-         stageObject["endHeight"] = polyRamp->getStageEndHeight(stageIndex);
-         stageArray.append(stageObject);
-      }
-
-      QJsonObject rampObject;
-      rampObject["stages"] = stageArray;
-      rampObject["stepSize"] = polyRamp->getStepSize();
-      rampObject["length"] = static_cast<int64_t>(polyRamp->getLength());
-      rampObject["loop"] = polyRamp->isLooping();
-
-      const QString key = Data::Core::keys.at(rampIndex);
-      ramps[key] = rampObject;
-   }
-   return ramps;
+void Target::slotRemoveBank()
+{
 }

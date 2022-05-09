@@ -1,7 +1,5 @@
 #include "ModelDivision.h"
 
-#include <Music/Tempo.h>
-
 #include "DataCore.h"
 
 Model::Division::Division(QObject* parent)

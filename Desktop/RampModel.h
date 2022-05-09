@@ -10,7 +10,6 @@ namespace Ramp
    {
       Q_OBJECT
    public:
-   public:
       Model(QObject* parent);
 
    public:

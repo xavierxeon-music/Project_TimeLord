@@ -10,12 +10,11 @@
 #include <Blocks/PolyRamp.h>
 #include <RootStorage.h>
 
-#include "PolyLineWidget.h"
-#include "RampVisu.h"
 #include "RampWidget.h"
 #include "StageWidget.h"
+#include "VisuWidget.h"
 
-#include "RampDeviceVCV.h"
+#include "Target.h"
 
 class MainWidget : public QWidget, public Data::Core
 {
@@ -34,7 +33,7 @@ public:
 
 public:
    const FileActions& getFileActions() const;
-   const RampDevice::VCV::ServerActions& getServerActions() const;
+   const Target::ServerActions& getServerActions() const;
 
 private slots:
    void slotLoadFromFile();
@@ -55,10 +54,9 @@ private:
 
    FileActions actions;
 
-   Ramp::Visu* polyRampVisu;
+   Visu::Widget* polyRampVisu;
    Ramp::Widget* polyRampWidget;
    Stage::Widget* stageWidget;
-   //PolyLine::Widget* polyLineWidget;
 };
 
 #endif // MainWidgetH

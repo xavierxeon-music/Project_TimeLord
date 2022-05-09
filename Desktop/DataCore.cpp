@@ -1,7 +1,7 @@
 #include "DataCore.h"
 
 #include "MainWidget.h"
-#include "RampDeviceVCV.h"
+#include "Target.h"
 
 // identifier
 
@@ -60,7 +60,7 @@ QIcon Data::Type::getIcon(const Value& type)
 const QString Data::Core::keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 bool Data::Core::isModified = false;
 bool Data::Core::lockGraphSize = true;
-RampDevice::VCV** Data::Core::device = nullptr;
+Target* Data::Core::target = nullptr;
 QList<Data::Core*> Data::Core::instanceList = QList<Data::Core*>();
 
 Data::Core::Core()
@@ -93,18 +93,26 @@ void Data::Core::saveSettings()
 
 PolyRamp* Data::Core::getPolyRamp(const Identifier& identifier)
 {
-   if (!device)
+   if (!target)
       return nullptr;
 
-   return &(device[identifier.bankIndex]->polyRamps[identifier.rampIndex]);
+   if (identifier.bankIndex >= target->banks.size())
+      return nullptr;
+
+   Bank::Data& bank = target->banks[identifier.bankIndex];
+   return &(bank.polyRamps[identifier.rampIndex]);
 }
 
 const PolyRamp* Data::Core::getPolyRamp(const Identifier& identifier) const
 {
-   if (!device)
+   if (!target)
       return nullptr;
 
-   return &(device[identifier.bankIndex]->polyRamps[identifier.rampIndex]);
+   if (identifier.bankIndex >= target->banks.size())
+      return nullptr;
+
+   const Bank::Data& bank = target->banks.at(identifier.bankIndex);
+   return &(bank.polyRamps[identifier.rampIndex]);
 }
 
 void Data::Core::setLockGraphSize(bool locked)
@@ -129,12 +137,10 @@ void Data::Core::setModified()
 
 void Data::Core::createRampDevice(QObject* parent)
 {
-   if (device)
+   if (target)
       return;
 
-   device = new RampDevice::VCV*[16];
-   for (uint8_t bankIndex = 0; bankIndex < 16; bankIndex++)
-      device[bankIndex] = new RampDevice::VCV(parent);
+   target = new ::Target(parent);
 }
 
 void Data::Core::unsetModified()

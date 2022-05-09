@@ -1,4 +1,4 @@
-#include "RampVisu.h"
+#include "VisuWidget.h"
 
 #include <QAction>
 #include <QGraphicsLineItem>
@@ -7,9 +7,9 @@
 #include <QTimer>
 
 #include "MainWidget.h"
-#include "RampDeviceVCV.h"
+#include "Target.h"
 
-Ramp::Visu::Visu(MainWidget* mainWidget)
+Visu::Widget::Widget(MainWidget* mainWidget)
    : Abstract::Widget(mainWidget)
    , graphicsView(nullptr)
    , stageMap()
@@ -26,14 +26,13 @@ Ramp::Visu::Visu(MainWidget* mainWidget)
 
    toolBar->addSeparator();
 
-   const RampDevice::VCV::ServerActions& serverActions = mainWidget->getServerActions();
+   const Target::ServerActions& serverActions = mainWidget->getServerActions();
    toolBar->addAction(serverActions.connectToServer);
-   toolBar->addAction(serverActions.bankUp);
    toolBar->addAction(serverActions.pushToServer);
 
    toolBar->addSeparator();
-   toolBar->addAction(QIcon(":/ZoomIn.svg"), "Zoom In", this, &Visu::slotZoomIn);
-   toolBar->addAction(QIcon(":/ZoomOut.svg"), "Zoom Out", this, &Visu::slotZoomOut);
+   toolBar->addAction(QIcon(":/ZoomIn.svg"), "Zoom In", this, &Visu::Widget::slotZoomIn);
+   toolBar->addAction(QIcon(":/ZoomOut.svg"), "Zoom Out", this, &Visu::Widget::slotZoomOut);
 
    QGraphicsScene* scene = new QGraphicsScene(this);
    scene->setSceneRect(0, 0, 150, 150);
@@ -41,14 +40,14 @@ Ramp::Visu::Visu(MainWidget* mainWidget)
    addPayload(graphicsView);
 
    QTimer* updateTimer = new QTimer(this);
-   connect(updateTimer, &QTimer::timeout, this, &Visu::slotUpdate);
+   connect(updateTimer, &QTimer::timeout, this, &Visu::Widget::slotUpdate);
    updateTimer->start(500);
 
    QPen whitePen(QColor(255, 255, 255));
    graphicsView->scene()->addLine(0, 0, 0, 150, whitePen); // to force height even withou graph data
 }
 
-void Ramp::Visu::slotUpdate()
+void Visu::Widget::slotUpdate()
 {
    static const QPen blackPen(QColor(0, 0, 0), 2);
    static const QPen grayPen(QColor(200, 200, 200));
@@ -115,7 +114,7 @@ void Ramp::Visu::slotUpdate()
    graphicsView->scene()->setSceneRect(contentRect);
 }
 
-void Ramp::Visu::slotZoomIn()
+void Visu::Widget::slotZoomIn()
 {
    if (255 == zoomLevel)
       return;
@@ -124,7 +123,7 @@ void Ramp::Visu::slotZoomIn()
    slotUpdate();
 }
 
-void Ramp::Visu::slotZoomOut()
+void Visu::Widget::slotZoomOut()
 {
    if (1 == zoomLevel)
       return;
@@ -133,7 +132,7 @@ void Ramp::Visu::slotZoomOut()
    slotUpdate();
 }
 
-void Ramp::Visu::polyRampSelected(Data::Identifier newIdentifier)
+void Visu::Widget::polyRampSelected(Data::Identifier newIdentifier)
 {
    identifier = newIdentifier;
 
