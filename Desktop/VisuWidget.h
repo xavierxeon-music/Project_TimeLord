@@ -28,7 +28,7 @@ namespace Visu
       void slotZoomOut();
 
    private:
-      void polyRampSelected(Core::Identifier newIdentifier) override;
+      void selectionChanged(Core::Identifier newIdentifier) override;
 
    private:
       QGraphicsView* graphicsView;

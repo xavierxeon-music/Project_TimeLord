@@ -7,6 +7,10 @@
 #include <QToolBar>
 #include <QVBoxLayout>
 
+class QItemSelectionModel;
+class QStandardItemModel;
+class QTreeView;
+
 class MainWidget;
 
 namespace Abstract
@@ -18,13 +22,22 @@ namespace Abstract
       Widget(MainWidget* mainWidget);
 
    protected:
+      QTreeView* addTreeView(QStandardItemModel* model);
       void addPayload(QWidget* widget);
+      void setSelection(const uint& row);
 
    protected:
       QToolBar* toolBar;
+      QTreeView* treeView;
+      QItemSelectionModel* selectionModel;
+
+   private slots:
+      void slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous);
 
    private:
+      QStandardItemModel* model;
       QVBoxLayout* masterLayout;
+      Core::Identifier selectionIdentifier;
    };
 } // namespace Abstract
 

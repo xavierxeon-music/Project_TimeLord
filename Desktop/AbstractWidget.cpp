@@ -1,7 +1,8 @@
 #include "AbstractWidget.h"
 
-#include <QFrame>
-#include <QLabel>
+#include <QItemSelectionModel>
+#include <QStandardItemModel>
+#include <QTreeView>
 
 #include "MainWidget.h"
 
@@ -9,7 +10,11 @@ Abstract::Widget::Widget(MainWidget* mainWidget)
    : QWidget(mainWidget)
    , Core::Interface()
    , toolBar(nullptr)
+   , treeView(nullptr)
+   , selectionModel(nullptr)
+   , model()
    , masterLayout(nullptr)
+   , selectionIdentifier()
 {
    toolBar = new QToolBar(this);
    toolBar->setIconSize(QSize(24, 24));
@@ -20,7 +25,43 @@ Abstract::Widget::Widget(MainWidget* mainWidget)
    masterLayout->addWidget(toolBar);
 }
 
+QTreeView* Abstract::Widget::addTreeView(QStandardItemModel* newModel)
+{
+   model = newModel;
+
+   treeView = new QTreeView(this);
+   treeView->setModel(model);
+   treeView->setRootIsDecorated(false);
+
+   selectionModel = treeView->selectionModel();
+   connect(selectionModel, &QItemSelectionModel::currentChanged, this, &Widget::slotCurrentSelectionChanged);
+
+   masterLayout->addWidget(treeView);
+
+   return treeView;
+}
+
 void Abstract::Widget::addPayload(QWidget* widget)
 {
    masterLayout->addWidget(widget);
+}
+
+void Abstract::Widget::setSelection(const uint& row)
+{
+   const QModelIndex modelIndexLeft = model->index(row, 0);
+   const QModelIndex modelIndexRight = model->index(row, model->columnCount() - 1);
+
+   selectionModel->select(QItemSelection(modelIndexLeft, modelIndexRight), QItemSelectionModel::SelectCurrent);
+
+   slotCurrentSelectionChanged(modelIndexLeft, QModelIndex());
+}
+
+void Abstract::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)
+{
+   Q_UNUSED(previous);
+
+   QStandardItem* item = model->itemFromIndex(current);
+   selectionIdentifier = item->data(Core::Role::Identifier).value<Core::Identifier>();
+
+   callOnAllInstances(&Interface::selectionChanged, selectionIdentifier);
 }

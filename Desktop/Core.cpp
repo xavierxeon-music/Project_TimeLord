@@ -74,7 +74,7 @@ void Core::Interface::modelHasChanged(Identifier identifier)
    // do nothing
 }
 
-void Core::Interface::polyRampSelected(Identifier identifier)
+void Core::Interface::selectionChanged(Identifier identifier)
 {
    Q_UNUSED(identifier)
    // do nothing

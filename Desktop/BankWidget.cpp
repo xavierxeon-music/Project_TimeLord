@@ -3,6 +3,7 @@
 #include <QTreeView>
 
 #include "BankModel.h"
+#include "DelegateSpinBox.h"
 #include "MainWidget.h"
 
 Bank::Widget::Widget(MainWidget* mainWidget)
@@ -18,23 +19,8 @@ Bank::Widget::Widget(MainWidget* mainWidget)
    bankModel = new Model(this);
    //bankModel->rebuildModel();
 
-   QTreeView* bankTreeView = new QTreeView(this);
-   bankTreeView->setModel(bankModel);
-   //polyRampTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
-   bankTreeView->setRootIsDecorated(false);
-   connect(bankTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &Widget::slotCurrentSelectionChanged);
-
-   addPayload(bankTreeView);
-}
-
-void Bank::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)
-{
-   Q_UNUSED(previous);
-
-   QStandardItem* item = bankModel->itemFromIndex(current);
-   identifier = item->data(Core::Role::Identifier).value<Core::Identifier>();
-
-   callOnAllInstances(&Interface::polyRampSelected, identifier);
+   QTreeView* bankTreeView = addTreeView(bankModel);
+   bankTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
 }
 
 void Bank::Widget::slotAddBank()

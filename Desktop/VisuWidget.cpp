@@ -132,7 +132,7 @@ void Visu::Widget::slotZoomOut()
    slotUpdate();
 }
 
-void Visu::Widget::polyRampSelected(Core::Identifier newIdentifier)
+void Visu::Widget::selectionChanged(Core::Identifier newIdentifier)
 {
    identifier = newIdentifier;
 

@@ -79,7 +79,7 @@ namespace Core
 
    public:
       virtual void modelHasChanged(Identifier identifier);
-      virtual void polyRampSelected(Identifier identifier);
+      virtual void selectionChanged(Identifier identifier);
       virtual void rebuildModel(Identifier identifier);
       virtual void saveSettings();
 
@@ -104,7 +104,6 @@ namespace Core
       bool getLockGraphSize() const;
 
       void setModified();
-
 
    private:
       friend class ::MainWidget;

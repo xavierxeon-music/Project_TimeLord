@@ -21,16 +21,12 @@ namespace Stage
       void slotMoveBack();
       void slotMoveForward();
       void slotLockGraphSize();
-      void slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous);
 
    private:
-      void setSelection(const uint& stageIndex);
-      void polyRampSelected(Core::Identifier newIdentifier) override;
+      void selectionChanged(Core::Identifier newIdentifier) override;
 
    private:
       Model* stageModel;
-      QItemSelectionModel* selectionModel;
-
       Core::Identifier identifier;
       uint8_t selectedStageIndex;
    };
