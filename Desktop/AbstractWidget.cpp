@@ -61,7 +61,7 @@ void Abstract::Widget::slotCurrentSelectionChanged(const QModelIndex& current, c
    Q_UNUSED(previous);
 
    QStandardItem* item = model->itemFromIndex(current);
-   if (item)
+   if (!item)
       return;
 
    selectionIdentifier = item->data(Core::Role::Identifier).value<Core::Identifier>();
