@@ -35,7 +35,7 @@ void Ramp::Model::modelHasChanged(Core::Identifier identifier)
    }
 }
 
-void Ramp::Model::rebuildModel(Core::Identifier)
+void Ramp::Model::rebuildModel(Core::Identifier identifier)
 {
    clear();
    setHorizontalHeaderLabels({"name", "length", "division", "loop", "count"});
@@ -44,7 +44,7 @@ void Ramp::Model::rebuildModel(Core::Identifier)
 
    for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
    {
-      Core::Identifier identifier(rampIndex);
+      identifier.rampIndex = rampIndex;
       PolyRamp* polyRamp = getPolyRamp(identifier);
       if (!polyRamp)
          continue;

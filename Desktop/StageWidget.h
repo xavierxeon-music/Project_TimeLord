@@ -23,12 +23,10 @@ namespace Stage
       void slotLockGraphSize();
 
    private:
-      void selectionChanged(Core::Identifier newIdentifier) override;
+      void selectionChanged(Core::Identifier identifier) override;
 
    private:
       Model* stageModel;
-      Core::Identifier identifier;
-      uint8_t selectedStageIndex;
    };
 } // namespace Stage
 

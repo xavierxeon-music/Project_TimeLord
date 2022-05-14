@@ -10,8 +10,6 @@
 Stage::Widget::Widget(MainWidget* mainWidget)
    : Abstract::Widget(mainWidget)
    , stageModel(nullptr)
-   , identifier()
-   , selectedStageIndex(0)
 {
    QAction* lockAction = toolBar->addAction(QIcon(":/Lock.svg"), "Lock Graph Size", this, &Widget::slotLockGraphSize);
    lockAction->setCheckable(true);
@@ -34,55 +32,55 @@ Stage::Widget::Widget(MainWidget* mainWidget)
 
 void Stage::Widget::slotInsertPoint()
 {
-   PolyRamp* polyRamp = getPolyRamp(identifier);
+   PolyRamp* polyRamp = getPolyRamp(selectionIdentifier);
    if (!polyRamp)
       return;
 
-   polyRamp->addStage(selectedStageIndex);
+   polyRamp->addStage(selectionIdentifier.stageIndex);
 
-   stageModel->rebuildModel(identifier);
-   setSelection(selectedStageIndex);
+   stageModel->rebuildModel(selectionIdentifier);
+   setSelection(selectionIdentifier.stageIndex);
 }
 
 void Stage::Widget::slotRemovePoint()
 {
-   PolyRamp* polyRamp = getPolyRamp(identifier);
+   PolyRamp* polyRamp = getPolyRamp(selectionIdentifier);
    if (!polyRamp)
       return;
 
-   polyRamp->removeStage(selectedStageIndex);
+   polyRamp->removeStage(selectionIdentifier.stageIndex);
 
-   stageModel->rebuildModel(identifier);
+   stageModel->rebuildModel(selectionIdentifier);
 }
 
 void Stage::Widget::slotMoveBack()
 {
-   PolyRamp* polyRamp = getPolyRamp(identifier);
+   PolyRamp* polyRamp = getPolyRamp(selectionIdentifier);
    if (!polyRamp)
       return;
 
-   if (0 == selectedStageIndex)
+   if (0 == selectionIdentifier.stageIndex)
       return;
 
-   polyRamp->moveStage(selectedStageIndex, selectedStageIndex - 1);
+   polyRamp->moveStage(selectionIdentifier.stageIndex, selectionIdentifier.stageIndex - 1);
 
-   stageModel->rebuildModel(identifier);
-   setSelection(selectedStageIndex - 1);
+   stageModel->rebuildModel(selectionIdentifier);
+   setSelection(selectionIdentifier.stageIndex - 1);
 }
 
 void Stage::Widget::slotMoveForward()
 {
-   PolyRamp* polyRamp = getPolyRamp(identifier);
+   PolyRamp* polyRamp = getPolyRamp(selectionIdentifier);
    if (!polyRamp)
       return;
 
-   if (selectedStageIndex + 1 > polyRamp->getStageCount())
+   if (selectionIdentifier.stageIndex + 1 > polyRamp->getStageCount())
       return;
 
-   polyRamp->moveStage(selectedStageIndex, selectedStageIndex + 1);
+   polyRamp->moveStage(selectionIdentifier.stageIndex, selectionIdentifier.stageIndex + 1);
 
-   stageModel->rebuildModel(identifier);
-   setSelection(selectedStageIndex + 1);
+   stageModel->rebuildModel(selectionIdentifier);
+   setSelection(selectionIdentifier.stageIndex + 1);
 }
 
 void Stage::Widget::slotLockGraphSize()
@@ -90,10 +88,10 @@ void Stage::Widget::slotLockGraphSize()
    toggleLockGraphSize();
 }
 
-void Stage::Widget::selectionChanged(Core::Identifier newIdentifier)
+void Stage::Widget::selectionChanged(Core::Identifier identifier)
 {
-   identifier = newIdentifier;
+   if (identifier.bankIndex != selectionIdentifier.bankIndex || identifier.rampIndex != selectionIdentifier.rampIndex)
+      stageModel->rebuildModel(identifier);
 
-   stageModel->rebuildModel(identifier);
-   selectedStageIndex = 0;
+   selectionIdentifier = identifier;
 }

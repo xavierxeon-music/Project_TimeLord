@@ -12,9 +12,9 @@ Abstract::Widget::Widget(MainWidget* mainWidget)
    , toolBar(nullptr)
    , treeView(nullptr)
    , selectionModel(nullptr)
+   , selectionIdentifier()
    , model()
    , masterLayout(nullptr)
-   , selectionIdentifier()
 {
    toolBar = new QToolBar(this);
    toolBar->setIconSize(QSize(24, 24));
@@ -41,7 +41,7 @@ QTreeView* Abstract::Widget::addTreeView(QStandardItemModel* newModel)
    return treeView;
 }
 
-void Abstract::Widget::addPayload(QWidget* widget)
+void Abstract::Widget::addWidget(QWidget* widget)
 {
    masterLayout->addWidget(widget);
 }
@@ -61,6 +61,9 @@ void Abstract::Widget::slotCurrentSelectionChanged(const QModelIndex& current, c
    Q_UNUSED(previous);
 
    QStandardItem* item = model->itemFromIndex(current);
+   if (item)
+      return;
+
    selectionIdentifier = item->data(Core::Role::Identifier).value<Core::Identifier>();
 
    callOnAllInstances(&Interface::selectionChanged, selectionIdentifier);

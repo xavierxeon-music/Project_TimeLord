@@ -27,7 +27,9 @@ namespace Ramp
       void slotSetLengthAllGraphs();
       void slotSetDivisionAllGraphs();
       void slotSetLoopAllGraphs();
-      void slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous);
+
+   private:
+      void selectionChanged(Core::Identifier identifier) override;
 
    private:
       Model* rampModel;

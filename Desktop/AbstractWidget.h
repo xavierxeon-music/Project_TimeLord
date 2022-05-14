@@ -23,13 +23,14 @@ namespace Abstract
 
    protected:
       QTreeView* addTreeView(QStandardItemModel* model);
-      void addPayload(QWidget* widget);
+      void addWidget(QWidget* widget);
       void setSelection(const uint& row);
 
    protected:
       QToolBar* toolBar;
       QTreeView* treeView;
       QItemSelectionModel* selectionModel;
+      Core::Identifier selectionIdentifier;
 
    private slots:
       void slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous);
@@ -37,7 +38,6 @@ namespace Abstract
    private:
       QStandardItemModel* model;
       QVBoxLayout* masterLayout;
-      Core::Identifier selectionIdentifier;
    };
 } // namespace Abstract
 

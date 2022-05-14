@@ -37,7 +37,7 @@ Visu::Widget::Widget(MainWidget* mainWidget)
    QGraphicsScene* scene = new QGraphicsScene(this);
    scene->setSceneRect(0, 0, 150, 150);
    graphicsView = new QGraphicsView(scene, this);
-   addPayload(graphicsView);
+   addWidget(graphicsView);
 
    QTimer* updateTimer = new QTimer(this);
    connect(updateTimer, &QTimer::timeout, this, &Visu::Widget::slotUpdate);

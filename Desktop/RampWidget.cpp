@@ -42,19 +42,13 @@ Ramp::Widget::Widget(MainWidget* mainWidget)
    loopEdit = new Edit::Loop(this);
    editStack->addWidget(loopEdit);
 
-   addPayload(editStack);
+   addWidget(editStack);
 
    rampModel = new Model(this);
-   rampModel->rebuildModel();
 
-   QTreeView* rampTreeView = new QTreeView(this);
-   rampTreeView->setModel(rampModel);
+   QTreeView* rampTreeView = addTreeView(rampModel);
    rampTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
    rampTreeView->setItemDelegateForColumn(2, new Delegate::ComboBox(this, new ::Model::Division(this)));
-   rampTreeView->setRootIsDecorated(false);
-   connect(rampTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &Widget::slotCurrentSelectionChanged);
-
-   addPayload(rampTreeView);
 }
 
 void Ramp::Widget::hideEditStack()
@@ -91,12 +85,10 @@ void Ramp::Widget::slotSetLoopAllGraphs()
    editStack->setCurrentWidget(loopEdit);
 }
 
-void Ramp::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous)
+void Ramp::Widget::selectionChanged(Core::Identifier identifier)
 {
-   Q_UNUSED(previous);
+   if (identifier.bankIndex != selectionIdentifier.bankIndex)
+      rampModel->rebuildModel(identifier);
 
-   QStandardItem* item = rampModel->itemFromIndex(current);
-   identifier = item->data(Core::Role::Identifier).value<Core::Identifier>();
-
-   callOnAllInstances(&Interface::selectionChanged, identifier);
+   selectionIdentifier = identifier;
 }
