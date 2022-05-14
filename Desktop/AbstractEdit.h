@@ -1,7 +1,7 @@
 #ifndef EditAbstractH
 #define EditAbstractH
 
-#include "DataCore.h"
+#include "Core.h"
 #include <QToolBar>
 
 #include <QHBoxLayout>
@@ -13,7 +13,7 @@ namespace Ramp
 
 namespace Abstract
 {
-   class Edit : public QToolBar, public Data::Core
+   class Edit : public QToolBar, public Core::Interface
    {
       Q_OBJECT
    public:

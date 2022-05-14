@@ -30,13 +30,13 @@ namespace Ramp
       void slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous);
 
    private:
-      Model* polyRampModel;
+      Model* rampModel;
       QStackedWidget* editStack;
       Edit::Length* lengthEdit;
       Edit::Division* divisionEdit;
       Edit::Loop* loopEdit;
 
-      Data::Identifier identifier;
+      Core::Identifier identifier;
    };
 } // namespace Ramp
 

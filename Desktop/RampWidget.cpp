@@ -13,7 +13,7 @@
 
 Ramp::Widget::Widget(MainWidget* mainWidget)
    : Abstract::Widget(mainWidget)
-   , polyRampModel(nullptr)
+   , rampModel(nullptr)
    , editStack(nullptr)
    , lengthEdit(nullptr)
    , divisionEdit(nullptr)
@@ -44,17 +44,17 @@ Ramp::Widget::Widget(MainWidget* mainWidget)
 
    addPayload(editStack);
 
-   polyRampModel = new Model(this);
-   polyRampModel->rebuildModel();
+   rampModel = new Model(this);
+   rampModel->rebuildModel();
 
-   QTreeView* polyRampTreeView = new QTreeView(this);
-   polyRampTreeView->setModel(polyRampModel);
-   polyRampTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
-   polyRampTreeView->setItemDelegateForColumn(2, new Delegate::ComboBox(this, new ::Model::Division(this)));
-   polyRampTreeView->setRootIsDecorated(false);
-   connect(polyRampTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &Widget::slotCurrentSelectionChanged);
+   QTreeView* rampTreeView = new QTreeView(this);
+   rampTreeView->setModel(rampModel);
+   rampTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
+   rampTreeView->setItemDelegateForColumn(2, new Delegate::ComboBox(this, new ::Model::Division(this)));
+   rampTreeView->setRootIsDecorated(false);
+   connect(rampTreeView->selectionModel(), &QItemSelectionModel::currentChanged, this, &Widget::slotCurrentSelectionChanged);
 
-   addPayload(polyRampTreeView);
+   addPayload(rampTreeView);
 }
 
 void Ramp::Widget::hideEditStack()
@@ -70,7 +70,7 @@ void Ramp::Widget::slotTrimCurrentGraph()
 
    polyRamp->trimLength();
 
-   polyRampModel->modelHasChanged(identifier);
+   rampModel->modelHasChanged(identifier);
 }
 
 void Ramp::Widget::slotSetLengthAllGraphs()
@@ -95,8 +95,8 @@ void Ramp::Widget::slotCurrentSelectionChanged(const QModelIndex& current, const
 {
    Q_UNUSED(previous);
 
-   QStandardItem* item = polyRampModel->itemFromIndex(current);
-   identifier = item->data(Data::Role::Identifier).value<Data::Identifier>();
+   QStandardItem* item = rampModel->itemFromIndex(current);
+   identifier = item->data(Core::Role::Identifier).value<Core::Identifier>();
 
-   callOnAllInstances(&Core::polyRampSelected, identifier);
+   callOnAllInstances(&Interface::polyRampSelected, identifier);
 }

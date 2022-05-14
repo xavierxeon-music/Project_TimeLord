@@ -1,12 +1,12 @@
 #ifndef DataCoreHPP
 #define DataCoreHPP
 
-#include "DataCore.h"
+#include "Core.h"
 
 template <typename... Args>
-void Data::Core::callOnAllInstances(void (Core::*function)(Args...), Args... args)
+void Core::Interface::callOnAllInstances(void (Interface::*function)(Args...), Args... args)
 {
-   for (Core* instance : instanceList)
+   for (Interface* instance : instanceList)
    {
       if (this == instance)
          continue;

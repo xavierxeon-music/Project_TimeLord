@@ -1,15 +1,21 @@
-#include "BankData.h"
+#include "BankContent.h"
 
 #include <QJsonArray>
 
-#include "DataCore.h"
+#include "Core.h"
 
-Bank::Data::Data()
-   : polyRamps{}
+Bank::Content::Content()
+   : beatsPerMinute(120)
+   , polyRamps{}
 {
 }
 
-QJsonObject Bank::Data::write() const
+const uint8_t& Bank::Content::getBeatsPerMinute() const
+{
+   return beatsPerMinute;
+}
+
+QJsonObject Bank::Content::write() const
 {
    QJsonObject ramps;
    for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
@@ -32,12 +38,13 @@ QJsonObject Bank::Data::write() const
       rampObject["length"] = static_cast<qint64>(polyRamp->getLength());
       rampObject["loop"] = polyRamp->isLooping();
 
-      const QString key = ::Data::Core::keys.at(rampIndex);
+      const QString key = Core::Interface::keys.at(rampIndex);
       ramps[key] = rampObject;
    }
    return ramps;
 }
 
-void Bank::Data::read(const QJsonObject& data) const
+void Bank::Content::read(const QJsonObject& data) const
 {
+   Q_UNUSED(data)
 }

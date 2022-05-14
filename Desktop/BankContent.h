@@ -1,5 +1,5 @@
-#ifndef BankDataH
-#define BankDataH
+#ifndef BankContentH
+#define BankContentH
 
 #include <Remember.h>
 
@@ -7,28 +7,31 @@
 
 #include <Blocks/PolyRamp.h>
 
-namespace Data
+namespace Core
 {
-   class Core;
+   class Interface;
 }
 
 namespace Bank
 {
-   class Data
+   class Content
    {
    public:
-      Data();
+      Content();
 
    public:
+      const uint8_t& getBeatsPerMinute() const;
+
       QJsonObject write() const;
       void read(const QJsonObject& data) const;
 
    private:
-      friend class ::Data::Core;
+      friend class Core::Interface;
 
    private:
+      uint8_t beatsPerMinute;
       PolyRamp polyRamps[8];
    };
 } // namespace Bank
 
-#endif // NOT BankDataH
+#endif // NOT BankContentH

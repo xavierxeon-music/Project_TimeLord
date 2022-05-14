@@ -1,7 +1,7 @@
 #ifndef MainWidgetH
 #define MainWidgetH
 
-#include "DataCore.h"
+#include "Core.h"
 #include <QWidget>
 
 #include <QSplitter>
@@ -10,13 +10,14 @@
 #include <Blocks/PolyRamp.h>
 #include <RootStorage.h>
 
+#include "BankWidget.h"
 #include "RampWidget.h"
 #include "StageWidget.h"
 #include "VisuWidget.h"
 
 #include "Target.h"
 
-class MainWidget : public QWidget, public Data::Core
+class MainWidget : public QWidget, public Core::Interface
 {
    Q_OBJECT
 
@@ -54,8 +55,9 @@ private:
 
    FileActions actions;
 
-   Visu::Widget* polyRampVisu;
-   Ramp::Widget* polyRampWidget;
+   Visu::Widget* visuWidget;
+   Bank::Widget* bankWidget;
+   Ramp::Widget* rampWidget;
    Stage::Widget* stageWidget;
 };
 

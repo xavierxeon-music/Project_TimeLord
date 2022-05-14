@@ -13,11 +13,11 @@ include(../../../Base/DesktopApp.pri)
 HEADERS += \
    AbstractEdit.h \
    AbstractWidget.h \
-   BankData.h \
+   BankContent.h \
    BankModel.h \
    BankWidget.h \
-   DataCore.h \
-   DataCore.hpp \
+   Core.h \
+   Core.hpp \
    DelegateComboBox.h \
    DelegateSpinBox.h \
    EditDivision.h \
@@ -35,10 +35,10 @@ HEADERS += \
 SOURCES += \
    AbstractEdit.cpp \
    AbstractWidget.cpp \
-   BankData.cpp \
+   BankContent.cpp \
    BankModel.cpp \
    BankWidget.cpp \
-   DataCore.cpp \
+   Core.cpp \
    DelegateComboBox.cpp \
    DelegateSpinBox.cpp \
    EditDivision.cpp \

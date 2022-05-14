@@ -14,8 +14,15 @@ namespace Bank
    public:
       Widget(MainWidget* mainWidget);
 
+   private slots:
+      void slotAddBank();
+      void slotRemoveBank();
+      void slotCurrentSelectionChanged(const QModelIndex& current, const QModelIndex& previous);
+
    private:
       Model* bankModel;
+
+      Core::Identifier identifier;
    };
 } // namespace Bank
 

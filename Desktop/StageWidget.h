@@ -25,13 +25,13 @@ namespace Stage
 
    private:
       void setSelection(const uint& stageIndex);
-      void polyRampSelected(Data::Identifier newIdentifier) override;
+      void polyRampSelected(Core::Identifier newIdentifier) override;
 
    private:
       Model* stageModel;
       QItemSelectionModel* selectionModel;
 
-      Data::Identifier identifier;
+      Core::Identifier identifier;
       uint8_t selectedStageIndex;
    };
 } // namespace Stage

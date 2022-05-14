@@ -1,12 +1,12 @@
 #ifndef StageModelH
 #define StageModelH
 
-#include "DataCore.h"
+#include "Core.h"
 #include <QStandardItemModel>
 
 namespace Stage
 {
-   class Model : public QStandardItemModel, public Data::Core
+   class Model : public QStandardItemModel, public Core::Interface
    {
       Q_OBJECT
    public:
@@ -24,9 +24,9 @@ namespace Stage
       friend class Widget;
 
    private:
-      Items create(const Data::Identifier& identifier);
+      Items create(const Core::Identifier& identifier);
       Items find(const int& row);
-      void rebuildModel(Data::Identifier identifier) override;
+      void rebuildModel(Core::Identifier identifier) override;
       void update(PolyRamp* polyRamp, const uint8_t& stageIndex);
       bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
    };

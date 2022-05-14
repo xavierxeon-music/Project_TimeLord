@@ -7,7 +7,7 @@
 
 Abstract::Widget::Widget(MainWidget* mainWidget)
    : QWidget(mainWidget)
-   , Data::Core()
+   , Core::Interface()
    , toolBar(nullptr)
    , masterLayout(nullptr)
 {

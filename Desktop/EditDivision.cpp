@@ -14,7 +14,7 @@ Edit::Division::Division(Ramp::Widget* polyRampWidget)
 
 void Edit::Division::execute(PolyRamp* polyRamp)
 {
-   const QVariant data = divisionCombo->currentData(Data::Role::Data);
+   const QVariant data = divisionCombo->currentData(Core::Role::Data);
    const Tempo::Division stepSize = data.value<Tempo::Division>();
 
    polyRamp->setStepSize(stepSize);

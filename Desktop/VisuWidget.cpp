@@ -99,7 +99,7 @@ void Visu::Widget::slotUpdate()
 
    for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
    {
-      Data::Identifier drawIdentifier(rampIndex);
+      Core::Identifier drawIdentifier(rampIndex);
       PolyRamp* polyRamp = getPolyRamp(drawIdentifier);
       if (selectedPolyRamp == polyRamp)
          continue;
@@ -132,7 +132,7 @@ void Visu::Widget::slotZoomOut()
    slotUpdate();
 }
 
-void Visu::Widget::polyRampSelected(Data::Identifier newIdentifier)
+void Visu::Widget::polyRampSelected(Core::Identifier newIdentifier)
 {
    identifier = newIdentifier;
 

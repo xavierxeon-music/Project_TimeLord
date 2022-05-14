@@ -2,11 +2,11 @@
 #define DelegateSpinBoxH
 
 #include <QStyledItemDelegate>
-#include "DataCore.h"
+#include "Core.h"
 
 namespace Delegate
 {
-   class SpinBox : public QStyledItemDelegate, public Data::Core
+   class SpinBox : public QStyledItemDelegate, public Core::Interface
    {
       Q_OBJECT
 

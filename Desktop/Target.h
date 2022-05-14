@@ -7,7 +7,7 @@
 
 #include <Midi/MidiPhysicalOutput.h>
 
-#include "BankData.h"
+#include "BankContent.h"
 
 namespace Data
 {
@@ -22,8 +22,6 @@ public:
    {
       QAction* connectToServer;
       QAction* pushToServer;
-      QAction* addBank;
-      QAction* removeBank;
    };
 
 public:
@@ -33,19 +31,17 @@ public:
    const ServerActions& getServerActions() const;
 
 private:
-   friend class Data::Core;
+   friend class Core::Interface;
 
 private slots:
    void slotConnectToServer(bool connect);
    void slotPushToServer();
-   void slotAddBank();
-   void slotRemoveBank();
 
 private:
-   std::vector<Bank::Data> banks;
+   std::vector<Bank::Content*> banks;
    Midi::Physical::Output output;
 
-   ServerActions actions;
+   ServerActions serverActions;
 };
 
 #endif // NOT TargetH

@@ -1,5 +1,5 @@
-#ifndef DataCoreH
-#define DataCoreH
+#ifndef CoreH
+#define CoreH
 
 #include <Blocks/PolyRamp.h>
 
@@ -7,7 +7,12 @@ class MainWidget;
 
 class Target;
 
-namespace Data
+namespace Bank
+{
+   class Content;
+}
+
+namespace Core
 {
    Q_NAMESPACE
 
@@ -16,6 +21,8 @@ namespace Data
       enum Value : uint8_t
       {
          None,
+         BankName,
+         BankTempo,
          PolyRampName,
          PolyRampLength,
          PolyRampStepSize,
@@ -65,10 +72,10 @@ namespace Data
    };
 
    // all graph data access and manipulation should happen via this class
-   class Core
+   class Interface
    {      
    public:
-      Core();
+      Interface();
 
    public:
       virtual void modelHasChanged(Identifier identifier);
@@ -80,11 +87,17 @@ namespace Data
       static const QString keys;
 
    protected:
-      PolyRamp* getPolyRamp(const Identifier& identifier); // ignores stage index
+      uint8_t getBankCount() const;
+      void addBank();
+      void removeBank();
+      Bank::Content* getBank(const Identifier& identifier);             // ignores ramp and stage index
+      const Bank::Content* getBank(const Identifier& identifier) const; // ignores stage index
+
+      PolyRamp* getPolyRamp(const Identifier& identifier);             // ignores stage index
       const PolyRamp* getPolyRamp(const Identifier& identifier) const; // ignores stage index
 
       template <typename... Args>
-      void callOnAllInstances(void (Core::*function)(Args...), Args... args);
+      void callOnAllInstances(void (Interface::*function)(Args...), Args... args);
 
       void setLockGraphSize(bool locked);
       void toggleLockGraphSize();
@@ -104,16 +117,16 @@ namespace Data
       static bool isModified;
       static bool lockGraphSize;
       static ::Target* target;
-      static QList<Core*> instanceList;
+      static QList<Interface*> instanceList;
    };
 
-} // namespace Data
+} // namespace Core
 
-Q_DECLARE_METATYPE(Data::Identifier);
-Q_DECLARE_METATYPE(Data::Target::Value);
+Q_DECLARE_METATYPE(Core::Identifier);
+Q_DECLARE_METATYPE(Core::Target::Value);
 
-#ifndef DataCoreHPP
-#include "DataCore.hpp"
-#endif // NOT DataCoreHPP
+#ifndef CoreHPP
+#include "Core.hpp"
+#endif // NOT CoreHPP
 
-#endif // NOT DataCoreH
+#endif // NOT CoreH

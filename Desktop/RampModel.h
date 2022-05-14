@@ -1,25 +1,25 @@
 #ifndef RampModelH
 #define RampModelH
 
-#include "DataCore.h"
+#include "Core.h"
 #include <QStandardItemModel>
 
 namespace Ramp
 {
-   class Model : public QStandardItemModel, public Data::Core
+   class Model : public QStandardItemModel, public Core::Interface
    {
       Q_OBJECT
    public:
       Model(QObject* parent);
 
    public:
-      void modelHasChanged(Data::Identifier identifier) override;
+      void modelHasChanged(Core::Identifier identifier) override;
 
    private:
       friend class Widget;
 
    private:
-      void rebuildModel(Data::Identifier identifier = Data::Identifier()) override;
+      void rebuildModel(Core::Identifier identifier = Core::Identifier()) override;
       void saveSettings() override;
       bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
    };

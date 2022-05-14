@@ -1,6 +1,6 @@
 #include "ModelDivision.h"
 
-#include "DataCore.h"
+#include "Core.h"
 
 Model::Division::Division(QObject* parent)
    : QStandardItemModel(parent)
@@ -11,7 +11,7 @@ Model::Division::Division(QObject* parent)
 
       const std::string name = Tempo::getName(division);
       item->setText(QString::fromStdString(name));
-      item->setData(QVariant::fromValue(division), Data::Role::Data);
+      item->setData(QVariant::fromValue(division), Core::Role::Data);
 
       invisibleRootItem()->appendRow(item);
    };

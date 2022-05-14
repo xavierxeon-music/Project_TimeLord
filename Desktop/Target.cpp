@@ -6,7 +6,7 @@
 #include <Midi/MidiCommon.h>
 #include <Tools/SevenBit.h>
 
-#include "DataCore.h"
+#include "Core.h"
 
 static constexpr uint8_t remoteChannel = Midi::Device::VCVRack;
 
@@ -14,22 +14,22 @@ Target::Target(QObject* parent)
    : QObject(parent)
    , banks{}
    , output(this, "TimeLord")
-   , actions{nullptr, nullptr, nullptr, nullptr}
+   , serverActions{nullptr, nullptr}
 {
+   serverActions.connectToServer = new QAction(QIcon(":/Port.svg"), "Connect To Server", this);
+   connect(serverActions.connectToServer, &QAction::triggered, this, &Target::slotConnectToServer);
+   serverActions.connectToServer->setCheckable(true);
 
-   actions.connectToServer = new QAction(QIcon(":/Port.svg"), "Connect To Server", this);
-   connect(actions.connectToServer, &QAction::triggered, this, &Target::slotConnectToServer);
-   actions.connectToServer->setCheckable(true);
-
-   actions.pushToServer = new QAction(QIcon(":/SaveToDaisy.svg"), "Push To Server", this);
-   connect(actions.pushToServer, &QAction::triggered, this, &Target::slotPushToServer);
+   serverActions.pushToServer = new QAction(QIcon(":/SaveToDaisy.svg"), "Push To Server", this);
+   connect(serverActions.pushToServer, &QAction::triggered, this, &Target::slotPushToServer);
 
    slotConnectToServer(true);
+
 }
 
 const Target::ServerActions& Target::getServerActions() const
 {
-   return actions;
+   return serverActions;
 }
 
 void Target::slotConnectToServer(bool connect)
@@ -39,7 +39,7 @@ void Target::slotConnectToServer(bool connect)
    else
       output.close();
 
-   actions.connectToServer->setChecked(output.isOpen());
+   serverActions.connectToServer->setChecked(output.isOpen());
 }
 
 void Target::slotPushToServer()
@@ -66,12 +66,4 @@ void Target::slotPushToServer()
 
    output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberApply, bankIndex);
    */
-}
-
-void Target::slotAddBank()
-{
-}
-
-void Target::slotRemoveBank()
-{
 }

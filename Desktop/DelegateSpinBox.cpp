@@ -4,7 +4,7 @@
 
 Delegate::SpinBox::SpinBox(QObject* parent)
    : QStyledItemDelegate(parent)
-   , Data::Core()
+   , Core::Interface()
 {
 }
 

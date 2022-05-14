@@ -1,14 +1,14 @@
 #ifndef DelegateComboBoxH
 #define DelegateComboBoxH
 
-#include "DataCore.h"
+#include "Core.h"
 #include <QStyledItemDelegate>
 
 class QStandardItemModel;
 
 namespace Delegate
 {
-   class ComboBox : public QStyledItemDelegate, public Data::Core
+   class ComboBox : public QStyledItemDelegate, public Core::Interface
    {
       Q_OBJECT
 

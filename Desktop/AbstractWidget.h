@@ -1,7 +1,7 @@
 #ifndef AbstractWidgetH
 #define AbstractWidgetH
 
-#include "DataCore.h"
+#include "Core.h"
 #include <QWidget>
 
 #include <QToolBar>
@@ -11,7 +11,7 @@ class MainWidget;
 
 namespace Abstract
 {
-   class Widget : public QWidget, public Data::Core
+   class Widget : public QWidget, public Core::Interface
    {
       Q_OBJECT
    public:

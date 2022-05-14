@@ -8,7 +8,7 @@
 
 Abstract::Edit::Edit(Ramp::Widget* polyRampWidget)
    : QToolBar(polyRampWidget)
-   , Data::Core()
+   , Core::Interface()
    , polyRampWidget(polyRampWidget)
 {
    setIconSize(QSize(24, 24));
@@ -34,12 +34,12 @@ void Abstract::Edit::slotExecute()
 {
    for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
    {
-      Data::Identifier identifier(rampIndex);
+      Core::Identifier identifier(rampIndex);
 
       PolyRamp* polyRamp = getPolyRamp(identifier);
       execute(polyRamp);
    }
 
    polyRampWidget->hideEditStack();
-   callOnAllInstances(&Core::rebuildModel, Data::Identifier());
+   callOnAllInstances(&Interface::rebuildModel, Core::Identifier());
 }

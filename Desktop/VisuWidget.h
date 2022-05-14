@@ -28,13 +28,13 @@ namespace Visu
       void slotZoomOut();
 
    private:
-      void polyRampSelected(Data::Identifier newIdentifier) override;
+      void polyRampSelected(Core::Identifier newIdentifier) override;
 
    private:
       QGraphicsView* graphicsView;
       Stage::Map stageMap;
 
-      Data::Identifier identifier;
+      Core::Identifier identifier;
       uint8_t zoomLevel;
    };
 } // namespace Visu

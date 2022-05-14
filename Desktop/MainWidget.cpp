@@ -14,14 +14,14 @@
 
 MainWidget::MainWidget()
    : QWidget(nullptr)
-   , Data::Core()
+   , Core::Interface()
    , splitter(nullptr)
    , statusBar(nullptr)
    , actions{nullptr, nullptr, nullptr}
-   , polyRampVisu(nullptr)
-   , polyRampWidget(nullptr)
+   , visuWidget(nullptr)
+   , bankWidget(nullptr)
+   , rampWidget(nullptr)
    , stageWidget(nullptr)
-//, polyLineWidget(nullptr)
 {
    setWindowTitle("Time Lord UI[*]");
    setMinimumSize(1400, 900);
@@ -43,22 +43,22 @@ MainWidget::MainWidget()
    actions.saveNewFile = new QAction(QIcon(":/SaveNewFile.svg"), "Save To New File", this);
    connect(actions.saveNewFile, &QAction::triggered, this, &MainWidget::slotSaveNewFile);
 
-   polyRampVisu = new Visu::Widget(this);
-   polyRampWidget = new Ramp::Widget(this);
+   visuWidget = new Visu::Widget(this);
+   bankWidget = new Bank::Widget(this);
+   rampWidget = new Ramp::Widget(this);
    stageWidget = new Stage::Widget(this);
-   //polyLineWidget = new PolyLine::Widget(this);
 
    splitter = new QSplitter(Qt::Horizontal, this);
    splitter->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
    splitter->setObjectName("ModelSplitter");
-   splitter->addWidget(polyRampWidget);
+   splitter->addWidget(bankWidget);
+   splitter->addWidget(rampWidget);
    splitter->addWidget(stageWidget);
-   //splitter->addWidget(polyLineWidget);
 
    QVBoxLayout* masterLayout = new QVBoxLayout(this);
    masterLayout->setContentsMargins(0, 0, 0, 0);
    masterLayout->setSpacing(0);
-   masterLayout->addWidget(polyRampVisu);
+   masterLayout->addWidget(visuWidget);
    masterLayout->addWidget(splitter);
    masterLayout->addWidget(statusBar);
 
@@ -160,15 +160,15 @@ void MainWidget::loadInternal(const QString& fileName)
    updateWindowTitle(fileName);
    unsetModified();
 
-   Data::Identifier dummy;
-   callOnAllInstances(&Core::rebuildModel, dummy);
+   Core::Identifier dummy;
+   callOnAllInstances(&Interface::rebuildModel, dummy);
 
    statusBar->showMessage("file loaded", 2000);
 }
 
 void MainWidget::saveInternal(const QString& fileName)
 {
-   callOnAllInstances(&Core::saveSettings);
+   callOnAllInstances(&Interface::saveSettings);
 
    // TODO
 
