@@ -47,23 +47,24 @@ void Target::slotPushToServer()
    if (!output.isOpen())
       return;
 
-   /*
-   const QJsonObject ramps = compileRamps();
-   qDebug() << ramps;
+   for (uint8_t bankIndex = 0; bankIndex < banks.size(); bankIndex++)
+   {
+      const QJsonObject ramps = banks[bankIndex]->writeRamps();
+      //qDebug() << ramps;
 
-   const QJsonDocument document(ramps);
-   const QByteArray content = document.toJson(QJsonDocument::Compact);
+      const QJsonDocument document(ramps);
+      const QByteArray content = document.toJson(QJsonDocument::Compact);
 
-   Bytes data(content.size());
-   std::memcpy(&data[0], content.constData(), content.size());
+      Bytes data(content.size());
+      std::memcpy(&data[0], content.constData(), content.size());
 
-   Bytes dataBase64 = SevenBit::encode(data);
+      Bytes dataBase64 = SevenBit::encode(data);
 
-   qDebug() << content.size() << data.size() << dataBase64.size();
+      //qDebug() << content.size() << data.size() << dataBase64.size();
 
-   for (const uint8_t byte : dataBase64)
-      output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberBlock, byte);
+      for (const uint8_t byte : dataBase64)
+         output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberBlock, byte);
 
-   output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberApply, bankIndex);
-   */
+      output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberApply, bankIndex);
+   }
 }
