@@ -7,7 +7,7 @@
 Bank::Content::Content()
    : beatsPerMinute(120)
    , polyRamps{}
-   , rampNames{}
+   , rampNames{"1", "2", "3", "4", "5", "6", "7", "8"}
 {
 }
 
@@ -43,8 +43,13 @@ QJsonObject Bank::Content::writeNames() const
    return names;
 }
 
-void Bank::Content::readNames(const QJsonObject& data) const
+void Bank::Content::readNames(const QJsonObject& data)
 {
+   for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
+   {
+      const QString key = Core::Interface::keys.at(rampIndex);
+      rampNames[rampIndex] = data[key].toString();
+   }
 }
 
 QJsonObject Bank::Content::writeRamps() const
@@ -76,7 +81,7 @@ QJsonObject Bank::Content::writeRamps() const
    return ramps;
 }
 
-void Bank::Content::readRamps(const QJsonObject& data) const
+void Bank::Content::readRamps(const QJsonObject& data)
 {
    Q_UNUSED(data)
 }

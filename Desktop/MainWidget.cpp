@@ -31,8 +31,6 @@ MainWidget::MainWidget()
    statusBar = new QStatusBar(this);
    statusBar->setSizeGripEnabled(true);
 
-   loadLastFile();
-
    actions.loadFromFile = new QAction(QIcon(":/LoadFromFile.svg"), "Load From File", this);
    connect(actions.loadFromFile, &QAction::triggered, this, &MainWidget::slotLoadFromFile);
 
@@ -61,6 +59,8 @@ MainWidget::MainWidget()
    masterLayout->addWidget(visuWidget);
    masterLayout->addWidget(splitter);
    masterLayout->addWidget(statusBar);
+
+   loadLastFile();
 
    AppSettings widgetSettings("MainWidget");
    restoreGeometry(widgetSettings.bytes("Geometry"));
@@ -154,8 +154,29 @@ void MainWidget::loadLastFile()
 void MainWidget::loadInternal(const QString& fileName)
 {
    FileSettings settings;
+   const QJsonArray bankArray = settings.array("banks");
 
-   //TODO
+   // adjust bank count
+   while (bankArray.count() < getBankCount())
+      removeBank();
+   while (bankArray.count() > getBankCount())
+      addBank();
+
+   for (const QJsonValue& bankValue : bankArray)
+   {
+      QJsonObject bankObject = bankValue.toObject();
+
+      const uint8_t bankIndex = bankObject["index"].toInteger();
+      const Core::Identifier bankIdentifier(bankIndex);
+
+      Bank::Content* bank = getBank(bankIdentifier);
+      if (!bank)
+         continue;
+
+      bank->setBeatsPerMinute(bankObject["bpm"].toInteger());
+      bank->readNames(bankObject["names"].toObject());
+      bank->readRamps(bankObject["content"].toObject());
+   }
 
    updateWindowTitle(fileName);
    unsetModified();

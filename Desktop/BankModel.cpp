@@ -13,8 +13,10 @@ void Bank::Model::modelHasChanged(Core::Identifier identifier)
 {
 }
 
-void Bank::Model::rebuildModel(Core::Identifier)
+void Bank::Model::rebuildModel(Core::Identifier identifier)
 {
+   Q_UNUSED(identifier)
+
    clear();
    setHorizontalHeaderLabels({"number", "bpm"});
 

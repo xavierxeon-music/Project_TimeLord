@@ -27,10 +27,10 @@ namespace Bank
       void setName(const uint8_t index, const QString& name);
 
       QJsonObject writeNames() const;
-      void readNames(const QJsonObject& data) const;
+      void readNames(const QJsonObject& data);
 
       QJsonObject writeRamps() const;
-      void readRamps(const QJsonObject& data) const;
+      void readRamps(const QJsonObject& data);
 
    private:
       friend class Core::Interface;

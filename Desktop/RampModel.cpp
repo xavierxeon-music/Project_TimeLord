@@ -49,14 +49,8 @@ void Ramp::Model::rebuildModel(Core::Identifier identifier)
 
       QStandardItem* nameItem = new QStandardItem();
       {
-         QString name = QString::number(rampIndex + 1);
-         if (1 == name.length())
-            name = QString("0") + name;
-
-         /*
-         const QString key = keys.at(identifier.rampIndex);
-         name = settings.string(key, name);
-         */
+         Bank::Content* bank = getBank(identifier);
+         const QString name = bank->getName(rampIndex);
 
          nameItem->setText(name);
          nameItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);

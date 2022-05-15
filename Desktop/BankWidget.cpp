@@ -17,7 +17,6 @@ Bank::Widget::Widget(MainWidget* mainWidget)
    toolBar->addAction(QIcon(":/Remove.svg"), "Remove Bank", this, &Widget::slotRemoveBank);
 
    bankModel = new Model(this);
-   //bankModel->rebuildModel();
 
    QTreeView* bankTreeView = addTreeView(bankModel);
    bankTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
