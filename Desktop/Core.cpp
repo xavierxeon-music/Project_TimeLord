@@ -99,6 +99,9 @@ void Core::Interface::addBank()
    if (!target)
       return;
 
+   if (127 == target->banks.size())
+      return;
+
    target->banks.push_back(new Bank::Content());
 }
 

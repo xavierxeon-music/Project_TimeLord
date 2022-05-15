@@ -71,7 +71,7 @@ QJsonObject Bank::Content::writeRamps() const
 
       QJsonObject rampObject;
       rampObject["stages"] = stageArray;
-      rampObject["stepSize"] = polyRamp->getStepSize();
+      rampObject["stepSize"] = static_cast<int>(polyRamp->getStepSize());
       rampObject["length"] = static_cast<qint64>(polyRamp->getLength());
       rampObject["loop"] = polyRamp->isLooping();
 
@@ -83,5 +83,28 @@ QJsonObject Bank::Content::writeRamps() const
 
 void Bank::Content::readRamps(const QJsonObject& data)
 {
-   Q_UNUSED(data)
+   for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
+   {
+      const QString key = Core::Interface::keys.at(rampIndex);
+      const QJsonObject rampObject = data[key].toObject();
+
+      PolyRamp* polyRamp = &polyRamps[rampIndex];
+      polyRamp->clear();
+
+      Tempo::Division stepSize = static_cast<Tempo::Division>(rampObject["stepSize"].toInt());
+      polyRamp->setStepSize(stepSize);
+      polyRamp->setLength(rampObject["length"].toInt());
+      polyRamp->setLooping(rampObject["loop"].toBool());
+
+      const QJsonArray stageArray = rampObject["stages"].toArray();
+      polyRamp->addStage(0, stageArray.count());
+      for (uint8_t stageIndex = 0; stageIndex < stageArray.count(); stageIndex++)
+      {
+         QJsonObject stageObject = stageArray.at(stageIndex).toObject();
+
+         polyRamp->setStageLength(stageIndex, stageObject["length"].toInt());
+         polyRamp->setStageStartHeight(stageIndex, stageObject["startHeight"].toInt());
+         polyRamp->setStageEndHeight(stageIndex, stageObject["endHeight"].toInt());
+      }
+   }
 }
