@@ -20,7 +20,6 @@ namespace Ramp
 
    private:
       void rebuildModel(Core::Identifier identifier) override;
-      void saveSettings() override;
       bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
    };
 } // namespace Ramp

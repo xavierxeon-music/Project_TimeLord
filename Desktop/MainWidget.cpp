@@ -168,7 +168,25 @@ void MainWidget::loadInternal(const QString& fileName)
 
 void MainWidget::saveInternal(const QString& fileName)
 {
-   callOnAllInstances(&Interface::saveSettings);
+   QJsonArray bankArray;
+
+   for (uint8_t bankIndex = 0; bankIndex < getBankCount(); bankIndex++)
+   {
+      const Core::Identifier bankIdentifier(bankIndex);
+      const Bank::Content* bank = getBank(bankIdentifier);
+      if (!bank)
+         continue;
+
+      QJsonObject bankObject;
+      bankObject["index"] = bankIndex;
+      bankObject["bpm"] = bank->getBeatsPerMinute();
+      bankObject["names"] = bank->writeNames();
+      bankObject["content"] = bank->writeRamps();
+      bankArray.append(bankObject);
+   }
+
+   FileSettings settings;
+   settings.write("banks", bankArray);
 
    // TODO
 

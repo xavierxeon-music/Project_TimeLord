@@ -81,7 +81,6 @@ namespace Core
       virtual void modelHasChanged(Identifier identifier);
       virtual void selectionChanged(Identifier identifier);
       virtual void rebuildModel(Identifier identifier);
-      virtual void saveSettings();
 
    public:
       static const QString keys;

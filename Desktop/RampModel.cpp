@@ -40,8 +40,6 @@ void Ramp::Model::rebuildModel(Core::Identifier identifier)
    clear();
    setHorizontalHeaderLabels({"name", "length", "division", "loop", "count"});
 
-   FileSettings settings("names");
-
    for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
    {
       identifier.rampIndex = rampIndex;
@@ -55,8 +53,10 @@ void Ramp::Model::rebuildModel(Core::Identifier identifier)
          if (1 == name.length())
             name = QString("0") + name;
 
+         /*
          const QString key = keys.at(identifier.rampIndex);
          name = settings.string(key, name);
+         */
 
          nameItem->setText(name);
          nameItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
@@ -100,21 +100,6 @@ void Ramp::Model::rebuildModel(Core::Identifier identifier)
    }
 }
 
-void Ramp::Model::saveSettings()
-{
-   FileSettings settings("names");
-   for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
-   {
-      QStandardItem* nameItem = invisibleRootItem()->child(row, 0);
-      const QString name = nameItem->text();
-
-      const Core::Identifier itemIndentifier = nameItem->data(Core::Role::Identifier).value<Core::Identifier>();
-      const QString key = keys.at(itemIndentifier.rampIndex);
-
-      settings.write(key, name);
-   }
-}
-
 bool Ramp::Model::setData(const QModelIndex& index, const QVariant& value, int role)
 {
    bool result = QStandardItemModel::setData(index, value, role);
@@ -132,13 +117,17 @@ bool Ramp::Model::setData(const QModelIndex& index, const QVariant& value, int r
 
    if (Core::Target::PolyRampName == target)
    {
+      Bank::Content* bank = getBank(identifier);
+      bank->setName(identifier.rampIndex, value.toString());
       setModified();
    }
    else if (Core::Target::PolyRampLength == target)
    {
       const uint8_t length = value.toInt();
       polyRamp->setLength(length);
+
       callOnAllInstances(&Interface::modelHasChanged, identifier);
+      setModified();
    }
    else if (Core::Target::PolyRampStepSize == target)
    {
@@ -149,11 +138,14 @@ bool Ramp::Model::setData(const QModelIndex& index, const QVariant& value, int r
       polyRamp->setStepSize(stepSize);
 
       callOnAllInstances(&Interface::modelHasChanged, identifier);
+      setModified();
    }
    else if (Core::Target::PolyRampLoop == target)
    {
       bool loopOn = value.toBool();
       polyRamp->setLooping(loopOn);
+
+      setModified();
    }
 
    return result;

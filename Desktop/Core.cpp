@@ -86,11 +86,6 @@ void Core::Interface::rebuildModel(Identifier identifier)
    // do nothing
 }
 
-void Core::Interface::saveSettings()
-{
-   // do nothing
-}
-
 uint8_t Core::Interface::getBankCount() const
 {
    if (!target)

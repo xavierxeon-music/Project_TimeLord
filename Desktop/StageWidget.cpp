@@ -39,6 +39,8 @@ void Stage::Widget::slotInsertPoint()
    polyRamp->addStage(selectionIdentifier.stageIndex);
 
    stageModel->rebuildModel(selectionIdentifier);
+   setModified();
+
    setSelection(selectionIdentifier.stageIndex);
 }
 
@@ -51,6 +53,7 @@ void Stage::Widget::slotRemovePoint()
    polyRamp->removeStage(selectionIdentifier.stageIndex);
 
    stageModel->rebuildModel(selectionIdentifier);
+   setModified();
 }
 
 void Stage::Widget::slotMoveBack()
@@ -65,6 +68,8 @@ void Stage::Widget::slotMoveBack()
    polyRamp->moveStage(selectionIdentifier.stageIndex, selectionIdentifier.stageIndex - 1);
 
    stageModel->rebuildModel(selectionIdentifier);
+   setModified();
+
    setSelection(selectionIdentifier.stageIndex - 1);
 }
 
@@ -80,6 +85,8 @@ void Stage::Widget::slotMoveForward()
    polyRamp->moveStage(selectionIdentifier.stageIndex, selectionIdentifier.stageIndex + 1);
 
    stageModel->rebuildModel(selectionIdentifier);
+   setModified();
+
    setSelection(selectionIdentifier.stageIndex + 1);
 }
 

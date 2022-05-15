@@ -157,12 +157,16 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
       const uint8_t height = value.toInt();
       polyRamp->setStageStartHeight(identifier.stageIndex, height);
       callOnAllInstances(&Interface::modelHasChanged, identifier);
+
+      setModified();
    }
    else if (Core::Target::StageEndHeight == target)
    {
       const uint8_t height = value.toInt();
       polyRamp->setStageEndHeight(identifier.stageIndex, height);
       callOnAllInstances(&Interface::modelHasChanged, identifier);
+
+      setModified();
    }
    else if (Core::Target::StageLength == target)
    {
@@ -177,6 +181,8 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
             length += "*";
          targeValue = length;
          callOnAllInstances(&Interface::modelHasChanged, identifier);
+
+         setModified();
       }
    }
 

@@ -27,10 +27,14 @@ void Bank::Widget::slotAddBank()
 {
    addBank();
    callOnAllInstances(&Interface::rebuildModel, Core::Identifier());
+
+   setModified();
 }
 
 void Bank::Widget::slotRemoveBank()
 {
    removeBank();
    callOnAllInstances(&Interface::rebuildModel, Core::Identifier());
+
+   setModified();
 }
