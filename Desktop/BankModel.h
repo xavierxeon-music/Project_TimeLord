@@ -12,14 +12,13 @@ namespace Bank
    public:
       Model(QObject* parent);
 
-   public:
-      void modelHasChanged(Core::Identifier identifier) override;
+   private:
+      friend class Widget;
 
    private:
       void rebuildModel(Core::Identifier identifier = Core::Identifier()) override;
+      bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
 
-   private:
-      friend class Widget;
    };
 } // namespace Bank
 

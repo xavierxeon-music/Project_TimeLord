@@ -17,19 +17,21 @@ namespace Abstract
    {
       Q_OBJECT
    public:
-      Edit(Ramp::Widget* polyRampWidget);
+      Edit(Ramp::Widget* rampWidget);
 
    protected:
       void setPayload(QWidget* widget, const QString& text);
       virtual void execute(PolyRamp* polyRamp) = 0;
+      void selectionChanged(Core::Identifier identifier) override;
 
    private slots:
       void slotCancel();
       void slotExecute();
 
    private:
-      Ramp::Widget* polyRampWidget;
+      Ramp::Widget* rampWidget;
+      Core::Identifier selectionIdentifier;
    };
-} // namespace Edit
+} // namespace Abstract
 
 #endif // NOT EditAbstractH

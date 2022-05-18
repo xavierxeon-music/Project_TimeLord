@@ -9,10 +9,6 @@ Bank::Model::Model(QObject* parent)
    setHorizontalHeaderLabels({"number", "bpm"});
 }
 
-void Bank::Model::modelHasChanged(Core::Identifier identifier)
-{
-}
-
 void Bank::Model::rebuildModel(Core::Identifier identifier)
 {
    Q_UNUSED(identifier)
@@ -47,4 +43,32 @@ void Bank::Model::rebuildModel(Core::Identifier identifier)
 
       invisibleRootItem()->appendRow({nameItem, tempoItem});
    }
+}
+
+bool Bank::Model::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+   if (Qt::EditRole != role)
+      return QStandardItemModel::setData(index, value, role);
+
+   const QVariant targetData = data(index, Core::Role::Target);
+   if (targetData.isNull())
+      return QStandardItemModel::setData(index, value, role);
+
+   const Core::Identifier identifier = data(index, Core::Role::Identifier).value<Core::Identifier>();
+   Bank::Content* bankContent = getBank(identifier);
+
+   QVariant targeValue = value;
+   const Core::Target::Value target = targetData.value<Core::Target::Value>();
+
+   if (Core::Target::BankTempo == target)
+   {
+      const uint8_t bpm = value.toInt();
+      bankContent->setBeatsPerMinute(bpm);
+      callOnAllInstances(&Interface::modelHasChanged, identifier);
+
+      setModified();
+   }
+
+   bool result = QStandardItemModel::setData(index, targeValue, role);
+   return result;
 }

@@ -6,10 +6,11 @@
 #include "MainWidget.h"
 #include "RampWidget.h"
 
-Abstract::Edit::Edit(Ramp::Widget* polyRampWidget)
-   : QToolBar(polyRampWidget)
+Abstract::Edit::Edit(Ramp::Widget* rampWidget)
+   : QToolBar(rampWidget)
    , Core::Interface()
-   , polyRampWidget(polyRampWidget)
+   , rampWidget(rampWidget)
+   , selectionIdentifier()
 {
    setIconSize(QSize(24, 24));
 }
@@ -27,19 +28,27 @@ void Abstract::Edit::setPayload(QWidget* widget, const QString& text)
 
 void Abstract::Edit::slotCancel()
 {
-   polyRampWidget->hideEditStack();
+   rampWidget->hideEditStack();
 }
 
 void Abstract::Edit::slotExecute()
 {
+   Core::Identifier identifier = selectionIdentifier;
    for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
    {
-      Core::Identifier identifier(rampIndex);
-
+      identifier.rampIndex = rampIndex;
       PolyRamp* polyRamp = getPolyRamp(identifier);
+      if (!polyRamp)
+         continue;
+
       execute(polyRamp);
    }
 
-   polyRampWidget->hideEditStack();
+   rampWidget->hideEditStack();
    callOnAllInstances(&Interface::rebuildModel, Core::Identifier());
+}
+
+void Abstract::Edit::selectionChanged(Core::Identifier identifier)
+{
+   selectionIdentifier = identifier;
 }

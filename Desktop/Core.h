@@ -26,6 +26,7 @@ namespace Core
          PolyRampName,
          PolyRampLength,
          PolyRampStepSize,
+         PolyRampTime,
          PolyRampLoop,
          PolyRampStageCount,
          StageStartHeight,
@@ -73,7 +74,7 @@ namespace Core
 
    // all graph data access and manipulation should happen via this class
    class Interface
-   {      
+   {
    public:
       Interface();
 
