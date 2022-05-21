@@ -12,14 +12,25 @@ namespace Ramp
    public:
       Model(QObject* parent);
 
-   public:
-      void modelHasChanged(Core::Identifier identifier) override;
+   private:
+      struct Items
+      {
+         QStandardItem* nameItem;
+         QStandardItem* lengthItem;
+         QStandardItem* stepSizeItem;
+         QStandardItem* timeItem;
+         QStandardItem* loopItem;
+         QStandardItem* countItem;
+      };
 
    private:
       friend class Widget;
 
    private:
+      Items create(const Core::Identifier& identifier);
+      Items find(const int& row);
       void rebuildModel(Core::Identifier identifier) override;
+      void modelHasChanged(Core::Identifier identifier) override;
       bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
    };
 } // namespace Ramp

@@ -97,9 +97,10 @@ void Visu::Widget::slotUpdate()
       }
    };
 
+   Core::Identifier drawIdentifier = identifier;
    for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
    {
-      Core::Identifier drawIdentifier(rampIndex);
+      drawIdentifier.rampIndex = rampIndex;
       PolyRamp* polyRamp = getPolyRamp(drawIdentifier);
       if (selectedPolyRamp == polyRamp)
          continue;

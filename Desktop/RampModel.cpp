@@ -12,67 +12,66 @@ Ramp::Model::Model(QObject* parent)
    setHorizontalHeaderLabels({"name", "length", "division", "time", "loop", "count"});
 }
 
-void Ramp::Model::modelHasChanged(Core::Identifier identifier)
+Ramp::Model::Items Ramp::Model::create(const Core::Identifier& identifier)
 {
-   for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
+   Items items;
+
+   items.nameItem = new QStandardItem();
    {
-      QStandardItem* nameItem = invisibleRootItem()->child(row, 0);
-      const Core::Identifier itemIndentifier = nameItem->data(Core::Role::Identifier).value<Core::Identifier>();
-      if (itemIndentifier.rampIndex != identifier.rampIndex)
-         continue;
-
-      Bank::Content* bank = getBank(identifier);
-      PolyRamp* polyRamp = getPolyRamp(identifier);
-
-      {
-         const QString name = bank->getName(identifier.rampIndex);
-         nameItem->setText(name);
-      }
-
-      QStandardItem* lengthItem = invisibleRootItem()->child(row, 1);
-      {
-         const QString length = QString::number(polyRamp->getLength());
-         lengthItem->setText(length);
-      }
-
-      QStandardItem* stepSizeItem = invisibleRootItem()->child(row, 2);
-      {
-         const std::string stepSize = Tempo::getName(polyRamp->getStepSize());
-         stepSizeItem->setText(QString::fromStdString(stepSize));
-         stepSizeItem->setData(QVariant::fromValue(polyRamp->getStepSize()), Core::Role::Data);
-      }
-
-      QStandardItem* timeItem = invisibleRootItem()->child(row, 3);
-      {
-         const float beatsPerMinute = bank->getBeatsPerMinute(); // == quarter / min
-         const float sixteenthPerSecond = (4 * beatsPerMinute) / 60.0;
-
-         const Tempo::Division division = stepSizeItem->data(Core::Role::Data).value<Tempo::Division>();
-         const float sixteenthPerDivision = static_cast<float>(division);
-
-         const float secondsPerDivision = sixteenthPerDivision / sixteenthPerSecond;
-         const float divisionCount = lengthItem->text().toInt();
-
-         const uint32_t time = static_cast<uint32_t>(divisionCount * secondsPerDivision);
-         const uint8_t seconds = time % 60;
-         const uint32_t minutes = (time - seconds) / 60;
-
-         const QString timeText = QString("%1:%2").arg(minutes).arg(seconds);
-         timeItem->setText(timeText);
-      }
-
-      QStandardItem* loopItem = invisibleRootItem()->child(row, 4);
-      {
-         loopItem->setCheckState(polyRamp->isLooping() ? Qt::Checked : Qt::Unchecked);
-      }
-
-      QStandardItem* countItem = invisibleRootItem()->child(row, 5);
-      {
-         const QString count = QString::number(polyRamp->getStageCount());
-         countItem->setText(count);
-      }
-      break;
+      items.nameItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
+      items.nameItem->setData(QVariant::fromValue(Core::Target::PolyRampName), Core::Role::Target);
    }
+
+   items.lengthItem = new QStandardItem();
+   {
+      items.lengthItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
+      items.lengthItem->setData(QVariant::fromValue(Core::Target::PolyRampLength), Core::Role::Target);
+   }
+
+   items.stepSizeItem = new QStandardItem();
+   {
+      items.stepSizeItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
+      items.stepSizeItem->setData(QVariant::fromValue(Core::Target::PolyRampStepSize), Core::Role::Target);
+   }
+
+   items.timeItem = new QStandardItem();
+   {
+      items.timeItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
+      items.timeItem->setData(QVariant::fromValue(Core::Target::PolyRampTime), Core::Role::Target);
+      items.timeItem->setEditable(false);
+   }
+
+   items.loopItem = new QStandardItem();
+   {
+      items.loopItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
+      items.loopItem->setData(QVariant::fromValue(Core::Target::PolyRampLoop), Core::Role::Target);
+      items.loopItem->setCheckable(true);
+      items.loopItem->setEditable(false);
+   }
+
+   items.countItem = new QStandardItem();
+   {
+      items.countItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
+      items.countItem->setEditable(false);
+   }
+
+   invisibleRootItem()->appendRow({items.nameItem, items.lengthItem, items.stepSizeItem, items.timeItem, items.loopItem, items.countItem});
+
+   return items;
+}
+
+Ramp::Model::Items Ramp::Model::find(const int& row)
+{
+   Items items;
+
+   items.nameItem = invisibleRootItem()->child(row, 0);
+   items.lengthItem = invisibleRootItem()->child(row, 1);
+   items.stepSizeItem = invisibleRootItem()->child(row, 2);
+   items.timeItem = invisibleRootItem()->child(row, 3);
+   items.loopItem = invisibleRootItem()->child(row, 4);
+   items.countItem = invisibleRootItem()->child(row, 5);
+
+   return items;
 }
 
 void Ramp::Model::rebuildModel(Core::Identifier identifier)
@@ -83,52 +82,61 @@ void Ramp::Model::rebuildModel(Core::Identifier identifier)
    for (uint8_t rampIndex = 0; rampIndex < 8; rampIndex++)
    {
       identifier.rampIndex = rampIndex;
+
       PolyRamp* polyRamp = getPolyRamp(identifier);
       if (!polyRamp)
          continue;
 
-      QStandardItem* nameItem = new QStandardItem();
-      {
-         nameItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
-         nameItem->setData(QVariant::fromValue(Core::Target::PolyRampName), Core::Role::Target);
-      }
-
-      QStandardItem* lengthItem = new QStandardItem();
-      {
-         lengthItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
-         lengthItem->setData(QVariant::fromValue(Core::Target::PolyRampLength), Core::Role::Target);
-      }
-
-      QStandardItem* stepSizeItem = new QStandardItem();
-      {
-         stepSizeItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
-         stepSizeItem->setData(QVariant::fromValue(Core::Target::PolyRampStepSize), Core::Role::Target);
-      }
-
-      QStandardItem* timeItem = new QStandardItem();
-      {
-         timeItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
-         timeItem->setData(QVariant::fromValue(Core::Target::PolyRampTime), Core::Role::Target);
-         timeItem->setEditable(false);
-      }
-
-      QStandardItem* loopItem = new QStandardItem();
-      {
-         loopItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
-         loopItem->setData(QVariant::fromValue(Core::Target::PolyRampLoop), Core::Role::Target);
-         loopItem->setCheckable(true);
-         loopItem->setEditable(false);
-      }
-
-      QStandardItem* countItem = new QStandardItem();
-      {
-         countItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
-         countItem->setEditable(false);
-      }
-
-      invisibleRootItem()->appendRow({nameItem, lengthItem, stepSizeItem, timeItem, loopItem, countItem});
-
+      create(identifier);
       modelHasChanged(identifier);
+   }
+}
+
+void Ramp::Model::modelHasChanged(Core::Identifier identifier)
+{
+   for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
+   {
+      Items items = find(row);
+      const Core::Identifier itemIndentifier = items.nameItem->data(Core::Role::Identifier).value<Core::Identifier>();
+      if (itemIndentifier.rampIndex != identifier.rampIndex)
+         continue;
+
+      Bank::Content* bank = getBank(identifier);
+      PolyRamp* polyRamp = getPolyRamp(identifier);
+
+      {
+         const QString name = bank->getName(identifier.rampIndex);
+         items.nameItem->setText(name);
+      }
+
+      {
+         const QString length = QString::number(polyRamp->getLength());
+         items.lengthItem->setText(length);
+      }
+
+      {
+         const std::string stepSize = Tempo::getName(polyRamp->getStepSize());
+         items.stepSizeItem->setText(QString::fromStdString(stepSize));
+         items.stepSizeItem->setData(QVariant::fromValue(polyRamp->getStepSize()), Core::Role::Data);
+      }
+
+      {
+         const Tempo::Division division = items.stepSizeItem->data(Core::Role::Data).value<Tempo::Division>();
+         const uint32_t divisionCount = items.lengthItem->text().toInt();
+
+         const QString timeText = compileTime(bank, division, divisionCount);
+         items.timeItem->setText(timeText);
+      }
+
+      {
+         items.loopItem->setCheckState(polyRamp->isLooping() ? Qt::Checked : Qt::Unchecked);
+      }
+
+      {
+         const QString count = QString::number(polyRamp->getStageCount());
+         items.countItem->setText(count);
+      }
+      break;
    }
 }
 

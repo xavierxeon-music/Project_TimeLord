@@ -15,8 +15,8 @@ namespace Stage
    private:
       struct Items
       {
-         QStandardItem* indexItem;
          QStandardItem* startPosItem;
+         QStandardItem* startTimeItem;
          QStandardItem* lengthItem;
          QStandardItem* startHeigthItem;
          QStandardItem* endHeigthItem;
@@ -27,7 +27,8 @@ namespace Stage
       Items create(const Core::Identifier& identifier);
       Items find(const int& row);
       void rebuildModel(Core::Identifier identifier) override;
-      void update(PolyRamp* polyRamp, const uint8_t& stageIndex);
+      void selectionChanged(Core::Identifier identifier) override;
+      void modelHasChanged(Core::Identifier identifier) override;
       bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
    };
 } // namespace Stage

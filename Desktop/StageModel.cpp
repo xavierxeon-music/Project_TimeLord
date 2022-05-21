@@ -5,29 +5,24 @@
 Stage::Model::Model(QObject* parent)
    : QStandardItemModel(parent)
    , Core::Interface()
-
 {
-   setHorizontalHeaderLabels({"index", "start position", "length", "start height", "start height"});
+   setHorizontalHeaderLabels({"start position", "start time", "length", "start height", "end height"});
 }
 
 Stage::Model::Items Stage::Model::create(const Core::Identifier& identifier)
 {
    Items items;
-   items.indexItem = new QStandardItem();
-   {
-      QString name = QString::number(identifier.stageIndex + 1);
-      while (3 != name.length())
-         name = QString("0") + name;
-
-      items.indexItem->setText(name);
-      items.indexItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
-      items.indexItem->setEditable(false);
-   }
 
    items.startPosItem = new QStandardItem();
    {
       items.startPosItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
       items.startPosItem->setEditable(false);
+   }
+
+   items.startTimeItem = new QStandardItem();
+   {
+      items.startTimeItem->setData(QVariant::fromValue(identifier), Core::Role::Identifier);
+      items.startTimeItem->setEditable(false);
    }
 
    items.lengthItem = new QStandardItem();
@@ -48,7 +43,7 @@ Stage::Model::Items Stage::Model::create(const Core::Identifier& identifier)
       items.endHeigthItem->setData(QVariant::fromValue(Core::Target::StageEndHeight), Core::Role::Target);
    }
 
-   invisibleRootItem()->appendRow({items.indexItem, items.startPosItem, items.lengthItem, items.startHeigthItem, items.endHeigthItem});
+   invisibleRootItem()->appendRow({items.startPosItem, items.startTimeItem, items.lengthItem, items.startHeigthItem, items.endHeigthItem});
 
    return items;
 }
@@ -57,8 +52,8 @@ Stage::Model::Items Stage::Model::find(const int& row)
 {
    Items items;
 
-   items.indexItem = invisibleRootItem()->child(row, 0);
-   items.startPosItem = invisibleRootItem()->child(row, 1);
+   items.startPosItem = invisibleRootItem()->child(row, 0);
+   items.startTimeItem = invisibleRootItem()->child(row, 1);
    items.lengthItem = invisibleRootItem()->child(row, 2);
    items.startHeigthItem = invisibleRootItem()->child(row, 3);
    items.endHeigthItem = invisibleRootItem()->child(row, 4);
@@ -69,7 +64,7 @@ Stage::Model::Items Stage::Model::find(const int& row)
 void Stage::Model::rebuildModel(Core::Identifier identifier)
 {
    clear();
-   setHorizontalHeaderLabels({"index", "start position", "length", "start height", "start height"});
+   setHorizontalHeaderLabels({"start position", "start time", "length", "start height", "end height"});
 
    PolyRamp* polyRamp = getPolyRamp(identifier);
    if (!polyRamp)
@@ -80,32 +75,34 @@ void Stage::Model::rebuildModel(Core::Identifier identifier)
    for (uint8_t stageIndex = 0; stageIndex < polyRamp->getStageCount(); stageIndex++)
    {
       stageIdentifier.stageIndex = stageIndex;
-      Items items = create(stageIdentifier);
-
-      QString name = QString::number(stageIndex + 1);
-      while (3 != name.length())
-         name = QString("0") + name;
-
-      items.indexItem->setText(name);
-
-      update(polyRamp, stageIndex);
+      create(stageIdentifier);
    }
 
+   modelHasChanged(identifier);
    callOnAllInstances(&Interface::modelHasChanged, identifier);
 }
 
-void Stage::Model::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
+void Stage::Model::selectionChanged(Core::Identifier identifier)
 {
+   rebuildModel(identifier);
+}
+
+void Stage::Model::modelHasChanged(Core::Identifier ignoreIdentifier)
+{
+   Q_UNUSED(ignoreIdentifier)
+
    uint32_t startPos = 0;
    for (int row = 0; row < invisibleRootItem()->rowCount(); row++)
    {
       Items items = find(row);
+      const Core::Identifier itemIndentifier = items.startPosItem->data(Core::Role::Identifier).value<Core::Identifier>();
 
-      const Core::Identifier identifier = items.indexItem->data(Core::Role::Identifier).value<Core::Identifier>();
+      Bank::Content* bank = getBank(itemIndentifier);
+      PolyRamp* polyRamp = getPolyRamp(itemIndentifier);
 
-      const uint8_t startHeight = polyRamp->getStageStartHeight(identifier.stageIndex);
-      const uint8_t endHeight = polyRamp->getStageEndHeight(identifier.stageIndex);
-      const uint8_t length = polyRamp->getStageLength(identifier.stageIndex);
+      const uint8_t startHeight = polyRamp->getStageStartHeight(itemIndentifier.stageIndex);
+      const uint8_t endHeight = polyRamp->getStageEndHeight(itemIndentifier.stageIndex);
+      const uint8_t length = polyRamp->getStageLength(itemIndentifier.stageIndex);
 
       QString posText = QString::number(startPos);
       items.startPosItem->setText(posText);
@@ -119,10 +116,10 @@ void Stage::Model::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
       else
          items.startPosItem->setIcon(QIcon(":/TrendStable.svg"));
 
-      if (identifier.stageIndex == itemStageIndex)
+      //if (identifier.stageIndex == itemStageIndex)
       {
          QString lengthText = QString::number(length);
-         if (identifier.stageIndex + 1 == polyRamp->getStageCount())
+         if (itemIndentifier.stageIndex + 1 == polyRamp->getStageCount())
             lengthText += "*";
          items.lengthItem->setText(lengthText);
 
@@ -133,7 +130,11 @@ void Stage::Model::update(PolyRamp* polyRamp, const uint8_t& itemStageIndex)
          items.endHeigthItem->setText(endHeightText);
       }
 
-      startPos += polyRamp->getStageLength(identifier.stageIndex);
+      const Tempo::Division division = polyRamp->getStepSize();
+      const QString timeText = compileTime(bank, division, startPos);
+      items.startTimeItem->setText(timeText);
+
+      startPos += length;
    }
 }
 
@@ -158,6 +159,7 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
       polyRamp->setStageStartHeight(identifier.stageIndex, height);
       callOnAllInstances(&Interface::modelHasChanged, identifier);
 
+      modelHasChanged(identifier);
       setModified();
    }
    else if (Core::Target::StageEndHeight == target)
@@ -166,6 +168,7 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
       polyRamp->setStageEndHeight(identifier.stageIndex, height);
       callOnAllInstances(&Interface::modelHasChanged, identifier);
 
+      modelHasChanged(identifier);
       setModified();
    }
    else if (Core::Target::StageLength == target)
@@ -182,11 +185,11 @@ bool Stage::Model::setData(const QModelIndex& index, const QVariant& value, int 
          targeValue = length;
          callOnAllInstances(&Interface::modelHasChanged, identifier);
 
+         modelHasChanged(identifier);
          setModified();
       }
    }
 
    bool result = QStandardItemModel::setData(index, targeValue, role);
-   update(polyRamp, identifier.stageIndex);
    return result;
 }

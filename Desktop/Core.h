@@ -105,6 +105,8 @@ namespace Core
 
       void setModified();
 
+      QString compileTime(const Bank::Content* bank, const Tempo::Division& division, const uint32_t& divisionCount);
+
    private:
       friend class ::MainWidget;
 

@@ -176,6 +176,23 @@ void Core::Interface::setModified()
    isModified = true;
 }
 
+QString Core::Interface::compileTime(const Bank::Content* bank, const Tempo::Division& division, const uint32_t& divisionCount)
+{
+   const float beatsPerMinute = bank->getBeatsPerMinute(); // == quarter / min
+
+   const float sixteenthPerSecond = (4 * beatsPerMinute) / 60.0;
+   const float sixteenthPerDivision = static_cast<float>(division);
+   const float secondsPerDivision = sixteenthPerDivision / sixteenthPerSecond;
+
+   const uint32_t time = static_cast<uint32_t>(divisionCount * secondsPerDivision);
+   const uint8_t seconds = time % 60;
+   const uint32_t minutes = (time - seconds) / 60;
+
+   const QString timeText = QString("%1:%2").arg(minutes).arg(seconds);
+
+   return timeText;
+}
+
 void Core::Interface::createRampDevice(QObject* parent)
 {
    if (target)
