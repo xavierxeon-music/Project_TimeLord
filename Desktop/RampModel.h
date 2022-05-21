@@ -22,8 +22,6 @@ namespace Ramp
          QStandardItem* loopItem;
          QStandardItem* countItem;
       };
-
-   private:
       friend class Widget;
 
    private:

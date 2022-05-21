@@ -25,9 +25,9 @@ Stage::Widget::Widget(MainWidget* mainWidget)
 
    stageModel = new Stage::Model(this);
    QTreeView* staggeTreeView = addTreeView(stageModel);
-   staggeTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
    staggeTreeView->setItemDelegateForColumn(2, new Delegate::SpinBox(this));
    staggeTreeView->setItemDelegateForColumn(3, new Delegate::SpinBox(this));
+   staggeTreeView->setItemDelegateForColumn(4, new Delegate::SpinBox(this));
 }
 
 void Stage::Widget::slotInsertPoint()

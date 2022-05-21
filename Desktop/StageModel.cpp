@@ -82,11 +82,6 @@ void Stage::Model::rebuildModel(Core::Identifier identifier)
    callOnAllInstances(&Interface::modelHasChanged, identifier);
 }
 
-void Stage::Model::selectionChanged(Core::Identifier identifier)
-{
-   rebuildModel(identifier);
-}
-
 void Stage::Model::modelHasChanged(Core::Identifier ignoreIdentifier)
 {
    Q_UNUSED(ignoreIdentifier)
