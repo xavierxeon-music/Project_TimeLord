@@ -47,7 +47,7 @@ Ramp::Widget::Widget(MainWidget* mainWidget)
    rampModel = new Model(this);
 
    QTreeView* rampTreeView = addTreeView(rampModel);
-   rampTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this));
+   rampTreeView->setItemDelegateForColumn(1, new Delegate::SpinBox(this, 1000));
    rampTreeView->setItemDelegateForColumn(2, new Delegate::ComboBox(this, new ::Model::Division(this)));
 }
 

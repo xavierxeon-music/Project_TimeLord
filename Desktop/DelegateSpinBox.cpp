@@ -2,9 +2,10 @@
 
 #include <QSpinBox>
 
-Delegate::SpinBox::SpinBox(QObject* parent)
+Delegate::SpinBox::SpinBox(QObject* parent, const uint32_t& maxValue)
    : QStyledItemDelegate(parent)
    , Core::Interface()
+   , maxValue(maxValue)
 {
 }
 
@@ -16,7 +17,7 @@ QWidget* Delegate::SpinBox::createEditor(QWidget* parent, const QStyleOptionView
    QSpinBox* spinBox = new QSpinBox(parent);
    spinBox->setFrame(false);
    spinBox->setMinimum(0);
-   spinBox->setMaximum(255);
+   spinBox->setMaximum(maxValue);
 
    return spinBox;
 }
@@ -33,7 +34,7 @@ void Delegate::SpinBox::setModelData(QWidget* editor, QAbstractItemModel* model,
 {
    QSpinBox* spinBox = static_cast<QSpinBox*>(editor);
    spinBox->interpretText();
-   const uint8_t value = spinBox->value();
+   const uint32_t value = spinBox->value();
 
    model->setData(index, value, Qt::EditRole);
 }

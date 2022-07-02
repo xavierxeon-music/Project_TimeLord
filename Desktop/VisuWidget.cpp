@@ -20,6 +20,7 @@ Visu::Widget::Widget(MainWidget* mainWidget)
 
    const MainWidget::FileActions& fileActions = mainWidget->getFileActions();
 
+   toolBar->addAction(fileActions.newFile);
    toolBar->addAction(fileActions.loadFromFile);
    toolBar->addAction(fileActions.saveToFile);
    toolBar->addAction(fileActions.saveNewFile);

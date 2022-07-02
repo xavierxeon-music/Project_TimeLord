@@ -17,7 +17,7 @@ MainWidget::MainWidget()
    , Core::Interface()
    , splitter(nullptr)
    , statusBar(nullptr)
-   , actions{nullptr, nullptr, nullptr}
+   , actions{nullptr, nullptr, nullptr, nullptr}
    , visuWidget(nullptr)
    , bankWidget(nullptr)
    , rampWidget(nullptr)
@@ -30,6 +30,9 @@ MainWidget::MainWidget()
 
    statusBar = new QStatusBar(this);
    statusBar->setSizeGripEnabled(true);
+
+   actions.newFile = new QAction(QIcon(":/New.svg"), "New File", this);
+   connect(actions.newFile, &QAction::triggered, this, &MainWidget::slotNewFile);
 
    actions.loadFromFile = new QAction(QIcon(":/LoadFromFile.svg"), "Load From File", this);
    connect(actions.loadFromFile, &QAction::triggered, this, &MainWidget::slotLoadFromFile);
@@ -79,6 +82,31 @@ const MainWidget::FileActions& MainWidget::getFileActions() const
 const Target::ServerActions& MainWidget::getServerActions() const
 {
    return target->getServerActions();
+}
+
+void MainWidget::slotNewFile()
+{
+   QString fileName = QFileDialog::getSaveFileName(this, "Save Data", QString(), "*.json");
+   if (fileName.isEmpty())
+      return;
+
+   if (!fileName.endsWith(".timelord.json"))
+   {
+      if (!fileName.endsWith(".json"))
+         fileName += ".timelord.json";
+      else
+         fileName.replace(".json", ".timelord.json");
+   }
+
+   AppSettings appSettings;
+   appSettings.write("LastFile", fileName);
+
+   FileSettings::setFileName(fileName);
+
+   FileSettings settings;
+   settings.write("banks", QJsonArray());
+
+   loadInternal(fileName);
 }
 
 void MainWidget::slotLoadFromFile()

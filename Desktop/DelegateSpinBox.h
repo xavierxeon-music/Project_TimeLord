@@ -11,7 +11,7 @@ namespace Delegate
       Q_OBJECT
 
    public:
-      SpinBox(QObject* parent);
+      SpinBox(QObject* parent, const uint32_t& maxValue = 255);
 
    public:
       QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
@@ -19,6 +19,8 @@ namespace Delegate
       void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const override;
       void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
+   private:
+      const uint32_t maxValue;
    };
 } // namespace Delegate
 

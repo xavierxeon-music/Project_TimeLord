@@ -24,6 +24,7 @@ class MainWidget : public QWidget, public Core::Interface
 public:
    struct FileActions
    {
+      QAction* newFile;
       QAction* loadFromFile;
       QAction* saveToFile;
       QAction* saveNewFile;
@@ -37,6 +38,7 @@ public:
    const Target::ServerActions& getServerActions() const;
 
 private slots:
+   void slotNewFile();
    void slotLoadFromFile();
    void slotSaveToFile();
    void slotSaveNewFile();
