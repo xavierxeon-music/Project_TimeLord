@@ -209,6 +209,9 @@ void MainWidget::loadInternal(const QString& fileName)
    updateWindowTitle(fileName);
    unsetModified();
 
+   const uint8_t zoom = settings.integer("zoom", 10);
+   visuWidget->setZoom(zoom);
+
    Core::Identifier dummy;
    callOnAllInstances(&Interface::rebuildModel, dummy);
 
@@ -236,8 +239,7 @@ void MainWidget::saveInternal(const QString& fileName)
 
    FileSettings settings;
    settings.write("banks", bankArray);
-
-   // TODO
+   settings.write("zoom", visuWidget->getZoom());
 
    updateWindowTitle(fileName);
    unsetModified();

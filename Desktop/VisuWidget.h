@@ -13,6 +13,10 @@ namespace Visu
    public:
       Widget(MainWidget* mainWidget);
 
+   public:
+      uint8_t getZoom() const;
+      void setZoom(const uint8_t level);
+
    private:
       struct Stage
       {
@@ -28,6 +32,7 @@ namespace Visu
       void slotZoomOut();
 
    private:
+      void drawGraph(PolyRamp* polyRamp, bool bold);
       void selectionChanged(Core::Identifier newIdentifier) override;
 
    private:

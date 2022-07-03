@@ -91,7 +91,7 @@ namespace Core
       void addBank();
       void removeBank();
       Bank::Content* getBank(const Identifier& identifier);             // ignores ramp and stage index
-      const Bank::Content* getBank(const Identifier& identifier) const; // ignores stage index
+      const Bank::Content* getBank(const Identifier& identifier) const; // ignores ramp and stage index
 
       PolyRamp* getPolyRamp(const Identifier& identifier);             // ignores stage index
       const PolyRamp* getPolyRamp(const Identifier& identifier) const; // ignores stage index
