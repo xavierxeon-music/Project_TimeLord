@@ -30,6 +30,7 @@ Visu::Widget::Widget(MainWidget* mainWidget)
    const Target::ServerActions& serverActions = mainWidget->getServerActions();
    toolBar->addAction(serverActions.connectToServer);
    toolBar->addAction(serverActions.pushToServer);
+   toolBar->addAction(serverActions.stateFromServer);
 
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/ZoomIn.svg"), "Zoom In", this, &Visu::Widget::slotZoomIn);

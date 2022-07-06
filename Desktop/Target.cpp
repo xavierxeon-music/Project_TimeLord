@@ -13,18 +13,23 @@ static constexpr uint8_t remoteChannel = Midi::Device::VCVRack;
 Target::Target(QObject* parent)
    : QObject(parent)
    , banks{}
-   , output(this, "TimeLord")
-   , serverActions{nullptr, nullptr}
+   , output(this, "Majordomo")
+   , input(this, "Majordomo")
+   , serverActions{nullptr, nullptr, nullptr}
+   , midiBuffer()
 {
    serverActions.connectToServer = new QAction(QIcon(":/Port.svg"), "Connect To Server", this);
    connect(serverActions.connectToServer, &QAction::triggered, this, &Target::slotConnectToServer);
    serverActions.connectToServer->setCheckable(true);
 
-   serverActions.pushToServer = new QAction(QIcon(":/SaveToDaisy.svg"), "Push To Server", this);
+   serverActions.pushToServer = new QAction(QIcon(":/SaveToMajordomo.svg"), "Push To Rack", this);
    connect(serverActions.pushToServer, &QAction::triggered, this, &Target::slotPushToServer);
 
-   slotConnectToServer(true);
+   serverActions.stateFromServer = new QAction(QIcon(":/StateFromMajordomo.svg"), "State From Rack", this);
+   connect(serverActions.stateFromServer, &QAction::triggered, this, &Target::slotRequestStateFromServer);
 
+   input.onControllChange(this, &Target::controllerChange);
+   slotConnectToServer(true);
 }
 
 const Target::ServerActions& Target::getServerActions() const
@@ -35,9 +40,15 @@ const Target::ServerActions& Target::getServerActions() const
 void Target::slotConnectToServer(bool connect)
 {
    if (connect)
+   {
       output.open();
+      input.open();
+   }
    else
+   {
       output.close();
+      input.close();
+   }
 
    serverActions.connectToServer->setChecked(output.isOpen());
 }
@@ -66,5 +77,30 @@ void Target::slotPushToServer()
          output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberBlock, byte);
 
       output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberApply, bankIndex);
+   }
+}
+
+void Target::slotRequestStateFromServer()
+{
+   output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberRequest, 0);
+}
+
+void Target::controllerChange(const Midi::Channel& channel, const Midi::ControllerMessage& controllerMessage, const uint8_t& value)
+{
+   if (Midi::Device::VCVRack != channel)
+      return;
+
+   if (Midi::ControllerMessage::RememberBlock == controllerMessage)
+   {
+      midiBuffer.append(value);
+   }
+   else if (Midi::ControllerMessage::RememberApply == controllerMessage)
+   {
+      const uint8_t bankIndex = value;
+      const QJsonDocument document = QJsonDocument::fromJson(midiBuffer);
+
+      midiBuffer.clear();
+
+      qDebug() << bankIndex << document.object();
    }
 }
