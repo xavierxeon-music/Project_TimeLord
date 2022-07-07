@@ -23,11 +23,13 @@ public:
    {
       QAction* connectToServer;
       QAction* pushToServer;
-      QAction* stateFromServer;
    };
 
 public:
    Target(QObject* parent);
+
+signals:
+   void signalNewState(const QJsonObject& stateObject);
 
 public:
    const ServerActions& getServerActions() const;
@@ -38,7 +40,6 @@ private:
 private slots:
    void slotConnectToServer(bool connect);
    void slotPushToServer();
-   void slotRequestStateFromServer();
 
 private:
    void controllerChange(const Midi::Channel& channel, const Midi::ControllerMessage& controllerMessage, const uint8_t& value);

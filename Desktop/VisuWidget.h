@@ -13,6 +13,9 @@ namespace Visu
    public:
       Widget(MainWidget* mainWidget);
 
+   signals:
+      void signalCaptureStates();
+
    public:
       uint8_t getZoom() const;
       void setZoom(const uint8_t level);

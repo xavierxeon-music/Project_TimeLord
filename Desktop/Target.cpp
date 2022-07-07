@@ -15,7 +15,7 @@ Target::Target(QObject* parent)
    , banks{}
    , output(this, "Majordomo")
    , input(this, "Majordomo")
-   , serverActions{nullptr, nullptr, nullptr}
+   , serverActions{nullptr, nullptr}
    , midiBuffer()
 {
    serverActions.connectToServer = new QAction(QIcon(":/Port.svg"), "Connect To Server", this);
@@ -24,9 +24,6 @@ Target::Target(QObject* parent)
 
    serverActions.pushToServer = new QAction(QIcon(":/SaveToMajordomo.svg"), "Push To Rack", this);
    connect(serverActions.pushToServer, &QAction::triggered, this, &Target::slotPushToServer);
-
-   serverActions.stateFromServer = new QAction(QIcon(":/StateFromMajordomo.svg"), "State From Rack", this);
-   connect(serverActions.stateFromServer, &QAction::triggered, this, &Target::slotRequestStateFromServer);
 
    input.onControllChange(this, &Target::controllerChange);
    slotConnectToServer(true);
@@ -80,11 +77,6 @@ void Target::slotPushToServer()
    }
 }
 
-void Target::slotRequestStateFromServer()
-{
-   output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberRequest, 0);
-}
-
 void Target::controllerChange(const Midi::Channel& channel, const Midi::ControllerMessage& controllerMessage, const uint8_t& value)
 {
    if (Midi::Device::VCVRack != channel)
@@ -96,11 +88,10 @@ void Target::controllerChange(const Midi::Channel& channel, const Midi::Controll
    }
    else if (Midi::ControllerMessage::RememberApply == controllerMessage)
    {
-      const uint8_t bankIndex = value;
       const QJsonDocument document = QJsonDocument::fromJson(midiBuffer);
-
       midiBuffer.clear();
 
-      qDebug() << bankIndex << document.object();
+      const QJsonObject stateObject = document.object();
+      emit signalNewState(stateObject);
    }
 }

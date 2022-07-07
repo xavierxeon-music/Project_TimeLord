@@ -12,6 +12,9 @@
 #include <AppSettings.h>
 #include <FileSettings.h>
 
+#include "DeviceStateModel.h"
+#include "DeviceStateWidget.h"
+
 MainWidget::MainWidget()
    : QWidget(nullptr)
    , Core::Interface()
@@ -62,6 +65,8 @@ MainWidget::MainWidget()
    masterLayout->addWidget(visuWidget);
    masterLayout->addWidget(splitter);
    masterLayout->addWidget(statusBar);
+
+   connect(visuWidget, &Visu::Widget::signalCaptureStates, this, &MainWidget::slotCaptureStates);
 
    loadLastFile();
 
@@ -160,6 +165,17 @@ void MainWidget::slotCheckDataModified()
       setWindowModified(true);
    else
       setWindowModified(false);
+}
+
+void MainWidget::slotCaptureStates()
+{
+   DeviceState::Model model(this, target);
+
+   DeviceState::Widget stateWidget(this, &model);
+   if (QDialog::Accepted != stateWidget.exec())
+      return;
+
+   model.applyToBanks();
 }
 
 void MainWidget::loadLastFile()

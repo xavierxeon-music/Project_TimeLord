@@ -20,6 +20,8 @@ HEADERS += \
    Core.hpp \
    DelegateComboBox.h \
    DelegateSpinBox.h \
+   DeviceStateModel.h \
+   DeviceStateWidget.h \
    EditDivision.h \
    EditLength.h \
    EditLoop.h \
@@ -41,6 +43,8 @@ SOURCES += \
    Core.cpp \
    DelegateComboBox.cpp \
    DelegateSpinBox.cpp \
+   DeviceStateModel.cpp \
+   DeviceStateWidget.cpp \
    EditDivision.cpp \
    EditLength.cpp \
    EditLoop.cpp \
@@ -56,3 +60,6 @@ SOURCES += \
 
 RESOURCES += \
    Icons/Icons.qrc
+
+FORMS += \
+   DeviceStateWidget.ui

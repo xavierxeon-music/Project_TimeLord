@@ -43,6 +43,7 @@ private slots:
    void slotSaveToFile();
    void slotSaveNewFile();
    void slotCheckDataModified();
+   void slotCaptureStates();
 
 private:
    void loadLastFile();

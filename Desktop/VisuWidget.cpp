@@ -30,7 +30,10 @@ Visu::Widget::Widget(MainWidget* mainWidget)
    const Target::ServerActions& serverActions = mainWidget->getServerActions();
    toolBar->addAction(serverActions.connectToServer);
    toolBar->addAction(serverActions.pushToServer);
-   toolBar->addAction(serverActions.stateFromServer);
+
+   QAction* stateFromServer = new QAction(QIcon(":/StateFromMajordomo.svg"), "State From Rack", this);
+   connect(stateFromServer, &QAction::triggered, this, &Visu::Widget::signalCaptureStates);
+   toolBar->addAction(stateFromServer);
 
    toolBar->addSeparator();
    toolBar->addAction(QIcon(":/ZoomIn.svg"), "Zoom In", this, &Visu::Widget::slotZoomIn);
