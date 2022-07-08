@@ -30,14 +30,20 @@ namespace DeviceState
       {
          using Map = std::map<uint8_t, QJsonObject>;
 
-         uint32_t positions;
+         uint32_t position;
          Map map;
 
          using List = QList<Stage>;
       };
 
+   private:
+      bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
+
+   private:
       Stage currentStage;
       Stage::List stageList;
+
+      const Bank::Content* bank;
    };
 } // namespace DeviceState
 
