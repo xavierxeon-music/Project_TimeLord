@@ -68,6 +68,11 @@ Core::Interface::Interface()
    instanceList.append(this);
 }
 
+Core::Interface::~Interface()
+{
+   instanceList.removeAll(this);
+}
+
 void Core::Interface::modelHasChanged(Identifier identifier)
 {
    Q_UNUSED(identifier)

@@ -169,6 +169,9 @@ void MainWidget::slotCheckDataModified()
 
 void MainWidget::slotCaptureStates()
 {
+   if (0 == getBankCount())
+      return;
+
    DeviceState::Model model(this, target);
 
    DeviceState::Widget stateWidget(this, &model);

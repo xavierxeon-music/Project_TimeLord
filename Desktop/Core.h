@@ -77,6 +77,7 @@ namespace Core
    {
    public:
       Interface();
+      ~Interface();
 
    public:
       virtual void modelHasChanged(Identifier identifier);

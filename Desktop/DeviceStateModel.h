@@ -20,6 +20,7 @@ namespace DeviceState
 
    public:
       void applyToBanks();
+      QString compileInfo() const;
 
    public slots:
       void slotNewState(const QJsonObject& stateObject);
