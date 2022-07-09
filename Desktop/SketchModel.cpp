@@ -1,6 +1,9 @@
 #include "SketchModel.h"
 
+#include <QFile>
 #include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonParseError>
 
 #include "Target.h"
 
@@ -22,9 +25,78 @@ Sketch::Model::Model(QObject* parent, Target* target)
 
 void Sketch::Model::loadFromFile(const QString& fileName)
 {
+   QFile file(fileName);
+   if (!file.open(QIODevice::ReadOnly))
+      return;
+
+   const QByteArray data = file.readAll();
+   file.close();
+
+   stateList.clear();
+   currentState.map.clear();
+
+   clear();
+   setHorizontalHeaderLabels({"number", "start pos", "time"});
+
+   QJsonDocument doc = QJsonDocument::fromJson(data);
+
+   QJsonArray stateArray = doc.array();
+   for (const QJsonValue& stateValue : stateArray)
+   {
+      QJsonObject stateObject = stateValue.toObject();
+
+      currentState.position = stateObject["position"].toInt();
+
+      uint8_t counter = 0;
+      QString key = QString::number(counter);
+      while (stateObject.contains(key))
+      {
+         State::Values values;
+         QJsonArray valueArray = stateObject[key].toArray();
+         for (const QJsonValueRef& value : valueArray)
+            values.push_back(value.toInt());
+
+         currentState.map[counter] = values;
+
+         counter++;
+         key = QString::number(counter);
+      }
+
+      stateList.append(currentState);
+      createCurrentStateItems();
+      currentState.map.clear();
+   }
 }
+
 void Sketch::Model::saveToFile(const QString& fileName)
 {
+   QJsonArray stateArray;
+   for (const State& state : stateList)
+   {
+      QJsonObject stateObject;
+      stateObject["position"] = static_cast<qint64>(state.position);
+      for (State::Map::const_iterator it = state.map.cbegin(); it != state.map.cend(); it++)
+      {
+         QJsonArray valueArray;
+         for (uint8_t value : it->second)
+            valueArray.append(value);
+
+         const QString key = QString::number(it->first);
+         stateObject[key] = valueArray;
+      }
+
+      stateArray.append(stateObject);
+   }
+
+   QJsonDocument doc(stateArray);
+   const QByteArray data = doc.toJson();
+
+   QFile file(fileName);
+   if (!file.open(QIODevice::WriteOnly))
+      return;
+
+   file.write(data);
+   file.close();
 }
 
 void Sketch::Model::applyToBanks()
@@ -45,7 +117,7 @@ void Sketch::Model::applyToBanks()
          for (identifier.rampIndex = 0; identifier.rampIndex < 8; identifier.rampIndex++)
          {
             PolyRamp* polyRamp = getPolyRamp(identifier);
-            if (0 == stateIndex)
+            if (1 == stateIndex)
             {
                polyRamp->clear();
                const uint32_t rampLength = stateList.last().position;
@@ -65,6 +137,8 @@ void Sketch::Model::applyToBanks()
          }
       }
    }
+
+   callOnAllInstances(&Interface::rebuildModel, Core::Identifier());
 }
 
 QString Sketch::Model::compileInfo() const
@@ -95,24 +169,8 @@ void Sketch::Model::slotNewState(const QJsonObject& stateObject)
       currentState.position = stateList.last().position + 1;
 
    stateList.append(currentState);
+   createCurrentStateItems();
 
-   const uint16_t index = invisibleRootItem()->rowCount();
-
-   QStandardItem* numberItem = new QStandardItem();
-   numberItem->setText(QString::number(index));
-   numberItem->setEditable(false);
-
-   QStandardItem* posItem = new QStandardItem();
-   posItem->setText(QString::number(currentState.position));
-
-   const uint32_t position = currentState.position;
-   const QString timeText = compileTime(bank, Tempo::Bar, position);
-
-   QStandardItem* timeItem = new QStandardItem();
-   timeItem->setText(timeText);
-   timeItem->setEditable(false);
-
-   invisibleRootItem()->appendRow({numberItem, posItem, timeItem});
    currentState.map.clear();
 }
 
@@ -132,4 +190,25 @@ bool Sketch::Model::setData(const QModelIndex& index, const QVariant& value, int
    stateList[row].position = position;
 
    return result;
+}
+
+void Sketch::Model::createCurrentStateItems()
+{
+   const uint16_t index = invisibleRootItem()->rowCount();
+
+   QStandardItem* numberItem = new QStandardItem();
+   numberItem->setText(QString::number(index));
+   numberItem->setEditable(false);
+
+   QStandardItem* posItem = new QStandardItem();
+   posItem->setText(QString::number(currentState.position));
+
+   const uint32_t position = currentState.position;
+   const QString timeText = compileTime(bank, Tempo::Bar, position);
+
+   QStandardItem* timeItem = new QStandardItem();
+   timeItem->setText(timeText);
+   timeItem->setEditable(false);
+
+   invisibleRootItem()->appendRow({numberItem, posItem, timeItem});
 }

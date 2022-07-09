@@ -41,6 +41,7 @@ namespace Sketch
 
    private:
       bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
+      void createCurrentStateItems();
 
    private:
       State currentState;
