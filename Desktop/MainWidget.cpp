@@ -12,8 +12,8 @@
 #include <AppSettings.h>
 #include <FileSettings.h>
 
-#include "DeviceStateModel.h"
-#include "DeviceStateWidget.h"
+#include "SketchModel.h"
+#include "SketchWidget.h"
 
 MainWidget::MainWidget()
    : QWidget(nullptr)
@@ -172,9 +172,9 @@ void MainWidget::slotCaptureStates()
    if (0 == getBankCount())
       return;
 
-   DeviceState::Model model(this, target);
+   Sketch::Model model(this, target);
 
-   DeviceState::Widget stateWidget(this, &model);
+   Sketch::Widget stateWidget(this, &model);
    if (QDialog::Accepted != stateWidget.exec())
       return;
 

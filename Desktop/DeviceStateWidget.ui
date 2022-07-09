@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DeviceStateWidget</class>
- <widget class="QDialog" name="DeviceStateWidget">
+ <class>SketchWidget</class>
+ <widget class="QDialog" name="SketchWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

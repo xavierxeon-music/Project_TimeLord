@@ -1,5 +1,5 @@
-#ifndef DeviceStateModelH
-#define DeviceStateModelH
+#ifndef SketchModelH
+#define SketchModelH
 
 #include "Core.h"
 #include <QStandardItemModel>
@@ -10,7 +10,7 @@
 
 class Target;
 
-namespace DeviceState
+namespace Sketch
 {
    class Model : public QStandardItemModel, public Core::Interface
    {
@@ -45,6 +45,6 @@ namespace DeviceState
 
       const Bank::Content* bank;
    };
-} // namespace DeviceState
+} // namespace Sketch
 
-#endif // NOT DeviceStateModelH
+#endif // NOT SketchModelH

@@ -1,19 +1,19 @@
-#ifndef DeviceStateWidgetH
-#define DeviceStateWidgetH
+#ifndef SketchWidgetH
+#define SketchWidgetH
 
-#include "ui_DeviceStateWidget.h"
+#include "ui_SketchWidget.h"
 #include <QDialog>
 
-namespace DeviceState
+namespace Sketch
 {
    class Model;
 
-   class Widget : public QDialog, private Ui::DeviceStateWidget
+   class Widget : public QDialog, private Ui::SketchWidget
    {
       Q_OBJECT
    public:
       Widget(QWidget* widget, Model* model);
    };
-} // namespace DeviceState
+} // namespace Sketch
 
-#endif // NOT DeviceStateWidgetH
+#endif // NOT SketchWidgetH

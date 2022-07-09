@@ -1,8 +1,8 @@
-#include "DeviceStateModel.h"
+#include "SketchModel.h"
 
 #include "Target.h"
 
-DeviceState::Model::Model(QObject* parent, Target* target)
+Sketch::Model::Model(QObject* parent, Target* target)
    : QStandardItemModel(parent)
    , Core::Interface()
    , currentStage()
@@ -18,7 +18,7 @@ DeviceState::Model::Model(QObject* parent, Target* target)
    bank = getBank(dummy);
 }
 
-void DeviceState::Model::applyToBanks()
+void Sketch::Model::applyToBanks()
 {
    for (const Stage& stage : stageList)
    {
@@ -26,7 +26,7 @@ void DeviceState::Model::applyToBanks()
    }
 }
 
-QString DeviceState::Model::compileInfo() const
+QString Sketch::Model::compileInfo() const
 {
    QString info;
    info += QString::number(getBankCount()) + " banks";
@@ -36,7 +36,7 @@ QString DeviceState::Model::compileInfo() const
    return info;
 }
 
-void DeviceState::Model::slotNewState(const QJsonObject& stateObject)
+void Sketch::Model::slotNewState(const QJsonObject& stateObject)
 {
    uint8_t bankIndex = stateObject["bankIndex"].toInt();
    if (bankIndex < 0 || bankIndex >= getBankCount())
@@ -68,7 +68,7 @@ void DeviceState::Model::slotNewState(const QJsonObject& stateObject)
    currentStage.map.clear();
 }
 
-bool DeviceState::Model::setData(const QModelIndex& index, const QVariant& value, int role)
+bool Sketch::Model::setData(const QModelIndex& index, const QVariant& value, int role)
 {
    bool result = QStandardItemModel::setData(index, value, role);
    if (Qt::EditRole != role && Qt::CheckStateRole != role)

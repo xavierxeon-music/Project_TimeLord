@@ -1,8 +1,8 @@
-#include "DeviceStateWidget.h"
+#include "SketchWidget.h"
 
-#include "DeviceStateModel.h"
+#include "SketchModel.h"
 
-DeviceState::Widget::Widget(QWidget* widget, Model* model)
+Sketch::Widget::Widget(QWidget* widget, Model* model)
    : QDialog(widget)
 {
    setupUi(this);
