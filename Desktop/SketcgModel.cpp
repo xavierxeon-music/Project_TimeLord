@@ -30,13 +30,14 @@ QString Sketch::Model::compileInfo() const
 {
    QString info;
    info += QString::number(getBankCount()) + " banks";
-
-   info += " @ " + QString::number(bank->getBeatsPerMinute()) + " bpm";
+   +info += " @ " + QString::number(bank->getBeatsPerMinute()) + " bpm";
 
    return info;
 }
 
-void Sketch::Model::slotNewState(const QJsonObject& stateObject)
++
+   void
+   Sketch::Model::slotNewState(const QJsonObject& stateObject)
 {
    uint8_t bankIndex = stateObject["bankIndex"].toInt();
    if (bankIndex < 0 || bankIndex >= getBankCount())
