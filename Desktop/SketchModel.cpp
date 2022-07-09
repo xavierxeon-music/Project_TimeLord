@@ -18,11 +18,22 @@ Sketch::Model::Model(QObject* parent, Target* target)
    bank = getBank(dummy);
 }
 
+void Sketch::Model::loadFromFile(const QString& fileName)
+{
+}
+void Sketch::Model::saveToFile(const QString& fileName)
+{
+}
+
 void Sketch::Model::applyToBanks()
 {
-   for (const Stage& stage : stageList)
+   if (stageList.count() < 2)
+      return;
+
+   for (size_t index = 1; index < stageList.count(); index++)
    {
-      qDebug() << stage.position << stage.map;
+      const Stage stage1 = stageList.at(index - 1);
+      const Stage stage2 = stageList.at(index);
    }
 }
 
@@ -30,14 +41,12 @@ QString Sketch::Model::compileInfo() const
 {
    QString info;
    info += QString::number(getBankCount()) + " banks";
-   +info += " @ " + QString::number(bank->getBeatsPerMinute()) + " bpm";
+   info += " @ " + QString::number(bank->getBeatsPerMinute()) + " bpm";
 
    return info;
 }
 
-+
-   void
-   Sketch::Model::slotNewState(const QJsonObject& stateObject)
+void Sketch::Model::slotNewState(const QJsonObject& stateObject)
 {
    uint8_t bankIndex = stateObject["bankIndex"].toInt();
    if (bankIndex < 0 || bankIndex >= getBankCount())

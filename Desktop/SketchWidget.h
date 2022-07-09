@@ -1,18 +1,27 @@
 #ifndef SketchWidgetH
 #define SketchWidgetH
 
-#include "ui_SketchWidget.h"
 #include <QDialog>
+
+#include <QTreeView>
 
 namespace Sketch
 {
    class Model;
 
-   class Widget : public QDialog, private Ui::SketchWidget
+   class Widget : public QDialog
    {
       Q_OBJECT
    public:
       Widget(QWidget* widget, Model* model);
+
+   private slots:
+      void slotLoadFromFile();
+      void slotSaveNewFile();
+
+   private:
+      Model* model;
+      QTreeView* stateTree;
    };
 } // namespace Sketch
 

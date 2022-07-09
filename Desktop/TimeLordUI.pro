@@ -61,5 +61,4 @@ SOURCES += \
 RESOURCES += \
    Icons/Icons.qrc
 
-FORMS += \
-   SketchWidget.ui
+FORMS +=
