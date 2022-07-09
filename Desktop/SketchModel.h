@@ -19,8 +19,8 @@ namespace Sketch
       Model(QObject* parent, Target* target);
 
    public:
-      void loadFromFile(const QString& fileName);
-      void saveToFile(const QString& fileName);
+      void loadFromFile();
+      void saveToFile();
       void applyToBanks();
       QString compileInfo() const;
 

@@ -5,6 +5,8 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 
+#include <FileSettings.h>
+
 #include "Target.h"
 
 Sketch::Model::Model(QObject* parent, Target* target)
@@ -23,24 +25,11 @@ Sketch::Model::Model(QObject* parent, Target* target)
    bank = getBank(dummy);
 }
 
-void Sketch::Model::loadFromFile(const QString& fileName)
+void Sketch::Model::loadFromFile()
 {
-   QFile file(fileName);
-   if (!file.open(QIODevice::ReadOnly))
-      return;
+   FileSettings settings;
+   const QJsonArray stateArray = settings.array("sketch");
 
-   const QByteArray data = file.readAll();
-   file.close();
-
-   stateList.clear();
-   currentState.map.clear();
-
-   clear();
-   setHorizontalHeaderLabels({"number", "start pos", "time"});
-
-   QJsonDocument doc = QJsonDocument::fromJson(data);
-
-   QJsonArray stateArray = doc.array();
    for (const QJsonValue& stateValue : stateArray)
    {
       QJsonObject stateObject = stateValue.toObject();
@@ -68,7 +57,7 @@ void Sketch::Model::loadFromFile(const QString& fileName)
    }
 }
 
-void Sketch::Model::saveToFile(const QString& fileName)
+void Sketch::Model::saveToFile()
 {
    QJsonArray stateArray;
    for (const State& state : stateList)
@@ -88,15 +77,8 @@ void Sketch::Model::saveToFile(const QString& fileName)
       stateArray.append(stateObject);
    }
 
-   QJsonDocument doc(stateArray);
-   const QByteArray data = doc.toJson();
-
-   QFile file(fileName);
-   if (!file.open(QIODevice::WriteOnly))
-      return;
-
-   file.write(data);
-   file.close();
+   FileSettings settings;
+   settings.write("sketch", stateArray);
 }
 
 void Sketch::Model::applyToBanks()

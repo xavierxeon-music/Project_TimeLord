@@ -52,26 +52,10 @@ Sketch::Widget::Widget(QWidget* widget, Model* model)
 
 void Sketch::Widget::slotLoadFromFile()
 {
-   const QString fileName = QFileDialog::getOpenFileName(this, "Save Data", QString(), "*.timelord_sketch.json");
-   if (fileName.isEmpty())
-      return;
-
-   model->loadFromFile(fileName);
+   model->loadFromFile();
 }
 
 void Sketch::Widget::slotSaveNewFile()
 {
-   QString fileName = QFileDialog::getSaveFileName(this, "Save Sketch", QString(), "*.json");
-   if (fileName.isEmpty())
-      return;
-
-   if (!fileName.endsWith(".timelord_sketch.json"))
-   {
-      if (!fileName.endsWith(".json"))
-         fileName += ".timelord_sketch.json";
-      else
-         fileName.replace(".json", ".timelord_sketch.json");
-   }
-
-   model->saveToFile(fileName);
+   model->saveToFile();
 }
