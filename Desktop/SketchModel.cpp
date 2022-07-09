@@ -1,12 +1,14 @@
 #include "SketchModel.h"
 
+#include <QJsonArray>
+
 #include "Target.h"
 
 Sketch::Model::Model(QObject* parent, Target* target)
    : QStandardItemModel(parent)
    , Core::Interface()
-   , currentStage()
-   , stageList()
+   , currentState()
+   , stateList()
    , bank(nullptr)
 
 {
@@ -27,13 +29,41 @@ void Sketch::Model::saveToFile(const QString& fileName)
 
 void Sketch::Model::applyToBanks()
 {
-   if (stageList.count() < 2)
+   if (stateList.count() < 2)
       return;
 
-   for (size_t index = 1; index < stageList.count(); index++)
+   for (size_t stateIndex = 1; stateIndex < stateList.count(); stateIndex++)
    {
-      const Stage stage1 = stageList.at(index - 1);
-      const Stage stage2 = stageList.at(index);
+      const State state1 = stateList.at(stateIndex - 1);
+      const State state2 = stateList.at(stateIndex);
+
+      const uint8_t stageLength = state2.position - state1.position;
+
+      Core::Identifier identifier;
+      for (identifier.bankIndex = 0; identifier.bankIndex < getBankCount(); identifier.bankIndex++)
+      {
+         for (identifier.rampIndex = 0; identifier.rampIndex < 8; identifier.rampIndex++)
+         {
+            PolyRamp* polyRamp = getPolyRamp(identifier);
+            if (0 == stateIndex)
+            {
+               polyRamp->clear();
+               const uint32_t rampLength = stateList.last().position;
+               polyRamp->setStepSize(Tempo::Bar);
+               polyRamp->setLength(rampLength);
+               polyRamp->setLooping(false); // ???
+               polyRamp->addStage(0, stateList.count() - 1);
+            }
+
+            const uint8_t stageIndex = stateIndex - 1;
+            const uint8_t startHeight = state1.map.at(identifier.bankIndex).at(identifier.rampIndex);
+            const uint8_t endHeight = state2.map.at(identifier.bankIndex).at(identifier.rampIndex);
+
+            polyRamp->setStageLength(stageIndex, stageLength);
+            polyRamp->setStageStartHeight(stageIndex, startHeight);
+            polyRamp->setStageEndHeight(stageIndex, endHeight);
+         }
+      }
    }
 }
 
@@ -52,11 +82,19 @@ void Sketch::Model::slotNewState(const QJsonObject& stateObject)
    if (bankIndex < 0 || bankIndex >= getBankCount())
       return;
 
-   currentStage.map[bankIndex] = stateObject;
-   if (currentStage.map.size() < getBankCount())
+   State::Values values;
+   const QJsonArray valueArray = stateObject["values"].toArray();
+   for (const QJsonValue& value : valueArray)
+      values.push_back(value.toInt());
+
+   currentState.map[bankIndex] = values;
+   if (currentState.map.size() < getBankCount())
       return;
 
-   stageList.append(currentStage);
+   if (!stateList.isEmpty())
+      currentState.position = stateList.last().position + 1;
+
+   stateList.append(currentState);
 
    const uint16_t index = invisibleRootItem()->rowCount();
 
@@ -65,9 +103,9 @@ void Sketch::Model::slotNewState(const QJsonObject& stateObject)
    numberItem->setEditable(false);
 
    QStandardItem* posItem = new QStandardItem();
-   posItem->setText(QString::number(index));
+   posItem->setText(QString::number(currentState.position));
 
-   const uint32_t position = index;
+   const uint32_t position = currentState.position;
    const QString timeText = compileTime(bank, Tempo::Bar, position);
 
    QStandardItem* timeItem = new QStandardItem();
@@ -75,7 +113,7 @@ void Sketch::Model::slotNewState(const QJsonObject& stateObject)
    timeItem->setEditable(false);
 
    invisibleRootItem()->appendRow({numberItem, posItem, timeItem});
-   currentStage.map.clear();
+   currentState.map.clear();
 }
 
 bool Sketch::Model::setData(const QModelIndex& index, const QVariant& value, int role)
@@ -91,7 +129,7 @@ bool Sketch::Model::setData(const QModelIndex& index, const QVariant& value, int
    const QString timeText = compileTime(bank, Tempo::Bar, position);
    timeItem->setText(timeText);
 
-   stageList[row].position = position;
+   stateList[row].position = position;
 
    return result;
 }

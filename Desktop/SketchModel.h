@@ -19,6 +19,8 @@ namespace Sketch
       Model(QObject* parent, Target* target);
 
    public:
+      void loadFromFile(const QString& fileName);
+      void saveToFile(const QString& fileName);
       void applyToBanks();
       QString compileInfo() const;
 
@@ -26,22 +28,23 @@ namespace Sketch
       void slotNewState(const QJsonObject& stateObject);
 
    private:
-      struct Stage
+      struct State
       {
-         using Map = std::map<uint8_t, QJsonObject>;
+         using Values = std::vector<uint8_t>;
+         using Map = std::map<uint8_t, Values>; // bankIndex - stage values
 
          uint32_t position;
          Map map;
 
-         using List = QList<Stage>;
+         using List = QList<State>;
       };
 
    private:
       bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
 
    private:
-      Stage currentStage;
-      Stage::List stageList;
+      State currentState;
+      State::List stateList;
 
       const Bank::Content* bank;
    };
