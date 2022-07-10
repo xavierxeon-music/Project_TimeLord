@@ -31,6 +31,9 @@ public:
 signals:
    void signalNewState(const QJsonObject& stateObject);
 
+public slots:
+   void slotSendState(const QJsonObject& stateObject);
+
 public:
    const ServerActions& getServerActions() const;
 

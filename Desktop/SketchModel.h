@@ -18,11 +18,15 @@ namespace Sketch
    public:
       Model(QObject* parent, Target* target);
 
+   signals:
+      void signalSendState(const QJsonObject& stateObject);
+
    public:
       void loadFromFile();
       void saveToFile();
       void applyToBanks();
       QString compileInfo() const;
+      void sendItemState(const QModelIndex& index);
 
    public slots:
       void slotNewState(const QJsonObject& stateObject);
@@ -33,6 +37,7 @@ namespace Sketch
          using Values = std::vector<uint8_t>;
          using Map = std::map<uint8_t, Values>; // bankIndex - stage values
 
+         QString name;
          uint32_t position;
          Map map;
 

@@ -18,6 +18,7 @@ namespace Sketch
    private slots:
       void slotLoadFromFile();
       void slotSaveNewFile();
+      void slotItemDoubleClicked(const QModelIndex& index);
 
    private:
       Model* model;

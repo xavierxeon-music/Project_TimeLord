@@ -18,8 +18,9 @@ Sketch::Model::Model(QObject* parent, Target* target)
 
 {
    connect(target, &Target::signalNewState, this, &Model::slotNewState);
+   connect(this, &Model::signalSendState, target, &Target::slotSendState);
 
-   setHorizontalHeaderLabels({"number", "start pos", "time"});
+   setHorizontalHeaderLabels({"number", "name", "start pos", "time"});
 
    Core::Identifier dummy;
    bank = getBank(dummy);
@@ -35,6 +36,7 @@ void Sketch::Model::loadFromFile()
       QJsonObject stateObject = stateValue.toObject();
 
       currentState.position = stateObject["position"].toInt();
+      currentState.name = stateObject["name"].toString();
 
       uint8_t counter = 0;
       QString key = QString::number(counter);
@@ -64,6 +66,7 @@ void Sketch::Model::saveToFile()
    {
       QJsonObject stateObject;
       stateObject["position"] = static_cast<qint64>(state.position);
+      stateObject["name"] = state.name;
       for (State::Map::const_iterator it = state.map.cbegin(); it != state.map.cend(); it++)
       {
          QJsonArray valueArray;
@@ -86,7 +89,8 @@ void Sketch::Model::applyToBanks()
    if (stateList.count() < 2)
       return;
 
-   for (size_t stateIndex = 1; stateIndex < stateList.count(); stateIndex++)
+   const size_t stateCount = static_cast<size_t>(stateList.count());
+   for (size_t stateIndex = 1; stateIndex < stateCount; stateIndex++)
    {
       const State state1 = stateList.at(stateIndex - 1);
       const State state2 = stateList.at(stateIndex);
@@ -132,6 +136,25 @@ QString Sketch::Model::compileInfo() const
    return info;
 }
 
+void Sketch::Model::sendItemState(const QModelIndex& index)
+{
+   const uint16_t row = index.row();
+   const State state = stateList.at(row);
+
+   for (State::Map::const_iterator it = state.map.cbegin(); it != state.map.cend(); it++)
+   {
+      QJsonArray valueArray;
+      for (uint8_t value : it->second)
+         valueArray.append(value);
+
+      QJsonObject stateObject;
+      stateObject["bankIndex"] = it->first;
+      stateObject["values"] = valueArray;
+
+      emit signalSendState(stateObject);
+   }
+}
+
 void Sketch::Model::slotNewState(const QJsonObject& stateObject)
 {
    uint8_t bankIndex = stateObject["bankIndex"].toInt();
@@ -163,14 +186,22 @@ bool Sketch::Model::setData(const QModelIndex& index, const QVariant& value, int
       return result;
 
    const uint16_t row = index.row();
+   const uint8_t column = index.column();
 
-   QStandardItem* timeItem = item(row, index.column() + 1);
-   const uint32_t position = value.toInt();
-   const QString timeText = compileTime(bank, Tempo::Bar, position);
-   timeItem->setText(timeText);
+   if (1 == column) // name
+   {
+      const QString name = value.toString();
+      stateList[row].name = name;
+   }
+   else if (2 == column) // position
+   {
+      const uint32_t position = value.toInt();
+      stateList[row].position = position;
 
-   stateList[row].position = position;
-
+      const QString timeText = compileTime(bank, Tempo::Bar, position);
+      QStandardItem* timeItem = item(row, column + 1);
+      timeItem->setText(timeText);
+   }
    return result;
 }
 
@@ -182,6 +213,9 @@ void Sketch::Model::createCurrentStateItems()
    numberItem->setText(QString::number(index));
    numberItem->setEditable(false);
 
+   QStandardItem* nameItem = new QStandardItem();
+   nameItem->setText(currentState.name);
+
    QStandardItem* posItem = new QStandardItem();
    posItem->setText(QString::number(currentState.position));
 
@@ -192,5 +226,5 @@ void Sketch::Model::createCurrentStateItems()
    timeItem->setText(timeText);
    timeItem->setEditable(false);
 
-   invisibleRootItem()->appendRow({numberItem, posItem, timeItem});
+   invisibleRootItem()->appendRow({numberItem, nameItem, posItem, timeItem});
 }

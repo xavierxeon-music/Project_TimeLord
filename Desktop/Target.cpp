@@ -29,6 +29,29 @@ Target::Target(QObject* parent)
    slotConnectToServer(true);
 }
 
+void Target::slotSendState(const QJsonObject& stateObject)
+{
+   if (!stateObject.contains("bankIndex"))
+      return;
+
+   const uint8_t bankIndex = stateObject["bankIndex"].toInt();
+
+   const QJsonDocument document(stateObject);
+   const QByteArray content = document.toJson(QJsonDocument::Compact);
+
+   Bytes data(content.size());
+   std::memcpy(&data[0], content.constData(), content.size());
+
+   Bytes dataBase64 = SevenBit::encode(data);
+
+   //qDebug() << content.size() << data.size() << dataBase64.size();
+
+   for (const uint8_t byte : dataBase64)
+      output.sendControllerChange(remoteChannel, Midi::ControllerMessage::DataBlock, byte);
+
+   output.sendControllerChange(remoteChannel, Midi::ControllerMessage::DataApply, bankIndex);
+}
+
 const Target::ServerActions& Target::getServerActions() const
 {
    return serverActions;
