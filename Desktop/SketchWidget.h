@@ -18,7 +18,6 @@ namespace Sketch
    private slots:
       void slotLoadFromFile();
       void slotSaveNewFile();
-      void slotAddBreak();
       void slotItemDoubleClicked(const QModelIndex& index);
 
    private:

@@ -26,7 +26,6 @@ namespace Sketch
       void saveToFile();
       void applyToBanks();
       QString compileInfo() const;
-      void addBreak();
       void sendItemState(const QModelIndex& index);
 
    public slots:
@@ -39,7 +38,6 @@ namespace Sketch
          using Map = std::map<uint8_t, Values>; // bankIndex - state values
          using List = QList<State>;
 
-         bool isBreak;
          QString name;
          uint32_t position;
          Map map;

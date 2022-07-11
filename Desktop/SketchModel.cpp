@@ -9,10 +9,11 @@
 
 #include "Target.h"
 
+// state
+
 Sketch::Model::State::State()
-   : isBreak(false)
-   , name()
-   , poistion(0)
+   : name()
+   , position(0)
    , map()
 {
 }
@@ -47,7 +48,6 @@ void Sketch::Model::loadFromFile()
 
       currentState.position = stateObject["position"].toInt();
       currentState.name = stateObject["name"].toString();
-      currentState.isBreak = stateObject["break"];
 
       uint8_t counter = 0;
       QString key = QString::number(counter);
@@ -78,7 +78,7 @@ void Sketch::Model::saveToFile()
       QJsonObject stateObject;
       stateObject["position"] = static_cast<qint64>(state.position);
       stateObject["name"] = state.name;
-      stateObject["break"] = state.isBreak;
+
       for (State::Map::const_iterator it = state.map.cbegin(); it != state.map.cend(); it++)
       {
          QJsonArray valueArray;
@@ -102,36 +102,55 @@ void Sketch::Model::applyToBanks()
       return;
 
    const size_t stateCount = static_cast<size_t>(stateList.count());
+
+   struct Ramp
+   {
+      size_t startIndex;
+      size_t endIndex;
+
+      using List = QList<Ramp>;
+   };
+
+   Ramp::List rampList;
    for (size_t stateIndex = 1; stateIndex < stateCount; stateIndex++)
    {
       const State state1 = stateList.at(stateIndex - 1);
       const State state2 = stateList.at(stateIndex);
 
-      if (state.isBreak)
-         continue;
+      const int32_t stageLength = state2.position - state1.position;
+      if (stageLength > 0)
+      {
+         rampList.append({stateIndex - 1, stateIndex});
+      }
+   }
+
+   const size_t stageCount = rampList.count();
+   for (size_t stageIndex = 0; stageIndex < stageCount; stageIndex++)
+   {
+      const State state1 = stateList.at(rampList.at(stageIndex).startIndex);
+      const State state2 = stateList.at(rampList.at(stageIndex).endIndex);
 
       const uint8_t stageLength = state2.position - state1.position;
-
       Core::Identifier identifier;
       for (identifier.bankIndex = 0; identifier.bankIndex < getBankCount(); identifier.bankIndex++)
       {
          for (identifier.rampIndex = 0; identifier.rampIndex < 8; identifier.rampIndex++)
          {
             PolyRamp* polyRamp = getPolyRamp(identifier);
-            if (1 == stateIndex)
+            if (0 == stageIndex)
             {
                polyRamp->clear();
                const uint32_t rampLength = stateList.last().position;
                polyRamp->setStepSize(Tempo::Bar);
                polyRamp->setLength(rampLength);
                polyRamp->setLooping(false); // ???
-               polyRamp->addStage(0, stateList.count() - 1);
+               polyRamp->addStage(0, stageCount);
             }
 
-            const uint8_t stageIndex = stateIndex - 1;
             const uint8_t startHeight = state1.map.at(identifier.bankIndex).at(identifier.rampIndex);
             const uint8_t endHeight = state2.map.at(identifier.bankIndex).at(identifier.rampIndex);
 
+            //qDebug() << stageIndex << stageLength << startHeight << endHeight;
             polyRamp->setStageLength(stageIndex, stageLength);
             polyRamp->setStageStartHeight(stageIndex, startHeight);
             polyRamp->setStageEndHeight(stageIndex, endHeight);
@@ -151,24 +170,10 @@ QString Sketch::Model::compileInfo() const
    return info;
 }
 
-void Sketch::Model::addBreak()
-{
-   currentState.isBreak = true;
-   {
-      stateList.append(currentState);
-      createCurrentStateItems();
-
-      currentState.map.clear();
-   }
-   currentState.isBreak = false;
-}
-
 void Sketch::Model::sendItemState(const QModelIndex& index)
 {
    const uint16_t row = index.row();
    const State state = stateList.at(row);
-   if (state.isBreak)
-      return;
 
    for (State::Map::const_iterator it = state.map.cbegin(); it != state.map.cend(); it++)
    {
@@ -243,27 +248,16 @@ void Sketch::Model::createCurrentStateItems()
    numberItem->setEditable(false);
 
    QStandardItem* nameItem = new QStandardItem();
+   nameItem->setText(currentState.name);
+
    QStandardItem* posItem = new QStandardItem();
+   const uint32_t position = currentState.position;
+   posItem->setText(QString::number(position));
+
    QStandardItem* timeItem = new QStandardItem();
-   if (currentState.isBreak)
-   {
-      nameItem->setText("Break");
-      nameItem->setEditable(false);
+   const QString timeText = compileTime(bank, Tempo::Bar, position);
+   timeItem->setText(timeText);
+   timeItem->setEditable(false);
 
-      posItem->setEditable(false);
-
-      timeItem->setEditable(false);
-   }
-   else
-   {
-      nameItem->setText(currentState.name);
-
-      posItem->setText(QString::number(currentState.position));
-
-      const uint32_t position = currentState.position;
-      const QString timeText = compileTime(bank, Tempo::Bar, position);
-      timeItem->setText(timeText);
-      timeItem->setEditable(false);
-   }
    invisibleRootItem()->appendRow({numberItem, nameItem, posItem, timeItem});
 }

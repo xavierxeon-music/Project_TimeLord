@@ -32,8 +32,6 @@ Sketch::Widget::Widget(QWidget* widget, Model* model)
       toolBar->addWidget(createButton);
 
       toolBar->addSeparator();
-      toolBar->addAction(QIcon(":/Break.svg"), "Add Break", this, &Widget::slotAddBreak);
-      toolBar->addSeparator();
       toolBar->addAction(QIcon(":/LoadFromFile.svg"), "Load From File", this, &Widget::slotLoadFromFile);
       toolBar->addAction(QIcon(":/SaveNewFile.svg"), "Save To New File", this, &Widget::slotSaveNewFile);
 
@@ -64,11 +62,6 @@ void Sketch::Widget::slotLoadFromFile()
 void Sketch::Widget::slotSaveNewFile()
 {
    model->saveToFile();
-}
-
-void Sketch::Widget::slotAddBreak()
-{
-   model->addBreak();
 }
 
 void Sketch::Widget::slotItemDoubleClicked(const QModelIndex& index)
