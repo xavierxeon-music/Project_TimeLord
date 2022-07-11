@@ -101,17 +101,9 @@ void Sketch::Model::applyToBanks()
    if (stateList.count() < 2)
       return;
 
+   QList<size_t> rampList;
+
    const size_t stateCount = static_cast<size_t>(stateList.count());
-
-   struct Ramp
-   {
-      size_t startIndex;
-      size_t endIndex;
-
-      using List = QList<Ramp>;
-   };
-
-   Ramp::List rampList;
    for (size_t stateIndex = 1; stateIndex < stateCount; stateIndex++)
    {
       const State state1 = stateList.at(stateIndex - 1);
@@ -120,15 +112,16 @@ void Sketch::Model::applyToBanks()
       const int32_t stageLength = state2.position - state1.position;
       if (stageLength > 0)
       {
-         rampList.append({stateIndex - 1, stateIndex});
+         rampList.append(stateIndex - 1);
       }
    }
 
    const size_t stageCount = rampList.count();
    for (size_t stageIndex = 0; stageIndex < stageCount; stageIndex++)
    {
-      const State state1 = stateList.at(rampList.at(stageIndex).startIndex);
-      const State state2 = stateList.at(rampList.at(stageIndex).endIndex);
+      const size_t rampIndex = rampList.at(stageIndex);
+      const State state1 = stateList.at(rampIndex + 0);
+      const State state2 = stateList.at(rampIndex + 1);
 
       const uint8_t stageLength = state2.position - state1.position;
       Core::Identifier identifier;
