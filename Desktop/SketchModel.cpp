@@ -9,6 +9,16 @@
 
 #include "Target.h"
 
+Sketch::Model::State::State()
+   : isBreak(false)
+   , name()
+   , poistion(0)
+   , map()
+{
+}
+
+// mdoel
+
 Sketch::Model::Model(QObject* parent, Target* target)
    : QStandardItemModel(parent)
    , Core::Interface()
@@ -37,6 +47,7 @@ void Sketch::Model::loadFromFile()
 
       currentState.position = stateObject["position"].toInt();
       currentState.name = stateObject["name"].toString();
+      currentState.isBreak = stateObject["break"];
 
       uint8_t counter = 0;
       QString key = QString::number(counter);
@@ -67,6 +78,7 @@ void Sketch::Model::saveToFile()
       QJsonObject stateObject;
       stateObject["position"] = static_cast<qint64>(state.position);
       stateObject["name"] = state.name;
+      stateObject["break"] = state.isBreak;
       for (State::Map::const_iterator it = state.map.cbegin(); it != state.map.cend(); it++)
       {
          QJsonArray valueArray;
@@ -94,6 +106,9 @@ void Sketch::Model::applyToBanks()
    {
       const State state1 = stateList.at(stateIndex - 1);
       const State state2 = stateList.at(stateIndex);
+
+      if (state.isBreak)
+         continue;
 
       const uint8_t stageLength = state2.position - state1.position;
 
@@ -136,10 +151,24 @@ QString Sketch::Model::compileInfo() const
    return info;
 }
 
+void Sketch::Model::addBreak()
+{
+   currentState.isBreak = true;
+   {
+      stateList.append(currentState);
+      createCurrentStateItems();
+
+      currentState.map.clear();
+   }
+   currentState.isBreak = false;
+}
+
 void Sketch::Model::sendItemState(const QModelIndex& index)
 {
    const uint16_t row = index.row();
    const State state = stateList.at(row);
+   if (state.isBreak)
+      return;
 
    for (State::Map::const_iterator it = state.map.cbegin(); it != state.map.cend(); it++)
    {
@@ -214,17 +243,27 @@ void Sketch::Model::createCurrentStateItems()
    numberItem->setEditable(false);
 
    QStandardItem* nameItem = new QStandardItem();
-   nameItem->setText(currentState.name);
-
    QStandardItem* posItem = new QStandardItem();
-   posItem->setText(QString::number(currentState.position));
-
-   const uint32_t position = currentState.position;
-   const QString timeText = compileTime(bank, Tempo::Bar, position);
-
    QStandardItem* timeItem = new QStandardItem();
-   timeItem->setText(timeText);
-   timeItem->setEditable(false);
+   if (currentState.isBreak)
+   {
+      nameItem->setText("Break");
+      nameItem->setEditable(false);
 
+      posItem->setEditable(false);
+
+      timeItem->setEditable(false);
+   }
+   else
+   {
+      nameItem->setText(currentState.name);
+
+      posItem->setText(QString::number(currentState.position));
+
+      const uint32_t position = currentState.position;
+      const QString timeText = compileTime(bank, Tempo::Bar, position);
+      timeItem->setText(timeText);
+      timeItem->setEditable(false);
+   }
    invisibleRootItem()->appendRow({numberItem, nameItem, posItem, timeItem});
 }
