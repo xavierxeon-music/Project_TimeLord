@@ -42,7 +42,7 @@ private:
 
 private slots:
    void slotConnectToServer(bool connect);
-   void slotPushToServer();
+   void slotPushRampsToServer();
 
 private:
    void controllerChange(const Midi::Channel& channel, const Midi::ControllerMessage& controllerMessage, const uint8_t& value);

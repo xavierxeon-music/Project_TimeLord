@@ -23,7 +23,7 @@ Target::Target(QObject* parent)
    serverActions.connectToServer->setCheckable(true);
 
    serverActions.pushToServer = new QAction(QIcon(":/SaveToMajordomo.svg"), "Push To Rack", this);
-   connect(serverActions.pushToServer, &QAction::triggered, this, &Target::slotPushToServer);
+   connect(serverActions.pushToServer, &QAction::triggered, this, &Target::slotPushRampsToServer);
 
    input.onControllChange(this, &Target::controllerChange);
    slotConnectToServer(true);
@@ -45,6 +45,8 @@ void Target::slotSendState(const QJsonObject& stateObject)
    Bytes dataBase64 = SevenBit::encode(data);
 
    //qDebug() << content.size() << data.size() << dataBase64.size();
+
+   output.sendControllerChange(remoteChannel, Midi::ControllerMessage::DataInit, bankIndex);
 
    for (const uint8_t byte : dataBase64)
       output.sendControllerChange(remoteChannel, Midi::ControllerMessage::DataBlock, byte);
@@ -73,7 +75,7 @@ void Target::slotConnectToServer(bool connect)
    serverActions.connectToServer->setChecked(output.isOpen());
 }
 
-void Target::slotPushToServer()
+void Target::slotPushRampsToServer()
 {
    if (!output.isOpen())
       return;
@@ -93,6 +95,8 @@ void Target::slotPushToServer()
 
       //qDebug() << content.size() << data.size() << dataBase64.size();
 
+      output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberInit, bankIndex);
+
       for (const uint8_t byte : dataBase64)
          output.sendControllerChange(remoteChannel, Midi::ControllerMessage::RememberBlock, byte);
 
@@ -105,11 +109,15 @@ void Target::controllerChange(const Midi::Channel& channel, const Midi::Controll
    if (Midi::Device::VCVRack != channel)
       return;
 
-   if (Midi::ControllerMessage::RememberBlock == controllerMessage)
+   if (Midi::ControllerMessage::DataInit == controllerMessage)
+   {
+      //do nothing
+   }
+   else if (Midi::ControllerMessage::DataBlock == controllerMessage)
    {
       midiBuffer.append(value);
    }
-   else if (Midi::ControllerMessage::RememberApply == controllerMessage)
+   else if (Midi::ControllerMessage::DataApply == controllerMessage)
    {
       const QJsonDocument document = QJsonDocument::fromJson(midiBuffer);
       midiBuffer.clear();
